@@ -1,0 +1,13 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "tslint-react"],
+  "jsRules": {},
+  "rules": {
+    "quotemark": [true, "single"],
+    "object-literal-sort-keys": false,
+    "interface-name": false,
+    "variable-name": { "options": "allow-pascal-case" },
+    "jsx-wrap-multiline": false
+  },
+  "rulesDirectory": []
+}
