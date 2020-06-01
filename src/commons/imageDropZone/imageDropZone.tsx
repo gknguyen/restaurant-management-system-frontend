@@ -16,7 +16,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { connect } from 'react-redux';
 import bytesToSize from '../../components/utils/bytesToSize';
 import { Image } from '../../configs/interfaces';
-import * as imageActions from '../../redux/actions/actionsImage';
+import * as imageActions from '../../redux/reducers/imageReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -93,14 +93,9 @@ const ImagesDropZone: React.FC<Props> = (props) => {
               />
             </div>
             <div>
-              <Typography
-                className={classes.info}
-                color='textSecondary'
-                variant='body1'
-              >
-                Drop an image here or click{' '}
-                <Link underline='always'>browse</Link> thorough your computer or
-                laptop
+              <Typography className={classes.info} color='textSecondary' variant='body1'>
+                Drop an image here or click <Link underline='always'>browse</Link> thorough your
+                computer or laptop
               </Typography>
             </div>
           </Fragment>

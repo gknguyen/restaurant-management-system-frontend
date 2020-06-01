@@ -50,6 +50,11 @@ const routes = [
         component: lazy(() => import('../viewers/users/list')),
       },
       {
+        path: '/createUser',
+        exact: true,
+        component: lazy(() => import('../viewers/users/createAndEdit/createUser')),
+      },
+      {
         path: '/userDetails',
         exact: true,
         component: lazy(() => import('../viewers/users/details')),

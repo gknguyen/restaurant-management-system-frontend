@@ -33,13 +33,13 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className={classes.root}>
+    <Container disableGutters maxWidth='xl' className={classes.root}>
       <StoreProvider store={store}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <Router>{renderRoutes(AppRoutes)}</Router>
         </MuiPickersUtilsProvider>
       </StoreProvider>
-    </div>
+    </Container>
   );
 };
 

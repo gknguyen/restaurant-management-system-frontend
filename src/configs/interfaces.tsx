@@ -13,6 +13,11 @@ export interface MenuType {
   typeName: string;
 }
 
+export interface UserType {
+  id: string;
+  typeName: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -40,9 +45,10 @@ export interface ProductHeadCell {
 export interface User {
   id: string;
   username: string;
+  password: string;
   fullName: number;
-  age: string;
-  phoneNumber: number;
+  age: number;
+  phoneNumber: string;
   email: boolean;
   avatar: string;
   loginDatetime: Date;

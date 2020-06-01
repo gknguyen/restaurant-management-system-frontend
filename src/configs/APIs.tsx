@@ -15,16 +15,21 @@ export const productTypeUrl: string = '/api/productType/';
 export const getListProductTypeUrl: string = productTypeUrl + 'getList';
 export const getOneProductTypeUrl: string = productTypeUrl + 'getOne';
 
+/* user type */
+export const userTypeUrl: string = '/api/userType/';
+export const getListUserTypeUrl: string = userTypeUrl + 'getList';
+
 /* product */
 export const productUrl: string = '/api/product/';
 export const getListProductUrl: string = productUrl + 'getList';
 export const getOneProductUrl: string = productUrl + 'getOne';
 export const searchListProductUrl: string = productUrl + 'searchList';
 export const createOneProductUrl: string = productUrl + 'createOne';
-export const updateOneProductUrl: string = productUrl + 'updateOne';
+export const editOneProductUrl: string = productUrl + 'editOne';
 export const deleteListProductUrl: string = productUrl + 'deleteList';
 
 /* user */
 export const userUrl: string = '/api/user/';
 export const getListUserUrl: string = userUrl + 'getList';
 export const getOneUserUrl: string = userUrl + 'getOne';
+export const createOneUserUrl: string = userUrl + 'createOne';

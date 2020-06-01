@@ -1,4 +1,4 @@
-import * as ActionType from '../../constants/actionTypes';
+import * as ActionType from '../constant';
 
 const initialState = {
   searchValue: '',
@@ -15,7 +15,14 @@ const initialState = {
     image: '',
     description: '',
   },
-  errorMessages: {},
+  errorMessages: {
+    productTypeName: '',
+    menuTypeName: '',
+    name: '',
+    price: '',
+    unit: '',
+    amount: '',
+  },
   open: false,
 };
 
@@ -38,6 +45,10 @@ const productReducer = (state = initialState, action: any) => {
     case ActionType.GET_PRODUCT:
       state.product = action.data;
       return { ...state };
+    /* return product id list value */
+    case ActionType.RECEIVE_PRODUCT_ID_LIST:
+      state.productIdList = action.data;
+      return { ...state };
     /* return product main values */
     case ActionType.RECEIVE_PRODUCT:
       state.product.name = action.data.name;
@@ -47,33 +58,44 @@ const productReducer = (state = initialState, action: any) => {
       state.product.image = action.data.image;
       state.product.description = action.data.description;
       return { ...state };
-    /* return product id list value */
-    case ActionType.RECEIVE_PRODUCT_ID_LIST:
-      state.productIdList = action.data;
-      return { ...state };
-    /* return product name value */
+    /* return each product value */
     case ActionType.RECEIVE_PRODUCT_NAME:
       state.product.name = action.data;
       return { ...state };
-    /* return product price value */
     case ActionType.RECEIVE_PRODUCT_PRICE:
       state.product.price = action.data;
       return { ...state };
-    /* return product unit value */
     case ActionType.RECEIVE_PRODUCT_UNIT:
       state.product.unit = action.data;
       return { ...state };
-    /* return product amount value */
     case ActionType.RECEIVE_PRODUCT_AMOUNT:
       state.product.amount = action.data;
       return { ...state };
-    /* return product description value */
     case ActionType.RECEIVE_PRODUCT_DESCRIPTION:
       state.product.description = action.data;
       return { ...state };
     /* return product error message */
     case ActionType.RECEIVE_PRODUCT_ERROR_MESSAGES:
       state.errorMessages = action.data;
+      return { ...state };
+    /* return each product error message */
+    case ActionType.RECEIVE_PRODUCT_ERROR_MESSAGES_PRODUCT_TYPE:
+      state.errorMessages.productTypeName = action.data;
+      return { ...state };
+    case ActionType.RECEIVE_PRODUCT_ERROR_MESSAGES_MENU_TYPE:
+      state.errorMessages.menuTypeName = action.data;
+      return { ...state };
+    case ActionType.RECEIVE_PRODUCT_ERROR_MESSAGES_NAME:
+      state.errorMessages.name = action.data;
+      return { ...state };
+    case ActionType.RECEIVE_PRODUCT_ERROR_MESSAGES_PRICE:
+      state.errorMessages.price = action.data;
+      return { ...state };
+    case ActionType.RECEIVE_PRODUCT_ERROR_MESSAGES_UNIT:
+      state.errorMessages.unit = action.data;
+      return { ...state };
+    case ActionType.RECEIVE_PRODUCT_ERROR_MESSAGES_AMOUNT:
+      state.errorMessages.amount = action.data;
       return { ...state };
     /* return edit open flag */
     case ActionType.RECEIVE_PRODUCT_EDIT_OPEN_FLAG:

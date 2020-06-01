@@ -1,4 +1,4 @@
-import * as ActionType from '../../constants/actionTypes';
+import * as ActionType from '../constant';
 
 const initialState = {
   imageFile: {},
