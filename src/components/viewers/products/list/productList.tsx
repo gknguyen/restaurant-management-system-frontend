@@ -12,13 +12,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { SearchBar } from '../../../../commons';
+import SearchBar from '../../../../commons/searchBar';
 import * as routes from '../../../../configs/APIs';
 import Axios from '../../../../configs/axios';
 import { ProductHeadCell } from '../../../../configs/interfaces';
 import * as productActions from '../../../../redux/reducers/productReducers/actions';
-import { ProductTable } from './components';
-import './productList.scss';
+import ProductTable from './components/productTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -121,20 +120,20 @@ const ProductList: React.FC<Props> = (props) => {
     <Dialog
       open={open}
       onClose={handleClose}
-      aria-labelledby='alert-dialog-title'
-      aria-describedby='alert-dialog-description'
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id='alert-dialog-title'>Do yo want to delete these products?</DialogTitle>
+      <DialogTitle id="alert-dialog-title">Do yo want to delete these products?</DialogTitle>
       <DialogContent>
-        <DialogContentText id='alert-dialog-description'>
+        <DialogContentText id="alert-dialog-description">
           These products will be deleted permanently
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={deleteHandler} color='primary'>
+        <Button onClick={deleteHandler} color="primary">
           Agree
         </Button>
-        <Button onClick={handleClose} color='primary'>
+        <Button onClick={handleClose} color="primary">
           Disagree
         </Button>
       </DialogActions>
@@ -142,41 +141,41 @@ const ProductList: React.FC<Props> = (props) => {
   );
 
   return (
-    <Container maxWidth='xl'>
-      <Box display='flex'>
-        <Grid className={classes.grid} container={true} spacing={2} direction='row'>
+    <Container maxWidth="xl">
+      <Box display="flex">
+        <Grid className={classes.grid} container={true} spacing={2} direction="row">
           <Grid container={true} item={true} xs={12}>
-            <Typography component='h1' variant='h4'>
+            <Typography component="h1" variant="h4">
               Product List
             </Typography>
           </Grid>
-          <Grid container={true} item={true} md={6} xs='auto' justify='flex-start'>
+          <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
             <div className={classes.search}>
               <SearchBar />
               <Button
                 className={classes.searchButton}
                 onClick={searchHandler}
-                size='medium'
-                variant='contained'
+                size="medium"
+                variant="contained"
               >
                 <SearchIcon />
               </Button>
             </div>
           </Grid>
-          <Grid container={true} item={true} md={6} xs='auto' justify='flex-end'>
+          <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
             <Button
               className={classes.createButton}
               onClick={createHandler}
-              size='medium'
-              variant='contained'
+              size="medium"
+              variant="contained"
             >
               Create
             </Button>
             <Button
               className={classes.deleteButton}
               onClick={handleClickOpen}
-              size='medium'
-              variant='contained'
+              size="medium"
+              variant="contained"
             >
               Delete
             </Button>

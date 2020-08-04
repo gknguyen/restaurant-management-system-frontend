@@ -17,7 +17,9 @@ import * as menuTypeActions from '../../../../redux/reducers/menuTypeReducers/ac
 import * as productActions from '../../../../redux/reducers/productReducers/actions';
 import * as productTypeActions from '../../../../redux/reducers/productTypeReducers/actions';
 import { getAuthToken, getProductId } from '../../../utils/localStore';
-import { DescriptionField, ImageUploadField, MainInfoField } from './components';
+import DescriptionField from './components/descriptionField';
+import ImageUploadField from './components/imageUploadField';
+import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -159,59 +161,59 @@ const EditProduct: React.FC<Props> = (props) => {
   };
 
   return (
-    <Container maxWidth='xl'>
+    <Container maxWidth="xl">
       <Dialog
         className={classes.dialog}
         onClose={handleClose}
-        aria-labelledby='customized-dialog-title'
+        aria-labelledby="customized-dialog-title"
         open={open}
-        maxWidth='md'
+        maxWidth="md"
       >
-        <DialogTitle id='customized-dialog-title'>
-          <Typography component='h1' variant='h5'>
+        <DialogTitle id="customized-dialog-title">
+          <Typography component="h1" variant="h5">
             Edit Product
           </Typography>
         </DialogTitle>
         <DialogContent>
           <form>
-            <Box display='flex'>
+            <Box display="flex">
               <Grid
                 className={classes.grid}
                 container={true}
-                direction='row'
-                justify='center'
-                alignItems='flex-start'
+                direction="row"
+                justify="center"
+                alignItems="flex-start"
               >
-                <Grid container={true} item={true} md={5} xs='auto'>
+                <Grid container={true} item={true} md={5} xs="auto">
                   <Grid container={true} item={true} xs={12}>
                     <ImageUploadField />
                   </Grid>
-                  <Grid container={true} item={true} xs={12} justify='center' alignItems='center'>
+                  <Grid container={true} item={true} xs={12} justify="center" alignItems="center">
                     <Button
                       className={classes.goBackButton}
-                      variant='contained'
-                      color='primary'
+                      variant="contained"
+                      color="primary"
                       onClick={handleClose}
                     >
                       Go Back
                     </Button>
                     <Button
                       className={classes.createButton}
-                      variant='contained'
-                      color='primary'
+                      variant="contained"
+                      color="primary"
                       onClick={editHandler}
                     >
                       Confirm
                     </Button>
                   </Grid>
                 </Grid>
-                <Grid container={true} item={true} md={7} xs='auto'>
+                <Grid container={true} item={true} md={7} xs="auto">
                   <Grid
                     container={true}
                     item={true}
                     xs={12}
-                    justify='space-between'
-                    direction='column'
+                    justify="space-between"
+                    direction="column"
                   >
                     <MainInfoField />
                   </Grid>

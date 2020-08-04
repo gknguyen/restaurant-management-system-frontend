@@ -15,9 +15,9 @@ export function getAuthenticatedUser() {
   const userDataString = sessionStorage.getItem('user');
   let userData: any = {};
   if (userDataString) {
-     userData = JSON.parse(userDataString);
+    userData = JSON.parse(userDataString);
   }
-//   console.log('userData: ', userData);
+  //   console.log('userData: ', userData);
   if (userData) {
     results.id = userData.id;
     results.role = userData.userType.typeName;

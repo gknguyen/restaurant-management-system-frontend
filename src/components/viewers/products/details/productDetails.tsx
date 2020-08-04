@@ -15,7 +15,7 @@ import * as menuTypeActions from '../../../../redux/reducers/menuTypeReducers/ac
 import * as productActions from '../../../../redux/reducers/productReducers/actions';
 import * as productTypeActions from '../../../../redux/reducers/productTypeReducers/actions';
 import { getProductId } from '../../../utils/localStore';
-import { EditProduct } from '../createAndEdit';
+import EditProduct from '../createAndEdit/editProduct';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,60 +83,60 @@ const ProductDetails: React.FC<Props> = (props) => {
   };
 
   return (
-    <Container maxWidth='xl'>
-      <Grid className={classes.grid} container={true} spacing={2} direction='column'>
+    <Container maxWidth="xl">
+      <Grid className={classes.grid} container={true} spacing={2} direction="column">
         <Grid container={true} item={true} xs={12}>
-          <Typography component='h1' variant='h4'>
+          <Typography component="h1" variant="h4">
             Product Details
           </Typography>
         </Grid>
         <Grid container={true} item={true} xs={12}>
           <Paper className={classes.paper}>
-            <Box display='flex'>
+            <Box display="flex">
               <Grid
                 className={classes.grid}
                 container={true}
                 spacing={3}
-                direction='row'
-                justify='center'
-                alignItems='flex-start'
+                direction="row"
+                justify="center"
+                alignItems="flex-start"
               >
-                <Grid container={true} item={true} spacing={1} md={5} xs='auto'>
+                <Grid container={true} item={true} spacing={1} md={5} xs="auto">
                   <Grid container={true} item={true} xs={12}>
                     <img
-                      alt='Select file'
+                      alt="Select file"
                       className={classes.image}
                       src={props.product.image ? productImageUrl : NO_IMAGE_URL}
                     />
                   </Grid>
-                  <Grid container={true} item={true} xs={12} justify='center' alignItems='flex-end'>
+                  <Grid container={true} item={true} xs={12} justify="center" alignItems="flex-end">
                     <Button
                       className={classes.goBackButton}
-                      variant='contained'
-                      color='primary'
+                      variant="contained"
+                      color="primary"
                       onClick={goBackHandler}
                     >
                       Go Back
                     </Button>
                     <Button
                       className={classes.editButton}
-                      variant='contained'
-                      color='primary'
+                      variant="contained"
+                      color="primary"
                       onClick={editHandler}
                     >
                       Edit
                     </Button>
                   </Grid>
                 </Grid>
-                <Grid container={true} item={true} md={7} xs='auto' spacing={3} direction='column'>
+                <Grid container={true} item={true} md={7} xs="auto" spacing={3} direction="column">
                   <Grid
                     container={true}
                     item={true}
                     xs={12}
-                    justify='center'
-                    alignItems='flex-start'
+                    justify="center"
+                    alignItems="flex-start"
                   >
-                    <Typography component='h1' variant='h4'>
+                    <Typography component="h1" variant="h4">
                       {props.product.name}
                     </Typography>
                   </Grid>
@@ -144,8 +144,8 @@ const ProductDetails: React.FC<Props> = (props) => {
                     container={true}
                     item={true}
                     xs={12}
-                    justify='center'
-                    alignItems='flex-start'
+                    justify="center"
+                    alignItems="flex-start"
                   >
                     <Typography>
                       {props.product.price} {props.product.unit}
@@ -155,18 +155,18 @@ const ProductDetails: React.FC<Props> = (props) => {
                     container={true}
                     item={true}
                     xs={12}
-                    justify='center'
-                    alignItems='flex-start'
+                    justify="center"
+                    alignItems="flex-start"
                   >
                     <Breadcrumbs>
                       {props.productType ? (
-                        <Typography color='textPrimary'>
+                        <Typography color="textPrimary">
                           {props.productType.typeName}
                           {/* {productType.typeName} */}
                         </Typography>
                       ) : null}
                       {props.menuType ? (
-                        <Typography color='textPrimary'>
+                        <Typography color="textPrimary">
                           {props.menuType.typeName}
                           {/* {menuType.typeName} */}
                         </Typography>
@@ -177,8 +177,8 @@ const ProductDetails: React.FC<Props> = (props) => {
                     container={true}
                     item={true}
                     xs={12}
-                    justify='center'
-                    alignItems='flex-start'
+                    justify="center"
+                    alignItems="flex-start"
                   >
                     <Typography>Amount: {props.product.amount}</Typography>
                   </Grid>
@@ -186,8 +186,8 @@ const ProductDetails: React.FC<Props> = (props) => {
                     container={true}
                     item={true}
                     xs={12}
-                    justify='center'
-                    alignItems='flex-start'
+                    justify="center"
+                    alignItems="flex-start"
                   >
                     <Typography>{props.product.description}</Typography>
                   </Grid>

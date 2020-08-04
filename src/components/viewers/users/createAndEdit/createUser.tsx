@@ -14,7 +14,8 @@ import { Image, User, UserType } from '../../../../configs/interfaces';
 import * as imageActions from '../../../../redux/reducers/imageReducers/actions';
 import * as userActions from '../../../../redux/reducers/userReducers/actions';
 import * as userTypeActions from '../../../../redux/reducers/userTypeReducers/actions';
-import { AvatarUploadField, MainInfoField } from './components';
+import AvatarUploadField from './components/avatarUploadField';
+import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -147,41 +148,41 @@ const CreateUser: React.FC<Props> = (props) => {
   };
 
   return (
-    <Container maxWidth='xl'>
-      <Grid className={classes.grid} container={true} spacing={2} direction='column'>
+    <Container maxWidth="xl">
+      <Grid className={classes.grid} container={true} spacing={2} direction="column">
         <Grid container={true} item={true} xs={12}>
-          <Typography component='h1' variant='h4'>
+          <Typography component="h1" variant="h4">
             New User
           </Typography>
         </Grid>
         <Grid container={true} item={true} xs={12}>
           <Paper className={classes.paper}>
             <form>
-              <Box display='flex'>
+              <Box display="flex">
                 <Grid
                   className={classes.grid}
                   container={true}
-                  direction='row'
-                  justify='center'
-                  alignItems='flex-start'
+                  direction="row"
+                  justify="center"
+                  alignItems="flex-start"
                 >
-                  <Grid container={true} item={true} md={5} xs='auto'>
+                  <Grid container={true} item={true} md={5} xs="auto">
                     <Grid container={true} item={true} xs={12}>
                       <AvatarUploadField />
                     </Grid>
-                    <Grid container={true} item={true} xs={12} justify='center' alignItems='center'>
+                    <Grid container={true} item={true} xs={12} justify="center" alignItems="center">
                       <Button
                         className={classes.goBackButton}
-                        variant='contained'
-                        color='primary'
+                        variant="contained"
+                        color="primary"
                         onClick={goBackHandler}
                       >
                         Go Back
                       </Button>
                       <Button
                         className={classes.createButton}
-                        variant='contained'
-                        color='primary'
+                        variant="contained"
+                        color="primary"
                         onClick={createHandler}
                       >
                         Create
@@ -189,8 +190,14 @@ const CreateUser: React.FC<Props> = (props) => {
                     </Grid>
                   </Grid>
 
-                  <Grid container={true} item={true} md={7} xs='auto'>
-                    <Grid container={true} item={true} xs={12} justify='space-between' direction='column'>
+                  <Grid container={true} item={true} md={7} xs="auto">
+                    <Grid
+                      container={true}
+                      item={true}
+                      xs={12}
+                      justify="space-between"
+                      direction="column"
+                    >
                       <MainInfoField />
                     </Grid>
                   </Grid>

@@ -22,7 +22,8 @@ import { validate } from './validate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    padding: '0px 0px 110px 0px',
+    padding: '110px 0px 110px 0px',
+    height: 820,
   },
   paper: {
     display: 'flex',
@@ -90,8 +91,8 @@ const Login: React.FC<Props> = (props) => {
   };
 
   const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const name: string = event.target.name.toString();
-    const value: string = event.target.value.toString();
+    const name = event.target.name.toString();
+    const value = event.target.value.toString();
     loginForm[name] = value;
     console.log('loginForm[' + name + ']: ' + name);
     validateEach(name);
@@ -110,60 +111,60 @@ const Login: React.FC<Props> = (props) => {
   };
 
   return (
-    <Container className={classes.container} component='main' maxWidth='xs'>
+    <Container className={classes.container} component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component='h1' variant='h5'>
+        <Typography component="h1" variant="h5">
           Sign in
         </Typography>
         <form className={classes.form} noValidate={true}>
           <TextField
-            variant='outlined'
-            margin='normal'
+            variant="outlined"
+            margin="normal"
             required={true}
             fullWidth={true}
-            id='username'
-            name='username'
-            label='username'
-            type='text'
-            autoComplete='username'
+            id="username"
+            name="username"
+            label="username"
+            type="text"
+            autoComplete="username"
             autoFocus={true}
             onChange={onInputChangeHandler}
             error={errorMessageUsername ? true : false}
             helperText={errorMessageUsername}
           />
           <TextField
-            variant='outlined'
-            margin='normal'
+            variant="outlined"
+            margin="normal"
             required={true}
             fullWidth={true}
-            id='password'
-            name='password'
-            label='password'
-            type='password'
-            autoComplete='current-password'
+            id="password"
+            name="password"
+            label="password"
+            type="password"
+            autoComplete="current-password"
             onChange={onInputChangeHandler}
             error={errorMessagePassword ? true : false}
             helperText={errorMessagePassword}
           />
           <FormControlLabel
-            control={<Checkbox value='remember' color='primary' />}
-            label='Remember me'
+            control={<Checkbox value="remember" color="primary" />}
+            label="Remember me"
           />
-          <span className='col-3' />
-          <div className='col-7 row'>
-            <span id='loginResult' className={classes.error}>
+          <span className="col-3" />
+          <div className="col-7 row">
+            <span id="loginResult" className={classes.error}>
               {errorMessage}
             </span>
           </div>
           <Button
-            type='submit'
+            type="submit"
             fullWidth={true}
-            variant='contained'
-            color='primary'
+            variant="contained"
+            color="primary"
             className={classes.submit}
             onClick={Login}
           >
@@ -171,13 +172,13 @@ const Login: React.FC<Props> = (props) => {
           </Button>
           <Grid container={true}>
             <Grid item={true} xs={12}>
-              <Link href='#' variant='body2'>
+              <Link href="#" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
             <Grid item={true} xs={12}>
-              <Link href='#' variant='body2'>
-                {'Don\'t have an account? Contact admin for new account'}
+              <Link href="#" variant="body2">
+                {"Don't have an account? Contact admin for new account"}
               </Link>
             </Grid>
           </Grid>

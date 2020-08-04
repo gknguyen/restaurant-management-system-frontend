@@ -3,8 +3,9 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React, { Fragment, Suspense, useState } from 'react';
 import { renderRoutes } from 'react-router-config';
-
-import { NavBar, BottomBar, TopBar } from './components';
+import NavBar from './components/navBar';
+import BottomBar from './components/bottomBar';
+import TopBar from './components/topBar';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -60,9 +61,7 @@ const Dashboard: React.FC = (props: any) => {
           openMobile={openNavBarMobile}
         />
         <main className={classes.content}>
-          <Suspense fallback={<LinearProgress />}>
-            {renderRoutes(route.routes)}
-          </Suspense>
+          <Suspense fallback={<LinearProgress />}>{renderRoutes(route.routes)}</Suspense>
         </main>
       </div>
     </Fragment>

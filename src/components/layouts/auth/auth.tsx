@@ -3,8 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React, { Fragment, Suspense, useState } from 'react';
 import { renderRoutes } from 'react-router-config';
-
-import { TopBar } from './components';
+import TopBar from './components/topBar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -34,9 +33,7 @@ const Auth: React.FC = (props: any) => {
     <Fragment>
       <TopBar />
       <div className={classes.content}>
-        <Suspense fallback={<LinearProgress />}>
-          {renderRoutes(route.routes)}
-        </Suspense>
+        <Suspense fallback={<LinearProgress />}>{renderRoutes(route.routes)}</Suspense>
       </div>
     </Fragment>
   );
