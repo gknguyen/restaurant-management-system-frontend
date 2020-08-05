@@ -8,7 +8,7 @@ import React, { useEffect } from 'react';
 import { Provider as StoreProvider } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { configureStore } from '../redux/store';
+import configureStore from '../redux/configureStore';
 import AppRoutes from './AppRoutes';
 
 const useStyles = makeStyles((theme: Theme) =>

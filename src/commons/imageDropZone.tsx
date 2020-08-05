@@ -7,6 +7,8 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  Box,
+  Grid,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -16,7 +18,9 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { connect } from 'react-redux';
 import bytesToSize from '../components/utils/bytesToSize';
 import { Image } from '../configs/interfaces';
-import * as imageActions from '../redux/reducers/imageReducers/actions';
+import * as imageActions from '../redux/imageReducers/actions';
+import Container from '@material-ui/core/Container';
+import { AWS_S3_BUCKET_URL } from '../configs/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -60,6 +64,7 @@ const ImagesDropZone: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const errorMessage = props.errorMessage;
+  const docImage = `${AWS_S3_BUCKET_URL}/undraw_add_file2_gvbb.svg`;
 
   const [images, setImages] = React.useState(defaultFilesValue);
 
@@ -78,26 +83,19 @@ const ImagesDropZone: React.FC<Props> = (props) => {
   });
 
   return (
-    <div className={classes.root}>
-      <div className={classes.dropZone} {...getRootProps()}>
+    <Container className={classes.root}>
+      <Box className={classes.dropZone} {...getRootProps()}>
         {images.length === 0 ? (
           <Fragment>
-            <input {...getInputProps()} />
-            <Typography className="text-danger">{errorMessage}</Typography>
-            <div>
-              <img
-                alt="Select file"
-                className={classes.image}
-                // src='/images/undraw_add_file2_gvbb.svg'
-                src="https://restaurantmanagementsystem.s3-ap-southeast-1.amazonaws.com/undraw_add_file2_gvbb.svg"
-              />
-            </div>
-            <div>
+            <Grid container={true} direction="column" justify="center" alignItems="center">
+              <input {...getInputProps()} />
+              <img alt="Select file" className={classes.image} src={docImage} />
               <Typography className={classes.info} color="textSecondary" variant="body1">
-                Drop an image here or click <Link underline="always">browse</Link> thorough your
-                computer or laptop
+                Drop an image here or click <Link underline="always">browse</Link>
+                thorough your computer or laptop
               </Typography>
-            </div>
+              <Typography className="text-danger">{errorMessage}</Typography>
+            </Grid>
           </Fragment>
         ) : (
           <Fragment>
@@ -120,8 +118,8 @@ const ImagesDropZone: React.FC<Props> = (props) => {
             </PerfectScrollbar>
           </Fragment>
         )}
-      </div>
-    </div>
+      </Box>
+    </Container>
   );
 };
 

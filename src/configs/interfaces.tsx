@@ -46,10 +46,10 @@ export interface User {
   id: string;
   username: string;
   password: string;
-  fullName: number;
+  fullName: string;
   age: number;
-  phoneNumber: string;
-  email: boolean;
+  phoneNumber: number;
+  email: string;
   avatar: string;
   loginDatetime: Date;
   authToken: string;
@@ -72,4 +72,3 @@ export interface Image {
   type: string;
   path: string;
 }
-

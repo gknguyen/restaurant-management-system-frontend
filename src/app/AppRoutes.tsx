@@ -2,13 +2,13 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import Auth from '../components/layouts/auth/auth';
 import DashBoardLayout from '../components/layouts/dashboard/dashboard';
-import Login from '../components/viewers/login/login';
-import CreateProduct from '../components/viewers/products/createAndEdit/createProduct';
-import ProductDetails from '../components/viewers/products/details/productDetails';
-import ProductList from '../components/viewers/products/list/productList';
-import CreateUser from '../components/viewers/users/createAndEdit/createUser';
-import UserDetails from '../components/viewers/users/details/userDetails';
-import UserList from '../components/viewers/users/list/userList';
+import Login from '../components/views/login/login';
+import CreateProduct from '../components/views/products/createAndEdit/createProduct';
+import ProductDetails from '../components/views/products/details/productDetails';
+import ProductList from '../components/views/products/list/productList';
+import CreateUser from '../components/views/users/createAndEdit/createUser';
+import UserDetails from '../components/views/users/details/userDetails';
+import UserList from '../components/views/users/list/userList';
 
 const routes = [
   /* ================================ Login ================================ */

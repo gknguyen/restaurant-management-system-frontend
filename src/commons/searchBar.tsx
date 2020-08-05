@@ -4,7 +4,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
 import { connect } from 'react-redux';
-import * as productActions from '../redux/reducers/productReducers/actions';
+import * as productActions from '../redux/productReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
