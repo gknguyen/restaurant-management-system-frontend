@@ -1,6 +1,5 @@
 import {
   Button,
-  colors,
   Link,
   List,
   ListItem,
@@ -17,7 +16,6 @@ import { useDropzone } from 'react-dropzone';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { connect } from 'react-redux';
 import bytesToSize from '../components/utils/bytesToSize';
-import { Image } from '../configs/interfaces';
 import * as imageActions from '../redux/imageReducers/actions';
 import Container from '@material-ui/core/Container';
 import { AWS_S3_BUCKET_URL } from '../configs/constants';
@@ -53,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const defaultFilesValue: Image[] = [];
+const defaultFilesValue: File[] = [];
 
 interface Props {
   errorMessage: string;
@@ -68,8 +66,8 @@ const ImagesDropZone: React.FC<Props> = (props) => {
 
   const [images, setImages] = React.useState(defaultFilesValue);
 
-  const handleDrop = useCallback((imageFiles: any[]) => {
-    const imageFile: Image = imageFiles[0];
+  const handleDrop = useCallback((imageFiles: File[]) => {
+    const imageFile = imageFiles[0];
     props.sendImageFiles(imageFile);
     setImages(imageFiles);
   }, []);
@@ -133,7 +131,7 @@ const mapStateToProps = (state: any) => {
 /* Send data to redux store */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    sendImageFiles: (imageFiles: Image) => {
+    sendImageFiles: (imageFiles: File) => {
       dispatch(imageActions.actionReceiveImageFiles(imageFiles));
     },
   };

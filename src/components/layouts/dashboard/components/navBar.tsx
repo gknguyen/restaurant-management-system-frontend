@@ -11,7 +11,7 @@ import navigationRoutes from './navigationRoutes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    height: '100%',
+    height: '93vh',
     overflowY: 'auto',
   },
   content: {

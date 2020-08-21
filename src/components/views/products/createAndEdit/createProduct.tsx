@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../../configs/APIs';
 import Axios from '../../../../configs/axios';
-import { Image, MenuType, Product, ProductType } from '../../../../configs/interfaces';
+import { MenuType, Product, ProductType } from '../../../../configs/interfaces';
 import * as imageActions from '../../../../redux/imageReducers/actions';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
@@ -20,6 +20,7 @@ import DescriptionField from './components/descriptionField';
 import ImageUploadField from './components/imageUploadField';
 import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
+import { HEADER_FILE_UPLOAD } from '../../../../configs/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,6 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const createDataForm: any = {};
+// const createDataForm = new FormData();
 
 interface Props {
   productTypeName: string;
@@ -67,7 +69,7 @@ interface Props {
   unit: string;
   amount: number;
   description: string;
-  productImage: Image;
+  productImage: File;
   getProductTypeList: Function;
   sendProductType: Function;
   getMenuTypeList: Function;
@@ -80,7 +82,6 @@ interface Props {
 const CreateProduct: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
-  const token = getAuthToken();
 
   createDataForm.productTypeName = props.productTypeName;
   createDataForm.menuTypeName = props.menuTypeName;
@@ -90,7 +91,6 @@ const CreateProduct: React.FC<Props> = (props) => {
   createDataForm.amount = props.amount;
   createDataForm.description = props.description;
   createDataForm.image = props.productImage.name;
-  console.log('createDataForm: ', createDataForm);
 
   useEffect(() => {
     props.getProductTypeList();
@@ -108,41 +108,27 @@ const CreateProduct: React.FC<Props> = (props) => {
 
   const createHandler = (event: any) => {
     event.preventDefault();
-    const results = checkValidate(createDataForm, true);
-    if (results) {
+
+    const isOk = checkValidate(createDataForm, true);
+    if (isOk) {
+      const formData = new FormData();
+      formData.append('productTypeName', createDataForm.productTypeName);
+      formData.append('menuTypeName', createDataForm.menuTypeName);
+      formData.append('name', createDataForm.name);
+      formData.append('price', createDataForm.price.toString());
+      formData.append('unit', createDataForm.unit);
+      formData.append('amount', createDataForm.amount.toString());
+      formData.append('description', createDataForm.description);
+      formData.append('image', createDataForm.image);
+      formData.append('files', props.productImage, props.productImage.name);
+
       Axios({
         method: 'POST',
         url: APIs.createOneProductUrl,
-        data: createDataForm,
+        data: formData,
       })
         .then(() => {
-          Axios({
-            method: 'GET',
-            url: APIs.getSignedUrl,
-            params: {
-              fileName: props.productImage.name,
-              fileType: props.productImage.type,
-              folderName: 'products',
-            },
-          })
-            .then((res) => {
-              const signedUrl: string = res.data.values;
-              Axios({
-                method: 'PUT',
-                url: signedUrl,
-                headers: { 'Content-Type': props.productImage.type },
-                data: props.productImage,
-              })
-                .then(() => {
-                  history.push('/menu/productList');
-                })
-                .catch((err) => {
-                  console.log(err.response.data);
-                });
-            })
-            .catch((err) => {
-              console.log(err.response.data);
-            });
+          history.push('/menu/productList');
         })
         .catch((err) => {
           console.log(err.response.data);

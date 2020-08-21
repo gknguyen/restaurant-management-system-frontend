@@ -1,7 +1,6 @@
-import { Image } from '../../configs/interfaces';
 import * as ActionType from '../constant';
 
-export const actionReceiveImageFiles = (imageFile: Image) => {
+export const actionReceiveImageFiles = (imageFile: File) => {
   return (dispatch: any) => {
     dispatch({
       type: ActionType.RECEIVE_IMAGE_FILES,

@@ -18,9 +18,7 @@ const NavigationList = (props: { [x: string]: any; pages: any }) => {
   const { pages, ...rest } = props;
 
   return (
-    <List>
-      {pages.reduce((items: any, page: any) => reduceChildRoutes({ items, page, ...rest }), [])}
-    </List>
+    <List>{pages.reduce((items: any, page: any) => reduceChildRoutes({ items, page, ...rest }), [])}</List>
   );
 };
 

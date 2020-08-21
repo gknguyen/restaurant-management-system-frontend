@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../../configs/APIs';
 import Axios from '../../../../configs/axios';
-import { Image, User, UserType } from '../../../../configs/interfaces';
+import { User, UserType } from '../../../../configs/interfaces';
 import * as imageActions from '../../../../redux/imageReducers/actions';
 import * as userActions from '../../../../redux/userReducers/actions';
 import * as userTypeActions from '../../../../redux/userTypeReducers/actions';
@@ -64,7 +64,7 @@ interface Props {
   age: number;
   phoneNumber: string;
   email: string;
-  avatar: Image;
+  avatar: File;
   getUserTypeList: Function;
   sendUserType: Function;
   sendUser: Function;

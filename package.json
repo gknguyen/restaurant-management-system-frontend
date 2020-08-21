@@ -27,6 +27,8 @@
     "googleapis": "^47.0.0",
     "history": "^4.10.1",
     "http-proxy-middleware": "^1.0.3",
+    "http-status": "^1.4.2",
+    "image-to-blob": "^0.2.0",
     "json2csv": "^4.5.4",
     "material-table": "^1.57.2",
     "moment": "^2.25.3",

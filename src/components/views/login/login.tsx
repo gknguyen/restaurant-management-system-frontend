@@ -10,7 +10,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState, FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../configs/APIs';
@@ -19,11 +19,16 @@ import { loginInputType } from '../../../configs/inputType';
 import { LoginForm, User } from '../../../configs/interfaces';
 import * as userActions from '../../../redux/userReducers/actions';
 import { validate } from './validate';
+import STATUS_CODE from 'http-status';
+import { HTTPdata } from '../../../configs/interfaces';
+import Box from '@material-ui/core/Box';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import clsx from 'clsx';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     padding: '110px 0px 110px 0px',
-    height: 820,
+    height: '88vh',
   },
   paper: {
     display: 'flex',
@@ -38,15 +43,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    background: 'linear-gradient(45deg, #4e342e 30%, #a1887f 90%)',
-    margin: theme.spacing(3, 0, 2),
+    // background: 'linear-gradient(45deg, #4e342e 30%, #a1887f 90%)',
+    margin: theme.spacing(0, 0, 2),
+  },
+  errorFieldHidden: {
+    textAlign: 'center',
+  },
+  errorField: {
+    textAlign: 'center',
+    padding: 10,
+    marginBottom: 20,
+    backgroundColor: '#f9e7e7',
   },
   error: {
-    color: '#ff0000',
+    color: '#e93c84',
     fontSize: '13px',
   },
   floatRight: {
     float: 'right',
+  },
+  progress: {
+    width: '100%',
+    padding: 10,
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
   },
 }));
 
@@ -63,9 +84,11 @@ const Login: React.FC<Props> = (props) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [errorMessageUsername, setErrorMessageUsername] = useState('');
   const [errorMessagePassword, setErrorMessagePassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const Login = (event: any) => {
+  const submitLoginForm = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     const results = validate(loginForm);
     if (results.flag === true) {
       Axios({
@@ -74,19 +97,20 @@ const Login: React.FC<Props> = (props) => {
         data: loginForm,
       })
         .then((res) => {
-          const token = res.data.values;
+          const HTTPdata = res.data as HTTPdata;
+          const token = HTTPdata.values as string;
           sessionStorage.setItem('token', JSON.stringify(token));
           history.push('/admin/home');
         })
-        .catch((error) => {
-          setErrorMessage('Login error');
-          history.push('/auth/login');
+        .catch((err) => {
+          const HTTPdata = err.response.data as HTTPdata;
+          setErrorMessage(HTTPdata.message);
+          setIsLoading(false);
         });
     } else {
-      setErrorMessage('Login error');
       setErrorMessageUsername(results.errorMessagesForm.username);
       setErrorMessagePassword(results.errorMessagesForm.password);
-      history.push('/auth/login');
+      setIsLoading(false);
     }
   };
 
@@ -94,7 +118,7 @@ const Login: React.FC<Props> = (props) => {
     const name = event.target.name.toString();
     const value = event.target.value.toString();
     loginForm[name] = value;
-    console.log('loginForm[' + name + ']: ' + name);
+    // console.log('loginForm[' + name + ']: ' + name);
     validateEach(name);
   };
 
@@ -113,14 +137,17 @@ const Login: React.FC<Props> = (props) => {
   return (
     <Container className={classes.container} component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
+      <Box className={classes.paper}>
+        {/** header */}
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate={true}>
+
+        {/** input */}
+        <form className={classes.form} noValidate={true} onSubmit={submitLoginForm}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -150,23 +177,39 @@ const Login: React.FC<Props> = (props) => {
             error={errorMessagePassword ? true : false}
             helperText={errorMessagePassword}
           />
+
+          {/** check box remember me */}
           <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
-          <span className="col-3" />
-          <div className="col-7 row">
+
+          {/** error message */}
+          <Box className={errorMessage ? classes.errorField : classes.errorFieldHidden}>
             <span id="loginResult" className={classes.error}>
               {errorMessage}
             </span>
-          </div>
-          <Button
-            type="submit"
-            fullWidth={true}
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={Login}
-          >
-            Sign In
-          </Button>
+          </Box>
+
+          {/** submit button */}
+          <input id="login-button" type="submit" style={{ display: 'none' }} />
+          <label htmlFor="login-button">
+            <Button
+              fullWidth={true}
+              variant="contained"
+              color="primary"
+              component="span"
+              className={classes.submit}
+              disabled={isLoading}
+            >
+              {isLoading === false ? (
+                'Sign In'
+              ) : (
+                <Box className={clsx(classes.submit && classes.progress)}>
+                  <LinearProgress />
+                </Box>
+              )}
+            </Button>
+          </label>
+
+          {/** other links */}
           <Grid container={true}>
             <Grid item={true} xs={12}>
               <Link href="#" variant="body2">
@@ -180,7 +223,7 @@ const Login: React.FC<Props> = (props) => {
             </Grid>
           </Grid>
         </form>
-      </div>
+      </Box>
     </Container>
   );
 };

@@ -66,9 +66,8 @@ export interface UserHeadCell {
   label: string;
 }
 
-export interface Image {
-  name: string;
-  size: number;
-  type: string;
-  path: string;
+export interface HTTPdata {
+  code: number;
+  message: string;
+  values: any;
 }

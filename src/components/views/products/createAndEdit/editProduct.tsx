@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as routes from '../../../../configs/APIs';
 import Axios from '../../../../configs/axios';
-import { Image, Product } from '../../../../configs/interfaces';
+import { Product } from '../../../../configs/interfaces';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as productTypeActions from '../../../../redux/productTypeReducers/actions';
@@ -64,7 +64,7 @@ interface Props {
   unit: string;
   amount: number;
   description: string;
-  productImage: Image;
+  productImage: File;
   open: boolean;
   getProductTypeList: Function;
   getMenuTypeList: Function;
