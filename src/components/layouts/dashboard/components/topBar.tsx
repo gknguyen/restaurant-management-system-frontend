@@ -100,12 +100,7 @@ const TopBar = () => {
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer">
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap={true}>

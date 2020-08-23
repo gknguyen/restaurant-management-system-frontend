@@ -14,7 +14,7 @@ import { MenuType, Product, ProductType } from '../../../../configs/interfaces';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as productTypeActions from '../../../../redux/productTypeReducers/actions';
-import { getProductId } from '../../../utils/localStore';
+import { getProductId } from '../../../../configs/localStore';
 import EditProduct from '../createAndEdit/editProduct';
 
 const useStyles = makeStyles((theme: Theme) =>

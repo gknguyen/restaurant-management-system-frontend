@@ -17,6 +17,7 @@ import * as routes from '../../../../configs/APIs';
 import Axios from '../../../../configs/axios';
 import { ProductHeadCell } from '../../../../configs/interfaces';
 import * as productActions from '../../../../redux/productReducers/actions';
+import * as commonActions from '../../../../redux/commonReducers/actions';
 import ProductTable from './components/productTable';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,18 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       flexWrap: 'wrap',
-    },
-    search: {
-      display: 'flex',
-      alignItems: 'center',
-      flexGrow: 1,
-      maxWidth: 480,
-      flexBasis: 480,
-    },
-    searchButton: {
-      background: 'linear-gradient(45deg, #3949ab 30%, #1e88e5 90%)',
-      color: 'white',
-      marginLeft: theme.spacing(2),
     },
     createButton: {
       background: 'linear-gradient(45deg, #00c853 30%, #b2ff59 90%)',
@@ -69,6 +58,7 @@ interface Props {
   sendProductTableHeadCells: Function;
   getProductList: Function;
   searchProductList: Function;
+  sendDisableFlag: Function;
 }
 
 const ProductList: React.FC<Props> = (props) => {
@@ -82,9 +72,7 @@ const ProductList: React.FC<Props> = (props) => {
     props.getProductList();
   }, []);
 
-  const searchHandler = () => {
-    props.searchProductList(props.searchValue);
-  };
+  props.searchProductList(props.searchValue);
 
   const createHandler = () => {
     history.push('/menu/createProduct');
@@ -150,17 +138,7 @@ const ProductList: React.FC<Props> = (props) => {
             </Typography>
           </Grid>
           <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
-            <div className={classes.search}>
-              <SearchBar />
-              <Button
-                className={classes.searchButton}
-                onClick={searchHandler}
-                size="medium"
-                variant="contained"
-              >
-                <SearchIcon />
-              </Button>
-            </div>
+            <SearchBar />
           </Grid>
           <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
             <Button
@@ -194,7 +172,7 @@ const ProductList: React.FC<Props> = (props) => {
 const mapStateToProps = (state: any) => {
   return {
     productIdList: state.productReducer.productIdList,
-    searchValue: state.productReducer.searchValue,
+    searchValue: state.commonReducer.searchValue,
   };
 };
 
@@ -209,6 +187,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     searchProductList: (searchValue: string) => {
       dispatch(productActions.actionSearchProductListUrl(searchValue));
+    },
+    sendDisableFlag: (isDisable: boolean) => {
+      dispatch(commonActions.actionDisableFlag(isDisable));
     },
   };
 };

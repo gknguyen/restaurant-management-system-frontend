@@ -54,13 +54,7 @@ const AvatarUploadField: React.FC = () => {
           Avatar Upload:
         </Typography>
       </Grid>
-      <Grid
-        className={classes.imagesDropZone}
-        container={true}
-        item={true}
-        xs={12}
-        justify="flex-start"
-      >
+      <Grid className={classes.imagesDropZone} container={true} item={true} xs={12} justify="flex-start">
         <ImagesDropZone />
       </Grid>
     </Grid>

@@ -15,7 +15,7 @@ import * as imageActions from '../../../../redux/imageReducers/actions';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as productTypeActions from '../../../../redux/productTypeReducers/actions';
-import { getAuthToken } from '../../../utils/localStore';
+import { getAuthToken } from '../../../../configs/localStore';
 import DescriptionField from './components/descriptionField';
 import ImageUploadField from './components/imageUploadField';
 import MainInfoField from './components/mainInfoField';

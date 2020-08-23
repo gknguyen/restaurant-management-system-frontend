@@ -15,7 +15,7 @@ import React, { Fragment, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { connect } from 'react-redux';
-import bytesToSize from '../components/utils/bytesToSize';
+import { bytesToSize } from '../configs/utils';
 import * as imageActions from '../redux/imageReducers/actions';
 import Container from '@material-ui/core/Container';
 import { AWS_S3_BUCKET_URL } from '../configs/constants';

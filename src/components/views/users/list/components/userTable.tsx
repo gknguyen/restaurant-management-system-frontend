@@ -58,6 +58,16 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const headCells: UserHeadCell[] = [
+  { id: 'username', numeric: false, disablePadding: true, label: 'username' },
+  { id: 'fullName', numeric: true, disablePadding: false, label: 'Name' },
+  { id: 'phoneNumber', numeric: true, disablePadding: false, label: 'Phone' },
+  { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
+  { id: 'activeStatus', numeric: true, disablePadding: false, label: 'Active' },
+  { id: 'loginDatetime', numeric: true, disablePadding: false, label: 'Login At' },
+  { id: 'userTypeName', numeric: true, disablePadding: false, label: 'type' },
+];
+
 interface EnhancedTableProps {
   classes: ReturnType<typeof useStyles>;
   numSelected: number;
@@ -181,7 +191,7 @@ const UserTable: React.FC<TableProps> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const headCells = props.headCells;
+  // const headCells = props.headCells;
   const bodyCells = props.bodyCells;
   console.log('bodyCells: ', bodyCells);
 

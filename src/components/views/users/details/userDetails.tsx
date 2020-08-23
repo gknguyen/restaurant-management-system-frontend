@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { AWS_S3_BUCKET_URL, NO_AVATAR_URL } from '../../../../configs/constants';
 import { User } from '../../../../configs/interfaces';
 import * as userActions from '../../../../redux/userReducers/actions';
-import { getUserId } from '../../../utils/localStore';
+import { getUserId } from '../../../../configs/localStore';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

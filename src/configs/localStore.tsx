@@ -17,7 +17,6 @@ export function getAuthenticatedUser() {
   if (userDataString) {
     userData = JSON.parse(userDataString);
   }
-  //   console.log('userData: ', userData);
   if (userData) {
     results.id = userData.id;
     results.role = userData.userType.typeName;
@@ -35,20 +34,17 @@ export function getAuthenticatedUser() {
 }
 
 export function getAuthToken() {
-  const tokenDataString: string | null = sessionStorage.getItem('token');
-  let token: string | null = null;
-  if (tokenDataString) {
-    token = JSON.parse(tokenDataString);
-  }
+  const tokenDataString = localStorage.getItem('token');
+  const token = tokenDataString ? (JSON.parse(tokenDataString) as string) : '';
   return token;
 }
 
 export function getProductId() {
-  const productId: string | null = sessionStorage.getItem('productId');
+  const productId = sessionStorage.getItem('productId');
   return productId;
 }
 
 export function getUserId() {
-  const userId: string | null = sessionStorage.getItem('userId');
+  const userId = sessionStorage.getItem('userId');
   return userId;
 }

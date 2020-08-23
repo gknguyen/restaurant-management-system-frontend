@@ -1,46 +1,46 @@
 export const errorMessagesForm: any = {};
 
 export const checkValidate = (createDataForm: any, create: boolean) => {
-  let results = true;
+  let result = true;
 
   if (!createDataForm.productTypeName) {
     errorMessagesForm.productTypeName = 'please select product type';
-    results = false;
+    result = false;
   } else {
     errorMessagesForm.productTypeName = null;
   }
 
   if (!createDataForm.menuTypeName) {
     errorMessagesForm.menuTypeName = 'please select menu type';
-    results = false;
+    result = false;
   } else {
     errorMessagesForm.menuTypeName = null;
   }
 
   if (!createDataForm.name) {
     errorMessagesForm.name = 'please input product name';
-    results = false;
+    result = false;
   } else {
     errorMessagesForm.name = null;
   }
 
   if (!createDataForm.price) {
     errorMessagesForm.price = 'please input product price';
-    results = false;
+    result = false;
   } else {
     errorMessagesForm.price = null;
   }
 
   if (!createDataForm.unit) {
     errorMessagesForm.unit = 'please input product unit';
-    results = false;
+    result = false;
   } else {
     errorMessagesForm.unit = null;
   }
 
   if (!createDataForm.amount) {
     errorMessagesForm.amount = 'please input product amount';
-    results = false;
+    result = false;
   } else {
     errorMessagesForm.amount = null;
   }
@@ -48,11 +48,11 @@ export const checkValidate = (createDataForm: any, create: boolean) => {
   if (create) {
     if (!createDataForm.image) {
       errorMessagesForm.image = 'please select product image';
-      results = false;
+      result = false;
     } else {
       errorMessagesForm.image = null;
     }
   }
 
-  return results;
+  return result;
 };

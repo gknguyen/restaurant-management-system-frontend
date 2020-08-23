@@ -1,4 +1,4 @@
-import { trimDate } from '../../components/utils/utils';
+import { trimDate } from '../../configs/utils';
 import * as routes from '../../configs/APIs';
 import Axios from '../../configs/axios';
 import { User, UserHeadCell } from '../../configs/interfaces';
@@ -92,11 +92,11 @@ export const actionReceiveUserTableHeadCells = (headCells: UserHeadCell[]) => {
   };
 };
 
-export const actionReceiveUser = (user: User) => {
+export const actionReceiveUserList = (userList: User[]) => {
   return (dispatch: any) => {
     dispatch({
-      type: ActionType.RECEIVE_USER,
-      data: user,
+      type: ActionType.RECEIVE_USER_LIST,
+      data: userList,
     });
   };
 };
@@ -106,6 +106,15 @@ export const actionReceiveUserIdList = (userIdList: string[]) => {
     dispatch({
       type: ActionType.RECEIVE_USER_ID_LIST,
       data: userIdList,
+    });
+  };
+};
+
+export const actionReceiveUser = (user: User) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: ActionType.RECEIVE_USER,
+      data: user,
     });
   };
 };

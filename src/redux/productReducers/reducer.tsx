@@ -1,7 +1,6 @@
 import * as ActionType from '../constant';
 
 const initialState = {
-  searchValue: '',
   headCells: [],
   productList: [],
   productIdList: [],
@@ -29,10 +28,6 @@ const initialState = {
 const productReducer = (state = initialState, action: any) => {
   /* type - check type of action send to Reducer */
   switch (action.type) {
-    /* return product table head cells */
-    case ActionType.RECEIVE_PRODUCT_SEARCH_VALUE:
-      state.searchValue = action.data;
-      return { ...state };
     /* return product table head cells */
     case ActionType.RECEIVE_PRODUCT_TABLE_HEAD_CELLS:
       state.headCells = action.data;

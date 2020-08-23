@@ -55,6 +55,10 @@ const userReducer = (state = initialState, action: any) => {
     case ActionType.GET_USER:
       state.user = action.data;
       return { ...state };
+    /* return user list value */
+    case ActionType.RECEIVE_USER_LIST:
+      state.userList = action.data;
+      return { ...state };
     /* return user id list value */
     case ActionType.RECEIVE_USER_ID_LIST:
       state.userIdList = action.data;

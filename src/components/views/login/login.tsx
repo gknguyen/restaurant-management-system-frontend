@@ -10,20 +10,21 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import React, { ChangeEvent, useState, FormEvent } from 'react';
+import React, { ChangeEvent, useState, FormEvent, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../configs/APIs';
-import Axios from '../../../configs/axios';
+import Axios, { authPost } from '../../../configs/axios';
 import { loginInputType } from '../../../configs/inputType';
 import { LoginForm, User } from '../../../configs/interfaces';
 import * as userActions from '../../../redux/userReducers/actions';
-import { validate } from './validate';
+import { validate, loginMessagesForm } from './validate';
 import STATUS_CODE from 'http-status';
 import { HTTPdata } from '../../../configs/interfaces';
 import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import clsx from 'clsx';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -86,30 +87,25 @@ const Login: React.FC<Props> = (props) => {
   const [errorMessagePassword, setErrorMessagePassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const submitLoginForm = (event: FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  }, []);
+
+  const submitLoginForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
-    const results = validate(loginForm);
-    if (results.flag === true) {
-      Axios({
-        method: 'POST',
-        url: APIs.loginUrl,
-        data: loginForm,
-      })
-        .then((res) => {
-          const HTTPdata = res.data as HTTPdata;
-          const token = HTTPdata.values as string;
-          sessionStorage.setItem('token', JSON.stringify(token));
-          history.push('/admin/home');
-        })
-        .catch((err) => {
-          const HTTPdata = err.response.data as HTTPdata;
-          setErrorMessage(HTTPdata.message);
-          setIsLoading(false);
-        });
+    if (validate(loginForm)) {
+      const HTTPdata = (await authPost(APIs.loginUrl, loginForm)) as HTTPdata;
+      if (HTTPdata.code === STATUS_CODE.OK) {
+        const token = HTTPdata.values as string;
+        localStorage.setItem('token', JSON.stringify(token));
+        history.push('/admin/home');
+        window.location.reload(true);
+      }
     } else {
-      setErrorMessageUsername(results.errorMessagesForm.username);
-      setErrorMessagePassword(results.errorMessagesForm.password);
+      setErrorMessageUsername(loginMessagesForm.username);
+      setErrorMessagePassword(loginMessagesForm.password);
       setIsLoading(false);
     }
   };
@@ -118,7 +114,6 @@ const Login: React.FC<Props> = (props) => {
     const name = event.target.name.toString();
     const value = event.target.value.toString();
     loginForm[name] = value;
-    // console.log('loginForm[' + name + ']: ' + name);
     validateEach(name);
   };
 
@@ -130,6 +125,8 @@ const Login: React.FC<Props> = (props) => {
         break;
       case loginInputType.password:
         setErrorMessagePassword('');
+        break;
+      default:
         break;
     }
   };

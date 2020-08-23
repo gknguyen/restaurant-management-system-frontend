@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, Typography } from '@material-ui/core';
-import useRouter from '../../components/utils/userRouter';
+import useRouter from '../../configs/userRouter';
 import NavigationListItem from './components/navigationListItem';
 
 const useStyles = makeStyles((theme) => ({

@@ -9,6 +9,7 @@ import ProductList from '../components/views/products/list/productList';
 import CreateUser from '../components/views/users/createAndEdit/createUser';
 import UserDetails from '../components/views/users/details/userDetails';
 import UserList from '../components/views/users/list/userList';
+import Logout from '../components/views/login/logout';
 
 const routes = [
   /* ================================ Login ================================ */
@@ -25,6 +26,11 @@ const routes = [
         path: '/auth/login',
         exact: true,
         component: Login,
+      },
+      {
+        path: '/auth/logout',
+        exact: true,
+        component: Logout,
       },
     ],
   },

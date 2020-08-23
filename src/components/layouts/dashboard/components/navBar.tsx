@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { Fragment, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Navigation from '../../../../commons/navigation/navigation';
-import useRouter from '../../../utils/userRouter';
+import useRouter from '../../../../configs/userRouter';
 import navigationRoutes from './navigationRoutes';
 
 const useStyles = makeStyles((theme: Theme) => ({

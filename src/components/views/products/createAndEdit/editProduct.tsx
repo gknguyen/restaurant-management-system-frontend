@@ -11,12 +11,12 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as routes from '../../../../configs/APIs';
-import Axios from '../../../../configs/axios';
+import api from '../../../../configs/axios';
 import { Product } from '../../../../configs/interfaces';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as productTypeActions from '../../../../redux/productTypeReducers/actions';
-import { getAuthToken, getProductId } from '../../../utils/localStore';
+import { getAuthToken, getProductId } from '../../../../configs/localStore';
 import DescriptionField from './components/descriptionField';
 import ImageUploadField from './components/imageUploadField';
 import MainInfoField from './components/mainInfoField';
@@ -104,7 +104,7 @@ const EditProduct: React.FC<Props> = (props) => {
     event.preventDefault();
     const results = checkValidate(editDataForm, false);
     if (results) {
-      Axios({
+      api({
         method: 'PUT',
         url: routes.editOneProductUrl,
         params: { productId },
@@ -113,7 +113,7 @@ const EditProduct: React.FC<Props> = (props) => {
         .then(() => {
           console.log('props.productImage: ', props.productImage);
           if (props.productImage.name) {
-            Axios({
+            api({
               method: 'GET',
               url: routes.getSignedUrl,
               params: {
@@ -124,7 +124,7 @@ const EditProduct: React.FC<Props> = (props) => {
             })
               .then((res) => {
                 const signedUrl: string = res.data.values;
-                Axios({
+                api({
                   method: 'PUT',
                   url: signedUrl,
                   headers: { 'Content-Type': props.productImage.type },

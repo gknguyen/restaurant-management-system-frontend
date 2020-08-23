@@ -1,30 +1,23 @@
-import { loginInputType } from '../../../configs/inputType';
 import { LoginForm } from '../../../configs/interfaces';
 
-interface Results {
-  flag: boolean;
-  errorMessagesForm: LoginForm;
-}
+export const loginMessagesForm: any = {};
 
 export const validate = (loginForm: LoginForm) => {
-  const results = {
-    flag: true,
-    errorMessagesForm: {},
-  } as Results;
+  let result = true;
 
   if (!loginForm.username) {
-    results.errorMessagesForm.username = 'please input your username';
-    results.flag = false;
+    loginMessagesForm.username = 'please input your username';
+    result = false;
   } else {
-    results.errorMessagesForm.username = '';
+    loginMessagesForm.username = '';
   }
 
   if (!loginForm.password) {
-    results.errorMessagesForm.password = 'please input your password';
-    results.flag = false;
+    loginMessagesForm.password = 'please input your password';
+    result = false;
   } else {
-    results.errorMessagesForm.password = '';
+    loginMessagesForm.password = '';
   }
 
-  return results;
+  return result;
 };

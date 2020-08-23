@@ -13,9 +13,12 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import SearchBar from '../../../../commons/searchBar';
-import { UserHeadCell } from '../../../../configs/interfaces';
+import { UserHeadCell, HTTPdata, User } from '../../../../configs/interfaces';
 import * as userActions from '../../../../redux/userReducers/actions';
 import UserTable from './components/userTable';
+import { apiPost, apiGet } from '../../../../configs/axios';
+import * as APIs from '../../../../configs/APIs';
+import { trimDate } from '../../../../configs/utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,21 +54,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const userHeadCells: UserHeadCell[] = [
-  { id: 'username', numeric: false, disablePadding: true, label: 'username' },
-  { id: 'fullName', numeric: true, disablePadding: false, label: 'Name' },
-  { id: 'phoneNumber', numeric: true, disablePadding: false, label: 'Phone' },
-  { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
-  { id: 'activeStatus', numeric: true, disablePadding: false, label: 'Active' },
-  { id: 'loginDatetime', numeric: true, disablePadding: false, label: 'Login At' },
-  { id: 'userTypeName', numeric: true, disablePadding: false, label: 'type' },
-];
-
 interface Props {
   searchValue: string;
   sendUserTableHeadCells: Function;
   getUserList: Function;
   searchUserList: Function;
+  sendUserList: Function;
 }
 
 const UserList: React.FC<Props> = (props) => {
@@ -75,8 +69,24 @@ const UserList: React.FC<Props> = (props) => {
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    props.sendUserTableHeadCells(userHeadCells);
-    props.getUserList();
+    apiGet(APIs.getListUserUrl).then((HTTPdata) => {
+      const userList: User[] = [];
+      const serverUserList: any[] = HTTPdata.values;
+      serverUserList.map((serverUser) => {
+        const user = {
+          id: serverUser.id || null,
+          username: serverUser.username || null,
+          fullName: serverUser.fullName || null,
+          phoneNumber: serverUser.phoneNumber || null,
+          email: serverUser.email || null,
+          activeStatus: serverUser.activeStatus || null,
+          loginDatetime: serverUser.loginDatetime ? trimDate(serverUser.loginDatetime, 20) : null,
+          userTypeName: serverUser.userType.typeName || null,
+        } as User;
+        userList.push(user);
+      });
+      props.sendUserList(userList);
+    });
   }, []);
 
   const searchHandler = () => {};
@@ -187,6 +197,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     searchUserList: (searchValue: string) => {
       dispatch(userActions.actionSearchUserListUrl(searchValue));
+    },
+    sendUserList: (userList: User[]) => {
+      dispatch(userActions.actionReceiveUserList(userList));
     },
   };
 };
