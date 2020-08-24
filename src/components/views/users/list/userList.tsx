@@ -15,6 +15,7 @@ import { useHistory } from 'react-router-dom';
 import SearchBar from '../../../../commons/searchBar';
 import { UserHeadCell, HTTPdata, User } from '../../../../configs/interfaces';
 import * as userActions from '../../../../redux/userReducers/actions';
+import * as commonActions from '../../../../redux/commonReducers/actions';
 import UserTable from './components/userTable';
 import { apiPost, apiGet } from '../../../../configs/axios';
 import * as APIs from '../../../../configs/APIs';
@@ -36,18 +37,18 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 480,
       flexBasis: 480,
     },
-    searchButton: {
-      background: 'linear-gradient(45deg, #3949ab 30%, #1e88e5 90%)',
-      color: 'white',
-      marginLeft: theme.spacing(2),
-    },
+    // searchButton: {
+    //   background: 'linear-gradient(45deg, #3949ab 30%, #1e88e5 90%)',
+    //   color: 'white',
+    //   marginLeft: theme.spacing(2),
+    // },
     createButton: {
-      background: 'linear-gradient(45deg, #00c853 30%, #b2ff59 90%)',
+      // background: 'linear-gradient(45deg, #00c853 30%, #b2ff59 90%)',
       color: 'white',
       marginLeft: theme.spacing(2),
     },
     deleteButton: {
-      background: 'linear-gradient(45deg, #ff1744 30%, #ff8a80 90%)',
+      // background: 'linear-gradient(45deg, #ff1744 30%, #ff8a80 90%)',
       color: 'white',
       marginLeft: theme.spacing(2),
     },
@@ -56,10 +57,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   searchValue: string;
+  isDisable: boolean;
   sendUserTableHeadCells: Function;
   getUserList: Function;
   searchUserList: Function;
   sendUserList: Function;
+  sendDisableFlag: Function;
 }
 
 const UserList: React.FC<Props> = (props) => {
@@ -69,6 +72,7 @@ const UserList: React.FC<Props> = (props) => {
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
+    props.sendDisableFlag(true);
     apiGet(APIs.getListUserUrl).then((HTTPdata) => {
       const userList: User[] = [];
       const serverUserList: any[] = HTTPdata.values;
@@ -86,6 +90,7 @@ const UserList: React.FC<Props> = (props) => {
         userList.push(user);
       });
       props.sendUserList(userList);
+      props.sendDisableFlag(false);
     });
   }, []);
 
@@ -139,17 +144,7 @@ const UserList: React.FC<Props> = (props) => {
             </Typography>
           </Grid>
           <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
-            <div className={classes.search}>
-              <SearchBar />
-              <Button
-                className={classes.searchButton}
-                onClick={searchHandler}
-                size="medium"
-                variant="contained"
-              >
-                <SearchIcon />
-              </Button>
-            </div>
+            <SearchBar />
           </Grid>
           <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
             <Button
@@ -157,6 +152,8 @@ const UserList: React.FC<Props> = (props) => {
               onClick={createHandler}
               size="medium"
               variant="contained"
+              color="primary"
+              disabled={props.isDisable}
             >
               Create
             </Button>
@@ -165,6 +162,8 @@ const UserList: React.FC<Props> = (props) => {
               onClick={handleClickOpen}
               size="medium"
               variant="contained"
+              color="secondary"
+              disabled={props.isDisable}
             >
               Delete
             </Button>
@@ -182,16 +181,17 @@ const UserList: React.FC<Props> = (props) => {
 /* collect data from redux store */
 const mapStateToProps = (state: any) => {
   return {
-    searchValue: state.productReducer.searchValue,
+    searchValue: state.commonReducer.searchValue,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 
 /* Send data to redux store */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    sendUserTableHeadCells: (headCells: UserHeadCell[]) => {
-      dispatch(userActions.actionReceiveUserTableHeadCells(headCells));
-    },
+    // sendUserTableHeadCells: (headCells: UserHeadCell[]) => {
+    //   dispatch(userActions.actionReceiveUserTableHeadCells(headCells));
+    // },
     getUserList: () => {
       dispatch(userActions.actionGetUserListUrl());
     },
@@ -200,6 +200,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     sendUserList: (userList: User[]) => {
       dispatch(userActions.actionReceiveUserList(userList));
+    },
+    sendDisableFlag: (isDisable: boolean) => {
+      dispatch(commonActions.actionDisableFlag(isDisable));
     },
   };
 };

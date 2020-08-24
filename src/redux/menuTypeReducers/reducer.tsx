@@ -23,6 +23,10 @@ const menuTypeReducer = (state = initialState, action: any) => {
     case ActionType.GET_MENU_TYPE_ID:
       state.menuType.id = action.data;
       return { ...state };
+    /* return menu type list */
+    case ActionType.RECEIVE_MENU_TYPE_LIST:
+      state.menuTypeList = action.data;
+      return { ...state };
     /* return product type */
     case ActionType.RECEIVE_MENU_TYPE:
       state.menuType.id = action.data.id;

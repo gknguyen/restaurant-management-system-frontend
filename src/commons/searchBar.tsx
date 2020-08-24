@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import * as commonActions from '../redux/commonReducers/actions';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-import { Box, LinearProgress } from '@material-ui/core';
+import { Box, LinearProgress, CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,9 +27,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: '#FFFFFF',
   },
   searchButton: {
-    background: 'linear-gradient(45deg, #3949ab 30%, #1e88e5 90%)',
+    // background: 'linear-gradient(45deg, #3949ab 30%, #1e88e5 90%)',
     color: 'white',
     marginLeft: theme.spacing(2),
+  },
+  progressCircular: {
+    // color: '#6798e5',
+    animationDuration: '550ms',
   },
 }));
 
@@ -51,6 +55,7 @@ const SearchBar: React.FC<Props> = (props) => {
   const searchHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // props.searchProductList(props.searchValue);
+    props.sendDisableFlag(true);
     props.sendSearchValue(searchValue);
   };
 
@@ -66,9 +71,6 @@ const SearchBar: React.FC<Props> = (props) => {
           onChange={changeHandler}
         />
       </Grid>
-      {/* <Button className={classes.searchButton} onClick={searchHandler} size="medium" variant="contained">
-        <SearchIcon />
-      </Button> */}
 
       {/** submit button */}
       <input id="search-button" type="submit" style={{ display: 'none' }} />
@@ -78,10 +80,21 @@ const SearchBar: React.FC<Props> = (props) => {
           variant="contained"
           size="medium"
           component="span"
+          color="primary"
           className={classes.searchButton}
           disabled={props.isDisable}
         >
-          {!props.isDisable ? <SearchIcon /> : <LinearProgress />}
+          {!props.isDisable ? (
+            <SearchIcon />
+          ) : (
+            <CircularProgress
+              className={classes.progressCircular}
+              variant="indeterminate"
+              disableShrink
+              size={24}
+              thickness={4}
+            />
+          )}
         </Button>
       </label>
     </form>

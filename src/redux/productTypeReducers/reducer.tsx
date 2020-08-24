@@ -23,6 +23,10 @@ const productTypeReducer = (state = initialState, action: any) => {
     case ActionType.GET_PRODUCT_TYPE_ID:
       state.productType.id = action.data;
       return { ...state };
+    /* return product type list */
+    case ActionType.RECEIVE_PRODUCT_TYPE_LIST:
+      state.productTypeList = action.data;
+      return { ...state };
     /* return product type */
     case ActionType.RECEIVE_PRODUCT_TYPE:
       state.productType.id = action.data.id;

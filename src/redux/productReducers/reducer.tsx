@@ -40,6 +40,10 @@ const productReducer = (state = initialState, action: any) => {
     case ActionType.GET_PRODUCT:
       state.product = action.data;
       return { ...state };
+    /* return product list */
+    case ActionType.RECEIVE_PRODUCT_LIST:
+      state.productList = action.data;
+      return { ...state };
     /* return product id list value */
     case ActionType.RECEIVE_PRODUCT_ID_LIST:
       state.productIdList = action.data;

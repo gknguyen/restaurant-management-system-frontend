@@ -144,6 +144,19 @@ export const actionReceiveProductTableHeadCells = (headCells: ProductHeadCell[])
 
 /* =============================================================================== */
 /*
+ receive product list
+*/
+export const actionReceiveProductList = (productList: Product[]) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: ActionType.RECEIVE_PRODUCT_LIST,
+      data: productList,
+    });
+  };
+};
+
+/* =============================================================================== */
+/*
  receive product id list
 */
 export const actionReceiveProductIdList = (productIdList: string[]) => {

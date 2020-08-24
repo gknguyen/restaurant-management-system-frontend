@@ -10,17 +10,18 @@ import Typography from '@material-ui/core/Typography';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import * as routes from '../../../../configs/APIs';
-import api from '../../../../configs/axios';
-import { Product } from '../../../../configs/interfaces';
+import api, { apiGet } from '../../../../configs/axios';
+import { Product, ProductType, MenuType } from '../../../../configs/interfaces';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as productTypeActions from '../../../../redux/productTypeReducers/actions';
+import * as commonActions from '../../../../redux/commonReducers/actions';
 import { getAuthToken, getProductId } from '../../../../configs/localStore';
 import DescriptionField from './components/descriptionField';
 import ImageUploadField from './components/imageUploadField';
 import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
+import * as APIs from '../../../../configs/APIs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,12 +43,12 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: '0 5px 5px 5px',
     },
     createButton: {
-      background: 'linear-gradient(45deg, #00c853 30%, #b2ff59 90%)',
+      // background: 'linear-gradient(45deg, #00c853 30%, #b2ff59 90%)',
       color: 'white',
       margin: '10px',
     },
     goBackButton: {
-      background: 'linear-gradient(45deg, #424242 30%, #9e9e9e 90%)',
+      // background: 'linear-gradient(45deg, #424242 30%, #9e9e9e 90%)',
       color: 'white',
       margin: '10px',
     },
@@ -66,11 +67,15 @@ interface Props {
   description: string;
   productImage: File;
   open: boolean;
+  isDisable: boolean;
   getProductTypeList: Function;
+  sendProductTypeList: Function;
   getMenuTypeList: Function;
+  sendMenuTypeList: Function;
   sendEditOpenFlag: Function;
   sendProductId: Function;
   sendErrorMessageForm: Function;
+  sendDisableFlag: Function;
 }
 
 const EditProduct: React.FC<Props> = (props) => {
@@ -78,8 +83,6 @@ const EditProduct: React.FC<Props> = (props) => {
   const history = useHistory();
   const token = getAuthToken();
   const productId = getProductId();
-
-  const open: boolean = props.open;
 
   editDataForm.productTypeId = props.productTypeId;
   editDataForm.menuTypeId = props.menuTypeId;
@@ -91,8 +94,10 @@ const EditProduct: React.FC<Props> = (props) => {
   console.log('editDataForm: ', editDataForm);
 
   useEffect(() => {
-    props.getProductTypeList();
-    props.getMenuTypeList();
+    apiGet(APIs.getListProductTypeUrl).then((HTTPdata) =>
+      props.sendProductTypeList(HTTPdata.values),
+    );
+    apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => props.sendMenuTypeList(HTTPdata.values));
   }, []);
 
   const handleClose = () => {
@@ -106,7 +111,7 @@ const EditProduct: React.FC<Props> = (props) => {
     if (results) {
       api({
         method: 'PUT',
-        url: routes.editOneProductUrl,
+        url: APIs.editOneProductUrl,
         params: { productId },
         data: editDataForm,
       })
@@ -115,7 +120,7 @@ const EditProduct: React.FC<Props> = (props) => {
           if (props.productImage.name) {
             api({
               method: 'GET',
-              url: routes.getSignedUrl,
+              url: APIs.getSignedUrl,
               params: {
                 fileName: props.productImage.name,
                 fileType: props.productImage.type,
@@ -166,7 +171,7 @@ const EditProduct: React.FC<Props> = (props) => {
         className={classes.dialog}
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
-        open={open}
+        open={props.open}
         maxWidth="md"
       >
         <DialogTitle id="customized-dialog-title">
@@ -192,7 +197,7 @@ const EditProduct: React.FC<Props> = (props) => {
                     <Button
                       className={classes.goBackButton}
                       variant="contained"
-                      color="primary"
+                      color="secondary"
                       onClick={handleClose}
                     >
                       Go Back
@@ -208,7 +213,13 @@ const EditProduct: React.FC<Props> = (props) => {
                   </Grid>
                 </Grid>
                 <Grid container={true} item={true} md={7} xs="auto">
-                  <Grid container={true} item={true} xs={12} justify="space-between" direction="column">
+                  <Grid
+                    container={true}
+                    item={true}
+                    xs={12}
+                    justify="space-between"
+                    direction="column"
+                  >
                     <MainInfoField />
                   </Grid>
                   <Grid container={true} item={true} xs={12}>
@@ -236,6 +247,7 @@ const mapStateToProps = (state: any) => {
     description: state.productReducer.product.description,
     productImage: state.imageReducer.imageFile,
     open: state.productReducer.open,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 
@@ -245,8 +257,14 @@ const mapDispatchToProps = (dispatch: any) => {
     getProductTypeList: () => {
       dispatch(productTypeActions.actionGetProductTypeListUrl());
     },
+    sendProductTypeList: (productTypeList: ProductType[]) => {
+      dispatch(productTypeActions.actionReceiveProductTypeList(productTypeList));
+    },
     getMenuTypeList: () => {
       dispatch(menuTypeActions.actionGetMenuTypeListUrl());
+    },
+    sendMenuTypeList: (menuTypeList: MenuType[]) => {
+      dispatch(menuTypeActions.actionReceiveMenuTypeList(menuTypeList));
     },
     sendEditOpenFlag: (open: boolean) => {
       dispatch(productActions.actionReceiveEditOpenFlag(open));
@@ -256,6 +274,11 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     sendErrorMessageForm: (errorMessagesForm: Product) => {
       dispatch(productActions.actionReceiveErrorMessages(errorMessagesForm));
+    },
+
+    /** common */
+    sendDisableFlag: (isDisable: boolean) => {
+      dispatch(commonActions.actionDisableFlag(isDisable));
     },
   };
 };

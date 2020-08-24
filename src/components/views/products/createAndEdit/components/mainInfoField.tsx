@@ -74,9 +74,6 @@ const MainInfoField: React.FC<Props> = (props) => {
   const [unit, setUnit] = React.useState(mainDefaultValues.unit);
   const [amount, setAmount] = React.useState(mainDefaultValues.amount);
 
-  props.sendProductTypeName(productTypeName);
-  props.sendMenuTypeName(menuTypeName);
-
   const productTypeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProductTypeName(event.target.value);
     const productType = { typeName: event.target.value };
@@ -94,9 +91,9 @@ const MainInfoField: React.FC<Props> = (props) => {
     props.sendName(event.target.value);
     props.sendErrorMessageName('');
   };
-  const priceChangeHandler = (event: any) => {
-    setPrice(event.target.value);
-    props.sendPrice(event.target.value);
+  const priceChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPrice(parseFloat(event.target.value));
+    props.sendPrice(parseFloat(event.target.value));
     props.sendErrorMessagePrice('');
   };
   const unitChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,9 +101,9 @@ const MainInfoField: React.FC<Props> = (props) => {
     props.sendUnit(event.target.value);
     props.sendErrorMessageUnit('');
   };
-  const amountChangeHandler = (event: any) => {
-    setAmount(event.target.value);
-    props.sendAmount(event.target.value);
+  const amountChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(parseInt(event.target.value));
+    props.sendAmount(parseInt(event.target.value));
     props.sendErrorMessageAmount('');
   };
 
@@ -127,7 +124,6 @@ const MainInfoField: React.FC<Props> = (props) => {
             id="outlined-select-required"
             label="Product Type"
             value={productTypeName}
-            defaultValue={productTypeName}
             variant="outlined"
             margin="dense"
             onChange={productTypeChangeHandler}
@@ -150,7 +146,6 @@ const MainInfoField: React.FC<Props> = (props) => {
             id="outlined-select-required"
             label="Menu Type"
             value={menuTypeName}
-            defaultValue={menuTypeName}
             variant="outlined"
             margin="dense"
             onChange={menuTypeChangeHandler}
@@ -173,7 +168,6 @@ const MainInfoField: React.FC<Props> = (props) => {
           id="outlined-required"
           label="Name"
           value={name}
-          defaultValue={mainDefaultValues.name}
           variant="outlined"
           margin="dense"
           onChange={nameChangeHandler}
@@ -187,7 +181,6 @@ const MainInfoField: React.FC<Props> = (props) => {
           id="outlined-required"
           label="Price"
           value={price}
-          defaultValue={mainDefaultValues.price}
           variant="outlined"
           margin="dense"
           type="number"
@@ -202,7 +195,6 @@ const MainInfoField: React.FC<Props> = (props) => {
           id="outlined-required"
           label="Unit"
           value={unit}
-          defaultValue={mainDefaultValues.unit}
           variant="outlined"
           margin="dense"
           onChange={unitChangeHandler}
@@ -216,7 +208,6 @@ const MainInfoField: React.FC<Props> = (props) => {
           id="outlined-required"
           label="Amount"
           value={amount}
-          defaultValue={mainDefaultValues.amount}
           variant="outlined"
           margin="dense"
           type="number"

@@ -58,6 +58,16 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const headCells: ProductHeadCell[] = [
+  { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
+  { id: 'price', numeric: true, disablePadding: false, label: 'Price' },
+  { id: 'unit', numeric: true, disablePadding: false, label: 'Unit' },
+  { id: 'amount', numeric: true, disablePadding: false, label: 'Amount' },
+  { id: 'active', numeric: true, disablePadding: false, label: 'Active' },
+  { id: 'productTypeName', numeric: true, disablePadding: false, label: 'Type' },
+  { id: 'menuTypeName', numeric: true, disablePadding: false, label: 'Menu' },
+];
+
 interface EnhancedTableProps {
   classes: ReturnType<typeof useStyles>;
   numSelected: number;
@@ -181,7 +191,7 @@ const ProductTable: React.FC<TableProps> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const headCells = props.headCells;
+  // const headCells = props.headCells;
   const bodyCells = props.bodyCells;
 
   const [order, setOrder] = React.useState<Order>('asc');

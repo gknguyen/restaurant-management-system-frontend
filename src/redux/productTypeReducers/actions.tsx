@@ -40,6 +40,15 @@ export const actionGetProductTypeIdUrl = (productTypeName: string) => {
   };
 };
 
+export const actionReceiveProductTypeList = (productTypeList: ProductType[]) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: ActionType.RECEIVE_PRODUCT_TYPE_LIST,
+      data: productTypeList,
+    });
+  };
+};
+
 export const actionReceiveProductType = (productType: ProductType) => {
   return (dispatch: any) => {
     dispatch({

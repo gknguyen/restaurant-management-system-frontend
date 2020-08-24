@@ -3,7 +3,7 @@ import { getAuthToken } from './localStore';
 import STATUS_CODE from 'http-status';
 import { HTTPdata } from './interfaces';
 import { showSnackBarAlert, logout } from './utils';
-import { HTTP } from './messages';
+import MESSAGE from './messages';
 import getHistory from './myHistory';
 
 /** ================================================================================== */
@@ -42,7 +42,7 @@ api.interceptors.request.use(
   function(config) {
     if (!config.headers.token) {
       window.location.replace('/auth/logout');
-      showSnackBarAlert(60000, 'error', HTTP.ERROR_401_MESSAGE + ' : token not found');
+      showSnackBarAlert(60000, 'error', MESSAGE.HTTP.ERROR_401 + ' : token not found');
     }
     return config;
   },
@@ -109,22 +109,22 @@ function handleApiError(err: any) {
   switch (err.response.status) {
     case STATUS_CODE.UNAUTHORIZED:
       window.location.replace('/auth/logout');
-      showSnackBarAlert(60000, 'error', HTTP.ERROR_401_MESSAGE + ' : ' + HTTPdata.message);
+      showSnackBarAlert(60000, 'error', MESSAGE.HTTP.ERROR_401 + ' : ' + HTTPdata.message);
       break;
     case STATUS_CODE.PRECONDITION_FAILED:
-      showSnackBarAlert(10000, 'error', HTTP.ERROR_412_MESSAGE + ' : ' + HTTPdata.message);
+      showSnackBarAlert(10000, 'error', MESSAGE.HTTP.ERROR_412 + ' : ' + HTTPdata.message);
       break;
     case STATUS_CODE.FORBIDDEN:
-      showSnackBarAlert(10000, 'error', HTTP.ERROR_403_MESSAGE + ' : ' + HTTPdata.message);
+      showSnackBarAlert(10000, 'error', MESSAGE.HTTP.ERROR_403 + ' : ' + HTTPdata.message);
       break;
     case STATUS_CODE.NOT_FOUND:
-      showSnackBarAlert(10000, 'error', HTTP.ERROR_404_MESSAGE + ' : ' + HTTPdata.message);
+      showSnackBarAlert(10000, 'error', MESSAGE.HTTP.ERROR_404 + ' : ' + HTTPdata.message);
       break;
     case STATUS_CODE.INTERNAL_SERVER_ERROR:
-      showSnackBarAlert(10000, 'error', HTTP.ERROR_500_MESSAGE + ' : ' + HTTPdata.message);
+      showSnackBarAlert(10000, 'error', MESSAGE.HTTP.ERROR_500 + ' : ' + HTTPdata.message);
       break;
     default:
-      showSnackBarAlert(10000, 'error', HTTP.ERROR_500_MESSAGE + ' : ' + HTTPdata.message);
+      showSnackBarAlert(10000, 'error', MESSAGE.HTTP.ERROR_500 + ' : ' + HTTPdata.message);
       break;
   }
   return HTTPdata;

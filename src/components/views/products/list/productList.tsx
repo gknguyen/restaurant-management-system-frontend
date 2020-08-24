@@ -14,11 +14,13 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import SearchBar from '../../../../commons/searchBar';
 import * as routes from '../../../../configs/APIs';
-import Axios from '../../../../configs/axios';
-import { ProductHeadCell } from '../../../../configs/interfaces';
+import Axios, { apiGet, apiDelete } from '../../../../configs/axios';
+import { ProductHeadCell, Product, HTTPdata } from '../../../../configs/interfaces';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as commonActions from '../../../../redux/commonReducers/actions';
 import ProductTable from './components/productTable';
+import * as APIs from '../../../../configs/APIs';
+import { showSnackBarAlert } from '../../../../configs/utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,33 +32,25 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: 'wrap',
     },
     createButton: {
-      background: 'linear-gradient(45deg, #00c853 30%, #b2ff59 90%)',
+      // background: 'linear-gradient(45deg, #00c853 30%, #b2ff59 90%)',
       color: 'white',
       marginLeft: theme.spacing(2),
     },
     deleteButton: {
-      background: 'linear-gradient(45deg, #ff1744 30%, #ff8a80 90%)',
+      // background: 'linear-gradient(45deg, #ff1744 30%, #ff8a80 90%)',
       color: 'white',
       marginLeft: theme.spacing(2),
     },
   }),
 );
 
-const productHeadCells: ProductHeadCell[] = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-  { id: 'price', numeric: true, disablePadding: false, label: 'Price' },
-  { id: 'unit', numeric: true, disablePadding: false, label: 'Unit' },
-  { id: 'amount', numeric: true, disablePadding: false, label: 'Amount' },
-  { id: 'active', numeric: true, disablePadding: false, label: 'Active' },
-  { id: 'productTypeName', numeric: true, disablePadding: false, label: 'Type' },
-  { id: 'menuTypeName', numeric: true, disablePadding: false, label: 'Menu' },
-];
-
 interface Props {
   searchValue: string;
   productIdList: string[];
+  isDisable: boolean;
   sendProductTableHeadCells: Function;
   getProductList: Function;
+  sendProductList: Function;
   searchProductList: Function;
   sendDisableFlag: Function;
 }
@@ -68,29 +62,45 @@ const ProductList: React.FC<Props> = (props) => {
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    props.sendProductTableHeadCells(productHeadCells);
-    props.getProductList();
+    props.sendDisableFlag(true);
   }, []);
 
-  props.searchProductList(props.searchValue);
+  if (props.searchValue) {
+    apiGet(APIs.searchListProductUrl, { searchValue: props.searchValue }).then((HTTPdata) =>
+      processDataToTable(HTTPdata),
+    );
+  } else {
+    apiGet(APIs.getListProductUrl).then((HTTPdata) => processDataToTable(HTTPdata));
+  }
+
+  const processDataToTable = (HTTPdata: HTTPdata) => {
+    const productList: Product[] = [];
+    const serverProductList: any[] = HTTPdata.values;
+    serverProductList.forEach((serverProduct) => {
+      const product = {
+        id: serverProduct.id || null,
+        name: serverProduct.name || null,
+        price: serverProduct.price || null,
+        unit: serverProduct.unit || null,
+        amount: serverProduct.amount || null,
+        active: serverProduct.activeStatus || null,
+        productTypeName: serverProduct.productType ? serverProduct.productType.typeName : null,
+        menuTypeName: serverProduct.menuType ? serverProduct.menuType.typeName : null,
+      } as Product;
+      productList.push(product);
+    });
+    props.sendProductList(productList);
+    props.sendDisableFlag(false);
+  };
 
   const createHandler = () => {
     history.push('/menu/createProduct');
   };
 
   const deleteHandler = () => {
-    Axios({
-      method: 'DELETE',
-      url: routes.deleteListProductUrl,
-      params: { productIdList: props.productIdList },
-    })
-      .then((res) => {
-        props.sendProductTableHeadCells(productHeadCells);
-        props.getProductList();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    apiDelete(APIs.deleteListProductUrl, { productIdList: props.productIdList }).then(() =>
+      window.location.reload(true),
+    );
     setOpen(false);
   };
 
@@ -146,6 +156,8 @@ const ProductList: React.FC<Props> = (props) => {
               onClick={createHandler}
               size="medium"
               variant="contained"
+              color="primary"
+              disabled={props.isDisable}
             >
               Create
             </Button>
@@ -154,6 +166,8 @@ const ProductList: React.FC<Props> = (props) => {
               onClick={handleClickOpen}
               size="medium"
               variant="contained"
+              color="secondary"
+              disabled={props.isDisable}
             >
               Delete
             </Button>
@@ -173,6 +187,7 @@ const mapStateToProps = (state: any) => {
   return {
     productIdList: state.productReducer.productIdList,
     searchValue: state.commonReducer.searchValue,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 
@@ -184,6 +199,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     getProductList: () => {
       dispatch(productActions.actionGetProductListUrl());
+    },
+    sendProductList: (productList: Product[]) => {
+      dispatch(productActions.actionReceiveProductList(productList));
     },
     searchProductList: (searchValue: string) => {
       dispatch(productActions.actionSearchProductListUrl(searchValue));
