@@ -25,6 +25,7 @@ import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import clsx from 'clsx';
 import axios from 'axios';
+import * as commonActions from '../../../redux/commonReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -75,7 +76,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const loginForm: any = {};
 
 interface Props {
+  /** params */
+  isDisable: boolean;
+  /** functions */
   sendLoginUserData: Function;
+  sendDisableFlag: Function;
 }
 
 const Login: React.FC<Props> = (props) => {
@@ -85,7 +90,6 @@ const Login: React.FC<Props> = (props) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [errorMessageUsername, setErrorMessageUsername] = useState('');
   const [errorMessagePassword, setErrorMessagePassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     localStorage.clear();
@@ -94,7 +98,7 @@ const Login: React.FC<Props> = (props) => {
 
   const submitLoginForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsLoading(true);
+    props.sendDisableFlag(true);
     if (validate(loginForm)) {
       const HTTPdata = (await authPost(APIs.loginUrl, loginForm)) as HTTPdata;
       if (HTTPdata.code === STATUS_CODE.OK) {
@@ -102,11 +106,13 @@ const Login: React.FC<Props> = (props) => {
         localStorage.setItem('token', JSON.stringify(token));
         history.push('/admin/home');
         window.location.reload(true);
+      } else {
+        props.sendDisableFlag(false);
       }
     } else {
       setErrorMessageUsername(loginMessagesForm.username);
       setErrorMessagePassword(loginMessagesForm.password);
-      setIsLoading(false);
+      props.sendDisableFlag(false);
     }
   };
 
@@ -176,7 +182,10 @@ const Login: React.FC<Props> = (props) => {
           />
 
           {/** check box remember me */}
-          <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+          <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            label="Remember me"
+          />
 
           {/** error message */}
           <Box className={errorMessage ? classes.errorField : classes.errorFieldHidden}>
@@ -194,9 +203,9 @@ const Login: React.FC<Props> = (props) => {
               color="primary"
               component="span"
               className={classes.submit}
-              disabled={isLoading}
+              disabled={props.isDisable}
             >
-              {isLoading === false ? (
+              {!props.isDisable ? (
                 'Sign In'
               ) : (
                 <Box className={clsx(classes.submit && classes.progress)}>
@@ -225,13 +234,23 @@ const Login: React.FC<Props> = (props) => {
   );
 };
 
+/* collect data from redux store */
+const mapStateToProps = (state: any) => {
+  return {
+    isDisable: state.commonReducer.isDisable,
+  };
+};
+
 /* Send data to redux store */
 const mapDispatchToProps = (dispatch: any) => {
   return {
     sendLoginUserData: (loginUser: User) => {
       dispatch(userActions.actionReceiveLoginUserData(loginUser));
     },
+    sendDisableFlag: (isDisable: boolean) => {
+      dispatch(commonActions.actionDisableFlag(isDisable));
+    },
   };
 };
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

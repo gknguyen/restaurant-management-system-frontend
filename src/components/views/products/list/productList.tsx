@@ -8,19 +8,20 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import ListTable from '../../../../commons/listTable';
 import SearchBar from '../../../../commons/searchBar';
-import * as routes from '../../../../configs/APIs';
-import Axios, { apiGet, apiDelete } from '../../../../configs/axios';
-import { ProductHeadCell, Product, HTTPdata } from '../../../../configs/interfaces';
-import * as productActions from '../../../../redux/productReducers/actions';
-import * as commonActions from '../../../../redux/commonReducers/actions';
-import ProductTable from './components/productTable';
 import * as APIs from '../../../../configs/APIs';
-import { showSnackBarAlert } from '../../../../configs/utils';
+import { apiDelete, apiGet } from '../../../../configs/axios';
+import { HTTPdata, Product } from '../../../../configs/interfaces';
+import * as commonActions from '../../../../redux/commonReducers/actions';
+import * as productActions from '../../../../redux/productReducers/actions';
+import { convertDateTime } from '../../../../configs/utils';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import { green, red } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,12 +45,24 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const headers = [
+  { field: 'id', title: 'Id', hidden: true },
+  { field: 'name', title: 'Name', sorting: false },
+  { field: 'price', title: 'Price', sorting: false },
+  { field: 'unit', title: 'Unit', sorting: false },
+  { field: 'amount', title: 'Amount', sorting: false },
+  { field: 'active', title: 'Active', sorting: false },
+  { field: 'productTypeName', title: 'Type', sorting: false },
+  { field: 'menuTypeName', title: 'Menu', sorting: false },
+  { field: 'editDateTime', title: 'Edit At', sorting: false },
+];
+
 interface Props {
-  searchValue: string;
+  /** params */
+  productList: any[];
   productIdList: string[];
   isDisable: boolean;
-  sendProductTableHeadCells: Function;
-  getProductList: Function;
+  /** functions */
   sendProductList: Function;
   searchProductList: Function;
   sendDisableFlag: Function;
@@ -60,18 +73,18 @@ const ProductList: React.FC<Props> = (props) => {
   const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
+  const [productIdList, setProductIdList] = React.useState<string[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     props.sendDisableFlag(true);
+    apiGet(APIs.getListProductUrl).then((HTTPdata) => processDataToTable(HTTPdata));
   }, []);
 
-  if (props.searchValue) {
-    apiGet(APIs.searchListProductUrl, { searchValue: props.searchValue }).then((HTTPdata) =>
+  const searchHandler = (searchValue: string) => {
+    apiGet(APIs.searchListProductUrl, { searchValue }).then((HTTPdata) =>
       processDataToTable(HTTPdata),
     );
-  } else {
-    apiGet(APIs.getListProductUrl).then((HTTPdata) => processDataToTable(HTTPdata));
-  }
+  };
 
   const processDataToTable = (HTTPdata: HTTPdata) => {
     const productList: Product[] = [];
@@ -83,9 +96,16 @@ const ProductList: React.FC<Props> = (props) => {
         price: serverProduct.price || null,
         unit: serverProduct.unit || null,
         amount: serverProduct.amount || null,
-        active: serverProduct.activeStatus || null,
+        active: serverProduct.activeStatus ? (
+          <CheckCircleIcon style={{ color: green[500] }} />
+        ) : (
+          <ErrorIcon style={{ color: red[600] }} />
+        ),
         productTypeName: serverProduct.productType ? serverProduct.productType.typeName : null,
         menuTypeName: serverProduct.menuType ? serverProduct.menuType.typeName : null,
+        editDateTime: serverProduct.editDateTime
+          ? convertDateTime(serverProduct.editDateTime)
+          : null,
       } as Product;
       productList.push(product);
     });
@@ -98,16 +118,23 @@ const ProductList: React.FC<Props> = (props) => {
   };
 
   const deleteHandler = () => {
-    apiDelete(APIs.deleteListProductUrl, { productIdList: props.productIdList }).then(() =>
+    apiDelete(APIs.deleteListProductUrl, { productIdList }).then(() =>
       window.location.reload(true),
     );
     setOpen(false);
   };
 
+  const detailHandler = (productId: string) => {
+    sessionStorage.setItem('productId', productId);
+    history.push('/menu/productDetails');
+  };
+
+  const onSelectionHandler = (productIdList: string[]) => {
+    setProductIdList(productIdList);
+  };
+
   const handleClickOpen = () => {
-    if (props.productIdList && props.productIdList.length > 0) {
-      setOpen(true);
-    }
+    if (productIdList && productIdList.length > 0) setOpen(true);
   };
 
   const handleClose = () => {
@@ -115,24 +142,17 @@ const ProductList: React.FC<Props> = (props) => {
   };
 
   const deleteDialog = (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">Do yo want to delete these products?</DialogTitle>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>Do yo want to delete these products?</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          These products will be deleted permanently
-        </DialogContentText>
+        <DialogContentText>These products will be deleted permanently</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={deleteHandler} color="primary">
-          Agree
+          Yes
         </Button>
         <Button onClick={handleClose} color="primary">
-          Disagree
+          No
         </Button>
       </DialogActions>
     </Dialog>
@@ -147,9 +167,13 @@ const ProductList: React.FC<Props> = (props) => {
               Product List
             </Typography>
           </Grid>
+
+          {/** search field */}
           <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
-            <SearchBar />
+            <SearchBar searchHandlerCallBack={searchHandler} />
           </Grid>
+
+          {/** buttons field */}
           <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
             <Button
               className={classes.createButton}
@@ -171,13 +195,22 @@ const ProductList: React.FC<Props> = (props) => {
             >
               Delete
             </Button>
-            {deleteDialog}
           </Grid>
+
+          {/** table field */}
           <Grid container={true} item={true} xs={12}>
-            <ProductTable />
+            <ListTable
+              headers={headers}
+              cells={props.productList}
+              onRowClickCallBack={detailHandler}
+              onSelectionCallBack={onSelectionHandler}
+            />
           </Grid>
         </Grid>
       </Box>
+
+      {/** confirm dialog */}
+      {deleteDialog}
     </Container>
   );
 };
@@ -185,8 +218,8 @@ const ProductList: React.FC<Props> = (props) => {
 /* collect data from redux store */
 const mapStateToProps = (state: any) => {
   return {
+    productList: state.productReducer.productList,
     productIdList: state.productReducer.productIdList,
-    searchValue: state.commonReducer.searchValue,
     isDisable: state.commonReducer.isDisable,
   };
 };
@@ -194,12 +227,6 @@ const mapStateToProps = (state: any) => {
 /* Send data to redux store */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    sendProductTableHeadCells: (headCells: ProductHeadCell[]) => {
-      dispatch(productActions.actionReceiveProductTableHeadCells(headCells));
-    },
-    getProductList: () => {
-      dispatch(productActions.actionGetProductListUrl());
-    },
     sendProductList: (productList: Product[]) => {
       dispatch(productActions.actionReceiveProductList(productList));
     },

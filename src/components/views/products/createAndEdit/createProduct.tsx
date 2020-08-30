@@ -2,29 +2,26 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../../configs/APIs';
-import Axios, { apiGet, apiPost } from '../../../../configs/axios';
+import { apiGet, apiPost } from '../../../../configs/axios';
 import { MenuType, Product, ProductType } from '../../../../configs/interfaces';
+import { showSnackBarAlert } from '../../../../configs/utils';
+import * as commonActions from '../../../../redux/commonReducers/actions';
 import * as imageActions from '../../../../redux/imageReducers/actions';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as productTypeActions from '../../../../redux/productTypeReducers/actions';
-import * as commonActions from '../../../../redux/commonReducers/actions';
-import { getAuthToken } from '../../../../configs/localStore';
 import DescriptionField from './components/descriptionField';
 import ImageUploadField from './components/imageUploadField';
 import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
-import { HEADER_FILE_UPLOAD } from '../../../../configs/constants';
-import { showSnackBarAlert } from '../../../../configs/utils';
-import MESSAGE from '../../../../configs/messages';
-import LinearProgress from '@material-ui/core/LinearProgress';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: '30px 40px 40px 40px',
       display: 'flex',
       flexWrap: 'wrap',
+      // maxWidth: 1200,
     },
     paper: {
       width: '100%',
@@ -69,9 +67,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const createDataForm: any = {};
-// const createDataForm = new FormData();
 
 interface Props {
+  /** params */
   productTypeName: string;
   menuTypeName: string;
   name: string;
@@ -81,10 +79,9 @@ interface Props {
   description: string;
   productImage: File;
   isDisable: boolean;
-  getProductTypeList: Function;
+  /** functions */
   sendProductTypeList: Function;
   sendProductType: Function;
-  getMenuTypeList: Function;
   sendMenuTypeList: Function;
   sendMenuType: Function;
   sendProduct: Function;
@@ -101,17 +98,15 @@ const CreateProduct: React.FC<Props> = (props) => {
   createDataForm.menuTypeName = props.menuTypeName;
   createDataForm.name = props.name;
   createDataForm.price = props.price;
-  createDataForm.unit = props.unit;
+  createDataForm.unit = props.unit || 'VND';
   createDataForm.amount = props.amount;
   createDataForm.description = props.description;
   createDataForm.image = props.productImage.name;
 
-  useEffect(() => {
-    // props.getProductTypeList();
+  React.useEffect(() => {
     apiGet(APIs.getListProductTypeUrl).then((HTTPdata) =>
       props.sendProductTypeList(HTTPdata.values),
     );
-    // props.getMenuTypeList();
     apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => props.sendMenuTypeList(HTTPdata.values));
   }, []);
 
@@ -149,6 +144,7 @@ const CreateProduct: React.FC<Props> = (props) => {
     } else {
       props.sendErrorMessageForm(errorMessagesForm);
       props.sendImageErrorMessage(errorMessagesForm.image);
+      props.sendDisableFlag(false);
     }
   };
 
@@ -254,17 +250,11 @@ const mapStateToProps = (state: any) => {
 /* Send data to redux store */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getProductTypeList: () => {
-      dispatch(productTypeActions.actionGetProductTypeListUrl());
-    },
     sendProductTypeList: (productTypeList: ProductType[]) => {
       dispatch(productTypeActions.actionReceiveProductTypeList(productTypeList));
     },
     sendProductType: (productType: ProductType) => {
       dispatch(productTypeActions.actionReceiveProductType(productType));
-    },
-    getMenuTypeList: () => {
-      dispatch(menuTypeActions.actionGetMenuTypeListUrl());
     },
     sendMenuTypeList: (menuTypeList: MenuType[]) => {
       dispatch(menuTypeActions.actionReceiveMenuTypeList(menuTypeList));
@@ -281,8 +271,6 @@ const mapDispatchToProps = (dispatch: any) => {
     sendImageErrorMessage: (errorMessage: string) => {
       dispatch(imageActions.actionReceiveErrorMessage(errorMessage));
     },
-
-    /** common */
     sendDisableFlag: (isDisable: boolean) => {
       dispatch(commonActions.actionDisableFlag(isDisable));
     },

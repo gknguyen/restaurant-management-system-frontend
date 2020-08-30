@@ -17,9 +17,13 @@ import { UserHeadCell, HTTPdata, User } from '../../../../configs/interfaces';
 import * as userActions from '../../../../redux/userReducers/actions';
 import * as commonActions from '../../../../redux/commonReducers/actions';
 import UserTable from './components/userTable';
-import { apiPost, apiGet } from '../../../../configs/axios';
+import { apiPost, apiGet, apiDelete } from '../../../../configs/axios';
 import * as APIs from '../../../../configs/APIs';
-import { trimDate } from '../../../../configs/utils';
+import { trimDate, convertDateTime } from '../../../../configs/utils';
+import ListTable from '../../../../commons/listTable';
+import { green, red } from '@material-ui/core/colors';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,10 +59,25 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const headers = [
+  { field: 'id', title: 'Id', hidden: true },
+  { field: 'username', title: 'Username', sorting: false },
+  { field: 'fullName', title: 'Name', sorting: false },
+  { field: 'phoneNumber', title: 'Phone', sorting: false },
+  { field: 'email', title: 'Email', sorting: false },
+  { field: 'activeStatus', title: 'Active', sorting: false },
+  { field: 'loginDatetime', title: 'Login At', sorting: false },
+  { field: 'userTypeName', title: 'Type', sorting: false },
+];
+
 interface Props {
+  /** params */
+  userList: User[];
+  userIdList: string[];
   searchValue: string;
   isDisable: boolean;
-  sendUserTableHeadCells: Function;
+  /** functions */
+  // sendUserTableHeadCells: Function;
   getUserList: Function;
   searchUserList: Function;
   sendUserList: Function;
@@ -70,40 +89,63 @@ const UserList: React.FC<Props> = (props) => {
   const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
+  const [userIdList, setUserIdList] = React.useState<string[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     props.sendDisableFlag(true);
-    apiGet(APIs.getListUserUrl).then((HTTPdata) => {
-      const userList: User[] = [];
-      const serverUserList: any[] = HTTPdata.values;
-      serverUserList.map((serverUser) => {
-        const user = {
-          id: serverUser.id || null,
-          username: serverUser.username || null,
-          fullName: serverUser.fullName || null,
-          phoneNumber: serverUser.phoneNumber || null,
-          email: serverUser.email || null,
-          activeStatus: serverUser.activeStatus || null,
-          loginDatetime: serverUser.loginDatetime ? trimDate(serverUser.loginDatetime, 20) : null,
-          userTypeName: serverUser.userType.typeName || null,
-        } as User;
-        userList.push(user);
-      });
-      props.sendUserList(userList);
-      props.sendDisableFlag(false);
-    });
+    apiGet(APIs.getListUserUrl).then((HTTPdata) => processDataToTable(HTTPdata));
   }, []);
 
-  const searchHandler = () => {};
+  const searchHandler = (searchValue: string) => {
+    apiGet(APIs.searchListUserUrl, { searchValue }).then((HTTPdata) =>
+      processDataToTable(HTTPdata),
+    );
+  };
+
+  const processDataToTable = (HTTPdata: HTTPdata) => {
+    const userList: User[] = [];
+    const serverUserList: any[] = HTTPdata.values;
+    serverUserList.map((serverUser) => {
+      const user = {
+        id: serverUser.id || null,
+        username: serverUser.username || null,
+        fullName: serverUser.fullName || null,
+        phoneNumber: serverUser.phoneNumber || null,
+        email: serverUser.email || null,
+        activeStatus: serverUser.activeStatus ? (
+          <CheckCircleIcon style={{ color: green[500] }} />
+        ) : (
+          <ErrorIcon style={{ color: red[600] }} />
+        ),
+        loginDatetime: serverUser.loginDatetime ? convertDateTime(serverUser.loginDatetime) : null,
+        userTypeName: serverUser.userType.typeName || null,
+      } as User;
+      userList.push(user);
+    });
+    props.sendUserList(userList);
+    props.sendDisableFlag(false);
+  };
 
   const createHandler = () => {
     history.push('/createUser');
   };
 
-  const deleteHandler = () => {};
+  const deleteHandler = () => {
+    apiDelete(APIs.deleteListUserUrl, { userIdList }).then(() => window.location.reload(true));
+    setOpen(false);
+  };
+
+  const detailHandler = (userId: string) => {
+    sessionStorage.setItem('userId', userId);
+    history.push('/userDetails');
+  };
+
+  const onSelectionHandler = (userIdList: string[]) => {
+    setUserIdList(userIdList);
+  };
 
   const handleClickOpen = () => {
-    setOpen(true);
+    if (userIdList && userIdList.length > 0) setOpen(true);
   };
 
   const handleClose = () => {
@@ -111,24 +153,17 @@ const UserList: React.FC<Props> = (props) => {
   };
 
   const deleteDialog = (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">Do yo want to delete these users?</DialogTitle>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>Do yo want to delete these users?</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          These users will be deleted permanently
-        </DialogContentText>
+        <DialogContentText>These users will be deleted permanently</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={deleteHandler} color="primary">
-          Agree
+          Yes
         </Button>
         <Button onClick={handleClose} color="primary">
-          Disagree
+          No
         </Button>
       </DialogActions>
     </Dialog>
@@ -143,9 +178,13 @@ const UserList: React.FC<Props> = (props) => {
               User List
             </Typography>
           </Grid>
+
+          {/** search field */}
           <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
-            <SearchBar />
+            <SearchBar searchHandlerCallBack={searchHandler} />
           </Grid>
+
+          {/** buttons field */}
           <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
             <Button
               className={classes.createButton}
@@ -167,13 +206,23 @@ const UserList: React.FC<Props> = (props) => {
             >
               Delete
             </Button>
-            {deleteDialog}
           </Grid>
+
+          {/** table field */}
           <Grid container={true} item={true} xs={12}>
-            <UserTable />
+            {/* <UserTable /> */}
+            <ListTable
+              headers={headers}
+              cells={props.userList}
+              onRowClickCallBack={detailHandler}
+              onSelectionCallBack={onSelectionHandler}
+            />
           </Grid>
         </Grid>
       </Box>
+
+      {/** confirm dialog */}
+      {deleteDialog}
     </Container>
   );
 };
@@ -181,6 +230,8 @@ const UserList: React.FC<Props> = (props) => {
 /* collect data from redux store */
 const mapStateToProps = (state: any) => {
   return {
+    userList: state.userReducer.userList,
+    userIdList: state.userReducer.userIdList,
     searchValue: state.commonReducer.searchValue,
     isDisable: state.commonReducer.isDisable,
   };

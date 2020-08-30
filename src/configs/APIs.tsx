@@ -31,4 +31,6 @@ export const deleteListProductUrl = productUrl + 'deleteList/';
 export const userUrl = baseUrl + 'user/';
 export const getListUserUrl = userUrl + 'getList/';
 export const getOneUserUrl = userUrl + 'getOne/';
+export const searchListUserUrl = userUrl + 'searchList/';
 export const createOneUserUrl = userUrl + 'createOne/';
+export const deleteListUserUrl = userUrl + 'deleteList/';

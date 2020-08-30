@@ -29,15 +29,17 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const mainValues: any = {};
+// const mainValues: any = {};
 
 interface Props {
+  /** params */
   productTypeList: ProductType[];
   menuTypeList: MenuType[];
   productType: ProductType;
   menuType: MenuType;
   product: Product;
   errorMessages: Product;
+  /** functions */
   sendProductTypeName: Function;
   sendProductType: Function;
   sendMenuTypeName: Function;
@@ -71,7 +73,7 @@ const MainInfoField: React.FC<Props> = (props) => {
   const [menuTypeName, setMenuTypeName] = React.useState(mainDefaultValues.menuTypeName);
   const [name, setName] = React.useState(mainDefaultValues.name);
   const [price, setPrice] = React.useState(mainDefaultValues.price);
-  const [unit, setUnit] = React.useState(mainDefaultValues.unit);
+  const [unit, setUnit] = React.useState((mainDefaultValues.unit = 'VND'));
   const [amount, setAmount] = React.useState(mainDefaultValues.amount);
 
   const productTypeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -263,7 +265,9 @@ const mapDispatchToProps = (dispatch: any) => {
 
     /** error messages */
     sendErrorMessageProductType: (productTypeNameErrorMessage: string) => {
-      dispatch(productActions.actionReceiveErrorMessageProductTypeName(productTypeNameErrorMessage));
+      dispatch(
+        productActions.actionReceiveErrorMessageProductTypeName(productTypeNameErrorMessage),
+      );
     },
     sendErrorMessageMenuType: (menuTypeNameErrorMessage: string) => {
       dispatch(productActions.actionReceiveErrorMessageMenuTypeName(menuTypeNameErrorMessage));

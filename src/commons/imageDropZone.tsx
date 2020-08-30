@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import React, { Fragment, useCallback } from 'react';
+import React, { Fragment, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { connect } from 'react-redux';
@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const defaultFilesValue: File[] = [];
 
 interface Props {
+  imageFileName: string;
   errorMessage: string;
   sendImageFiles: Function;
 }
@@ -89,8 +90,8 @@ const ImagesDropZone: React.FC<Props> = (props) => {
               <input {...getInputProps()} />
               <img alt="Select file" className={classes.image} src={docImage} />
               <Typography className={classes.info} color="textSecondary" variant="body1">
-                Drop an image here or click <Link underline="always">browse</Link>
-                thorough your computer or laptop
+                Drop an image here or click <Link underline="always">browse</Link> thorough your
+                computer or laptop
               </Typography>
               <Typography className="text-danger">{errorMessage}</Typography>
             </Grid>
@@ -124,6 +125,7 @@ const ImagesDropZone: React.FC<Props> = (props) => {
 /* collect data from redux store */
 const mapStateToProps = (state: any) => {
   return {
+    imageFileName: state.imageReducer.imageFileName,
     errorMessage: state.imageReducer.errorMessage,
   };
 };

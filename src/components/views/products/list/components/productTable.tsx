@@ -229,7 +229,10 @@ const ProductTable: React.FC<TableProps> = (props) => {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
     }
     setSelected(newSelected);
   };
@@ -294,7 +297,10 @@ const ProductTable: React.FC<TableProps> = (props) => {
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox checked={isItemSelected} inputProps={{ 'aria-labelledby': labelId }} />
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ 'aria-labelledby': labelId }}
+                        />
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row" padding="none">
                         <Typography>{bodyCells.name}</Typography>

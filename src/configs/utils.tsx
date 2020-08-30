@@ -3,6 +3,8 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import SnackbarAlert from '../commons/snackBarAlert';
 import Logout from '../components/views/login/logout';
+import moment, { utc } from 'moment-timezone';
+import { CURRENT_TIEMZONE } from './constants';
 
 export function showSnackBarAlert(duration: number, severty: Color, message: string) {
   render(<SnackbarAlert duration={duration} severty={severty} message={message} />);
@@ -38,4 +40,8 @@ export function bytesToSize(bytes: number, decimals = 2) {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+export function convertDateTime(theDateTime: string, format = 'YYYY/MM/DD HH:mm:ss') {
+  return moment.tz(utc(theDateTime), CURRENT_TIEMZONE).format(format);
 }

@@ -24,7 +24,7 @@ export interface Product {
   price: number;
   unit: string;
   amount: number;
-  active: boolean;
+  active: boolean | JSX.Element;
   image: string;
   description: string;
   productType: any;
@@ -33,6 +33,7 @@ export interface Product {
   menuType: any;
   menuTypeId: string;
   menuTypeName: string;
+  editDateTime: Date | string;
 }
 
 export interface ProductHeadCell {
@@ -51,9 +52,9 @@ export interface User {
   phoneNumber: number;
   email: string;
   avatar: string;
-  loginDatetime: Date;
+  loginDatetime: Date | string;
   authToken: string;
-  activeStatus: boolean;
+  activeStatus: boolean | JSX.Element;
   userType: any;
   userTypeId: string;
   userTypeName: string;

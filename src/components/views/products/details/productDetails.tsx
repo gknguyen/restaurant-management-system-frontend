@@ -6,15 +6,18 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import * as APIs from '../../../../configs/APIs';
+import { apiGet } from '../../../../configs/axios';
 import { AWS_S3_BUCKET_URL, NO_IMAGE_URL } from '../../../../configs/constants';
 import { MenuType, Product, ProductType } from '../../../../configs/interfaces';
+import { getProductId } from '../../../../configs/localStore';
+import * as imageActions from '../../../../redux/imageReducers/actions';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as productTypeActions from '../../../../redux/productTypeReducers/actions';
-import { getProductId } from '../../../../configs/localStore';
 import EditProduct from '../createAndEdit/editProduct';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,15 +51,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  productType: ProductType;
-  menuType: MenuType;
-  product: Product;
+  /** params */
+  productTypeName: string;
+  menuTypeName: string;
+  name: string;
+  price: number;
+  unit: string;
+  amount: number;
+  description: string;
+  image: string;
+  /** functions */
   sendProductType: Function;
   sendMenuType: Function;
   sendProduct: Function;
   sendEditOpenFlag: Function;
-  sendProductId: Function;
   sendErrorMessageForm: Function;
+  sendImageFilesName: Function;
 }
 
 const ProductDetails: React.FC<Props> = (props) => {
@@ -64,10 +74,29 @@ const ProductDetails: React.FC<Props> = (props) => {
   const history = useHistory();
   const productId = getProductId();
 
-  const productImageUrl = AWS_S3_BUCKET_URL + '/products/' + props.product.image;
+  const productImageUrl = `${AWS_S3_BUCKET_URL}/products/${props.image}`;
 
-  useEffect(() => {
-    props.sendProductId(productId);
+  React.useEffect(() => {
+    apiGet(APIs.getOneProductUrl, { productId }).then((HTTPdata) => {
+      const serverProduct = HTTPdata.values;
+
+      const productType = serverProduct.productType || null;
+      const menuType = serverProduct.menuType || null;
+      const product = {
+        id: serverProduct.id || null,
+        name: serverProduct.name || null,
+        price: serverProduct.price || null,
+        unit: serverProduct.unit || null,
+        amount: serverProduct.amount || null,
+        active: serverProduct.activeStatus || null,
+        image: serverProduct.image || null,
+        description: serverProduct.description || null,
+      } as Product;
+
+      props.sendProduct(product);
+      props.sendProductType(productType);
+      props.sendMenuType(menuType);
+    });
   }, []);
 
   const editHandler = () => {
@@ -106,7 +135,7 @@ const ProductDetails: React.FC<Props> = (props) => {
                     <img
                       alt="Select file"
                       className={classes.image}
-                      src={props.product.image ? productImageUrl : NO_IMAGE_URL}
+                      src={props.image ? productImageUrl : NO_IMAGE_URL}
                     />
                   </Grid>
                   <Grid container={true} item={true} xs={12} justify="center" alignItems="flex-end">
@@ -129,37 +158,57 @@ const ProductDetails: React.FC<Props> = (props) => {
                   </Grid>
                 </Grid>
                 <Grid container={true} item={true} md={7} xs="auto" spacing={3} direction="column">
-                  <Grid container={true} item={true} xs={12} justify="center" alignItems="flex-start">
+                  <Grid
+                    container={true}
+                    item={true}
+                    xs={12}
+                    justify="center"
+                    alignItems="flex-start"
+                  >
                     <Typography component="h1" variant="h4">
-                      {props.product.name}
+                      {props.name}
                     </Typography>
                   </Grid>
-                  <Grid container={true} item={true} xs={12} justify="center" alignItems="flex-start">
+                  <Grid
+                    container={true}
+                    item={true}
+                    xs={12}
+                    justify="center"
+                    alignItems="flex-start"
+                  >
                     <Typography>
-                      {props.product.price} {props.product.unit}
+                      {props.price} {props.unit}
                     </Typography>
                   </Grid>
-                  <Grid container={true} item={true} xs={12} justify="center" alignItems="flex-start">
+                  <Grid
+                    container={true}
+                    item={true}
+                    xs={12}
+                    justify="center"
+                    alignItems="flex-start"
+                  >
                     <Breadcrumbs>
-                      {props.productType ? (
-                        <Typography color="textPrimary">
-                          {props.productType.typeName}
-                          {/* {productType.typeName} */}
-                        </Typography>
-                      ) : null}
-                      {props.menuType ? (
-                        <Typography color="textPrimary">
-                          {props.menuType.typeName}
-                          {/* {menuType.typeName} */}
-                        </Typography>
-                      ) : null}
+                      <Typography color="textPrimary">{props.productTypeName}</Typography>
+                      <Typography color="textPrimary">{props.menuTypeName}</Typography>
                     </Breadcrumbs>
                   </Grid>
-                  <Grid container={true} item={true} xs={12} justify="center" alignItems="flex-start">
-                    <Typography>Amount: {props.product.amount}</Typography>
+                  <Grid
+                    container={true}
+                    item={true}
+                    xs={12}
+                    justify="center"
+                    alignItems="flex-start"
+                  >
+                    <Typography>Amount: {props.amount}</Typography>
                   </Grid>
-                  <Grid container={true} item={true} xs={12} justify="center" alignItems="flex-start">
-                    <Typography>{props.product.description}</Typography>
+                  <Grid
+                    container={true}
+                    item={true}
+                    xs={12}
+                    justify="center"
+                    alignItems="flex-start"
+                  >
+                    <Typography>{props.description}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -175,9 +224,14 @@ const ProductDetails: React.FC<Props> = (props) => {
 /* collect data from redux store */
 const mapStateToProps = (state: any) => {
   return {
-    productType: state.productTypeReducer.productType,
-    menuType: state.menuTypeReducer.menuType,
-    product: state.productReducer.product,
+    productTypeName: state.productTypeReducer.productType.typeName,
+    menuTypeName: state.menuTypeReducer.menuType.typeName,
+    name: state.productReducer.product.name,
+    price: state.productReducer.product.price,
+    unit: state.productReducer.product.unit,
+    amount: state.productReducer.product.amount,
+    description: state.productReducer.product.description,
+    image: state.productReducer.product.image,
   };
 };
 
@@ -196,11 +250,11 @@ const mapDispatchToProps = (dispatch: any) => {
     sendEditOpenFlag: (open: boolean) => {
       dispatch(productActions.actionReceiveEditOpenFlag(open));
     },
-    sendProductId: (productId: string) => {
-      dispatch(productActions.actionGetProductUrl(productId));
-    },
     sendErrorMessageForm: (errorMessagesForm: Product) => {
       dispatch(productActions.actionReceiveErrorMessages(errorMessagesForm));
+    },
+    sendImageFilesName: (imageFilesName: string) => {
+      dispatch(imageActions.actionReceiveImageFilesName(imageFilesName));
     },
   };
 };

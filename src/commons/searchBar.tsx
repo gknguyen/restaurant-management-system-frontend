@@ -38,9 +38,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  /** params */
   isDisable: boolean;
+  /** functions */
+  searchHandlerCallBack: Function;
   sendDisableFlag: Function;
-  sendSearchValue: Function;
+  // sendSearchValue: Function;
 }
 
 const SearchBar: React.FC<Props> = (props) => {
@@ -54,9 +57,9 @@ const SearchBar: React.FC<Props> = (props) => {
 
   const searchHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // props.searchProductList(props.searchValue);
     props.sendDisableFlag(true);
-    props.sendSearchValue(searchValue);
+    // props.sendSearchValue(searchValue);
+    props.searchHandlerCallBack(searchValue);
   };
 
   return (
@@ -114,9 +117,9 @@ const mapDispatchToProps = (dispatch: any) => {
     sendDisableFlag: (isDisable: boolean) => {
       dispatch(commonActions.actionDisableFlag(isDisable));
     },
-    sendSearchValue: (searchValue: string) => {
-      dispatch(commonActions.actionReceiveSearchValue(searchValue));
-    },
+    // sendSearchValue: (searchValue: string) => {
+    //   dispatch(commonActions.actionReceiveSearchValue(searchValue));
+    // },
   };
 };
 
