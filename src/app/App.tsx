@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const history: any = createBrowserHistory();
-const store: any = configureStore();
+const history = createBrowserHistory();
+const store = configureStore();
 
 const App: React.FC = () => {
   const classes = useStyles();

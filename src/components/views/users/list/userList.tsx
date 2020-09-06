@@ -16,7 +16,6 @@ import SearchBar from '../../../../commons/searchBar';
 import { UserHeadCell, HTTPdata, User } from '../../../../configs/interfaces';
 import * as userActions from '../../../../redux/userReducers/actions';
 import * as commonActions from '../../../../redux/commonReducers/actions';
-import UserTable from './components/userTable';
 import { apiPost, apiGet, apiDelete } from '../../../../configs/axios';
 import * as APIs from '../../../../configs/APIs';
 import { trimDate, convertDateTime } from '../../../../configs/utils';
@@ -66,7 +65,7 @@ const headers = [
   { field: 'phoneNumber', title: 'Phone', sorting: false },
   { field: 'email', title: 'Email', sorting: false },
   { field: 'activeStatus', title: 'Active', sorting: false },
-  { field: 'loginDatetime', title: 'Login At', sorting: false },
+  { field: 'loginDateTime', title: 'Login At', sorting: false },
   { field: 'userTypeName', title: 'Type', sorting: false },
 ];
 
@@ -78,7 +77,7 @@ interface Props {
   isDisable: boolean;
   /** functions */
   // sendUserTableHeadCells: Function;
-  getUserList: Function;
+  // getUserList: Function;
   searchUserList: Function;
   sendUserList: Function;
   sendDisableFlag: Function;
@@ -105,23 +104,25 @@ const UserList: React.FC<Props> = (props) => {
   const processDataToTable = (HTTPdata: HTTPdata) => {
     const userList: User[] = [];
     const serverUserList: any[] = HTTPdata.values;
+
     serverUserList.map((serverUser) => {
       const user = {
-        id: serverUser.id || null,
-        username: serverUser.username || null,
-        fullName: serverUser.fullName || null,
-        phoneNumber: serverUser.phoneNumber || null,
-        email: serverUser.email || null,
+        id: serverUser.id,
+        username: serverUser.username,
+        fullName: serverUser.fullName,
+        phoneNumber: serverUser.phoneNumber,
+        email: serverUser.email,
         activeStatus: serverUser.activeStatus ? (
           <CheckCircleIcon style={{ color: green[500] }} />
         ) : (
           <ErrorIcon style={{ color: red[600] }} />
         ),
-        loginDatetime: serverUser.loginDatetime ? convertDateTime(serverUser.loginDatetime) : null,
-        userTypeName: serverUser.userType.typeName || null,
+        loginDateTime: convertDateTime(serverUser.loginDateTime),
+        userTypeName: serverUser.userType.typeName,
       } as User;
       userList.push(user);
     });
+
     props.sendUserList(userList);
     props.sendDisableFlag(false);
   };
@@ -243,9 +244,9 @@ const mapDispatchToProps = (dispatch: any) => {
     // sendUserTableHeadCells: (headCells: UserHeadCell[]) => {
     //   dispatch(userActions.actionReceiveUserTableHeadCells(headCells));
     // },
-    getUserList: () => {
-      dispatch(userActions.actionGetUserListUrl());
-    },
+    // getUserList: () => {
+    //   dispatch(userActions.actionGetUserListUrl());
+    // },
     searchUserList: (searchValue: string) => {
       dispatch(userActions.actionSearchUserListUrl(searchValue));
     },

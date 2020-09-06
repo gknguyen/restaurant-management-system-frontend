@@ -12,10 +12,10 @@ const initialState = {
     password: '',
     fullName: '',
     age: 0,
-    phoneNumber: 0,
+    phoneNumber: '',
     email: '',
     avatar: '',
-    loginDatetime: '',
+    loginDateTime: '',
     authToken: '',
     activeStatus: false,
   },
@@ -65,12 +65,7 @@ const userReducer = (state = initialState, action: any) => {
       return { ...state };
     /* return user values */
     case ActionType.RECEIVE_USER:
-      state.user.username = action.data.username;
-      state.user.password = action.data.password;
-      state.user.fullName = action.data.fullName;
-      state.user.age = action.data.age;
-      state.user.phoneNumber = action.data.phoneNumber;
-      state.user.email = action.data.email;
+      state.user = action.data;
       return { ...state };
     /* return each user value */
     case ActionType.RECEIVE_USER_USERNAME:

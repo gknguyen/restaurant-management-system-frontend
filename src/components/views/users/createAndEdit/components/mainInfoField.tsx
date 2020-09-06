@@ -31,10 +31,15 @@ const useStyles = makeStyles((theme: Theme) =>
 const mainValues: any = {};
 
 interface Props {
+  /** input params */
+  isEdit: boolean;
+  /** redux params */
   userTypeList: UserType[];
   userType: UserType;
   user: User;
   errorMessages: User;
+  isDisable: boolean;
+  /** redux functions */
   sendUserType: Function;
   sendUsername: Function;
   sendPassword: Function;
@@ -91,12 +96,12 @@ const MainInfoField: React.FC<Props> = (props) => {
     props.sendFullName(event.target.value);
     props.sendErrorMessageFullName('');
   };
-  const ageChangeHandler = (event: any) => {
-    setAge(event.target.value);
+  const ageChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAge(parseInt(event.target.value));
     props.sendAge(event.target.value);
     props.sendErrorMessageAge('');
   };
-  const phoneNumberChangeHandler = (event: any) => {
+  const phoneNumberChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(event.target.value);
     props.sendPhoneNumber(event.target.value);
     props.sendErrorMessagePhoneNumber('');
@@ -109,16 +114,19 @@ const MainInfoField: React.FC<Props> = (props) => {
 
   return (
     <Container className={classes.grid} disableGutters>
+      {/** header */}
       <Grid container={true}>
         <Typography className={classes.typography} component="h1" variant="h6">
           Details:
         </Typography>
       </Grid>
+
+      {/** contents */}
       <Grid container={true}>
         <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
           <TextField
             className={classes.textField}
-            required={true}
+            // required={true}
             select={true}
             fullWidth={true}
             id="outlined-select-required"
@@ -130,6 +138,7 @@ const MainInfoField: React.FC<Props> = (props) => {
             onChange={userTypeChangeHandler}
             error={props.errorMessages.userTypeName ? true : false}
             helperText={props.errorMessages.userTypeName}
+            disabled={props.isDisable}
           >
             {props.userTypeList.map((userType) => (
               <MenuItem key={userType.id} value={userType.typeName}>
@@ -142,7 +151,7 @@ const MainInfoField: React.FC<Props> = (props) => {
       <Grid container={true}>
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Username"
@@ -153,10 +162,11 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={usernameChangeHandler}
           error={props.errorMessages.username ? true : false}
           helperText={props.errorMessages.username}
+          disabled={props.isDisable}
         />
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Password"
@@ -167,10 +177,11 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={passwordChangeHandler}
           error={props.errorMessages.password ? true : false}
           helperText={props.errorMessages.password}
+          disabled={props.isEdit || props.isDisable}
         />
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Full Name"
@@ -181,10 +192,11 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={fullNameChangeHandler}
           error={props.errorMessages.fullName ? true : false}
           helperText={props.errorMessages.fullName}
+          disabled={props.isDisable}
         />
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Age"
@@ -196,10 +208,11 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={ageChangeHandler}
           error={props.errorMessages.age ? true : false}
           helperText={props.errorMessages.age}
+          disabled={props.isDisable}
         />
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Phone Number"
@@ -211,10 +224,11 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={phoneNumberChangeHandler}
           error={props.errorMessages.phoneNumber ? true : false}
           helperText={props.errorMessages.phoneNumber}
+          disabled={props.isDisable}
         />
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Email"
@@ -225,6 +239,7 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={emailChangeHandler}
           error={props.errorMessages.email ? true : false}
           helperText={props.errorMessages.email}
+          disabled={props.isDisable}
         />
       </Grid>
     </Container>
@@ -238,6 +253,7 @@ const mapStateToProps = (state: any) => {
     userType: state.userTypeReducer.userType,
     user: state.userReducer.user,
     errorMessages: state.userReducer.errorMessages,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 

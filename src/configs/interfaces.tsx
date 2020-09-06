@@ -49,10 +49,10 @@ export interface User {
   password: string;
   fullName: string;
   age: number;
-  phoneNumber: number;
+  phoneNumber: string;
   email: string;
   avatar: string;
-  loginDatetime: Date | string;
+  loginDateTime: Date | string;
   authToken: string;
   activeStatus: boolean | JSX.Element;
   userType: any;

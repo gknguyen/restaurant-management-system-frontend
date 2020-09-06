@@ -21,6 +21,15 @@ export const actionGetUserTypeListUrl = () => {
   };
 };
 
+export const actionReceiveUserTypeList = (userTypeList: UserType[]) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: ActionType.RECEIVE_USER_TYPE_LIST,
+      data: userTypeList,
+    });
+  };
+};
+
 export const actionReceiveUserType = (userType: UserType) => {
   return (dispatch: any) => {
     dispatch({

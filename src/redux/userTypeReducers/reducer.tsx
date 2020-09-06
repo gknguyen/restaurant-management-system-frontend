@@ -23,6 +23,10 @@ const userTypeReducer = (state = initialState, action: any) => {
     case ActionType.GET_USER_TYPE_ID:
       state.userType.id = action.data;
       return { ...state };
+    /* return user type list */
+    case ActionType.RECEIVE_USER_TYPE_LIST:
+      state.userTypeList = action.data;
+      return { ...state };
     /* return user type */
     case ActionType.RECEIVE_USER_TYPE:
       state.userType.id = action.data.id;

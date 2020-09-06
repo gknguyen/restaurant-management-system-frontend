@@ -33,4 +33,5 @@ export const getListUserUrl = userUrl + 'getList/';
 export const getOneUserUrl = userUrl + 'getOne/';
 export const searchListUserUrl = userUrl + 'searchList/';
 export const createOneUserUrl = userUrl + 'createOne/';
+export const editOneUserUrl = userUrl + 'editOne/';
 export const deleteListUserUrl = userUrl + 'deleteList/';

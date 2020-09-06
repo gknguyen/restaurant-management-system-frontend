@@ -20,6 +20,7 @@ export const RECEIVE_MENU_TYPE = 'RECEIVE_MENU_TYPE';
 export const GET_USER_TYPE_LIST = 'GET_USER_TYPE_LIST';
 export const GET_USER_TYPE = 'GET_USER_TYPE';
 export const GET_USER_TYPE_ID = 'GET_USER_TYPE_ID';
+export const RECEIVE_USER_TYPE_LIST = 'RECEIVE_USER_TYPE_LIST';
 export const RECEIVE_USER_TYPE = 'RECEIVE_USER_TYPE';
 
 /* product */

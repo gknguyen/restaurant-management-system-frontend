@@ -5,11 +5,11 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React, { useEffect } from 'react';
+import React, { FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../../configs/APIs';
-import Axios from '../../../../configs/axios';
+import Axios, { apiPost, apiGet } from '../../../../configs/axios';
 import { User, UserType } from '../../../../configs/interfaces';
 import * as imageActions from '../../../../redux/imageReducers/actions';
 import * as userActions from '../../../../redux/userReducers/actions';
@@ -17,6 +17,9 @@ import * as userTypeActions from '../../../../redux/userTypeReducers/actions';
 import AvatarUploadField from './components/avatarUploadField';
 import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
+import * as commonActions from '../../../../redux/commonReducers/actions';
+import LinearProgressBar from '../../../../commons/linearProgressBar';
+import { showSnackBarAlert } from '../../../../configs/utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const createDataForm: any = {};
 
 interface Props {
+  /** params */
   userTypeName: string;
   username: string;
   password: string;
@@ -65,11 +69,14 @@ interface Props {
   phoneNumber: string;
   email: string;
   avatar: File;
-  getUserTypeList: Function;
+  isDisable: boolean;
+  /** functions */
+  sendUserTypeList: Function;
   sendUserType: Function;
   sendUser: Function;
   sendErrorMessageForm: Function;
   sendImageErrorMessage: Function;
+  sendDisableFlag: Function;
 }
 
 const CreateUser: React.FC<Props> = (props) => {
@@ -86,8 +93,8 @@ const CreateUser: React.FC<Props> = (props) => {
   createDataForm.avatar = props.avatar.name;
   // console.log('createDataForm: ', createDataForm);
 
-  useEffect(() => {
-    props.getUserTypeList();
+  React.useEffect(() => {
+    apiGet(APIs.getListUserTypeUrl).then((HTTPdata) => props.sendUserTypeList(HTTPdata.values));
   }, []);
 
   const goBackHandler = () => {
@@ -98,64 +105,49 @@ const CreateUser: React.FC<Props> = (props) => {
     history.push('/userList');
   };
 
-  const createHandler = (event: any) => {
+  const createHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const results = checkValidate(createDataForm, true);
-    if (results) {
-      Axios({
-        method: 'POST',
-        url: APIs.createOneUserUrl,
-        data: createDataForm,
-      })
-        .then(() => {
-          Axios({
-            method: 'GET',
-            url: APIs.getSignedUrl,
-            params: {
-              fileName: props.avatar.name,
-              fileType: props.avatar.type,
-              folderName: 'users',
-            },
-          })
-            .then((res) => {
-              const signedUrl: string = res.data.values;
-              Axios({
-                method: 'PUT',
-                url: signedUrl,
-                headers: { 'Content-Type': props.avatar.type },
-                data: props.avatar,
-              })
-                .then(() => {
-                  history.push('/userList');
-                })
-                .catch((err) => {
-                  console.log(err.response.data);
-                });
-            })
-            .catch((err) => {
-              console.log(err.response.data);
-            });
-        })
-        .catch((err) => {
-          console.log(err.response.data);
-        });
+    props.sendDisableFlag(true);
+
+    const isOk = checkValidate(createDataForm, true);
+    if (isOk) {
+      const formData = new FormData();
+      formData.append('userTypeName', createDataForm.userTypeName);
+      formData.append('username', createDataForm.username);
+      formData.append('password', createDataForm.password);
+      formData.append('fullName', createDataForm.fullName);
+      formData.append('age', createDataForm.age.toString());
+      formData.append('phoneNumber', createDataForm.phoneNumber);
+      formData.append('email', createDataForm.email);
+      formData.append('avatar', createDataForm.avatar);
+      formData.append('files', props.avatar, props.avatar.name);
+
+      apiPost(APIs.createOneUserUrl, formData).then((HTTPdata) => {
+        props.sendDisableFlag(false);
+        showSnackBarAlert(5000, 'success', HTTPdata.message);
+        history.push('/userList');
+      });
     } else {
       props.sendErrorMessageForm(errorMessagesForm);
       props.sendImageErrorMessage(errorMessagesForm.avatar);
+      props.sendDisableFlag(false);
     }
   };
 
   return (
     <Container maxWidth="xl">
       <Grid className={classes.grid} container={true} spacing={2} direction="column">
+        {/** header */}
         <Grid container={true} item={true} xs={12}>
           <Typography component="h1" variant="h4">
             New User
           </Typography>
         </Grid>
+
+        {/** contents */}
         <Grid container={true} item={true} xs={12}>
           <Paper className={classes.paper}>
-            <form>
+            <form onSubmit={createHandler}>
               <Box display="flex">
                 <Grid
                   className={classes.grid}
@@ -165,9 +157,12 @@ const CreateUser: React.FC<Props> = (props) => {
                   alignItems="flex-start"
                 >
                   <Grid container={true} item={true} md={5} xs="auto">
+                    {/** avatar field */}
                     <Grid container={true} item={true} xs={12}>
                       <AvatarUploadField />
                     </Grid>
+
+                    {/** buttons field */}
                     <Grid container={true} item={true} xs={12} justify="center" alignItems="center">
                       <Button
                         className={classes.goBackButton}
@@ -177,20 +172,37 @@ const CreateUser: React.FC<Props> = (props) => {
                       >
                         Go Back
                       </Button>
-                      <Button
-                        className={classes.createButton}
-                        variant="contained"
-                        color="primary"
-                        onClick={createHandler}
-                      >
-                        Create
-                      </Button>
+                      <input
+                        id="create-button"
+                        type="submit"
+                        style={{ display: 'none' }}
+                        disabled={props.isDisable}
+                      />
+                      <label htmlFor="create-button">
+                        <Button
+                          fullWidth={true}
+                          variant="contained"
+                          color="primary"
+                          component="span"
+                          className={classes.createButton}
+                          disabled={props.isDisable}
+                        >
+                          Create
+                        </Button>
+                      </label>
                     </Grid>
                   </Grid>
 
+                  {/** informations field */}
                   <Grid container={true} item={true} md={7} xs="auto">
-                    <Grid container={true} item={true} xs={12} justify="space-between" direction="column">
-                      <MainInfoField />
+                    <Grid
+                      container={true}
+                      item={true}
+                      xs={12}
+                      justify="space-between"
+                      direction="column"
+                    >
+                      <MainInfoField isEdit={false} />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -198,6 +210,9 @@ const CreateUser: React.FC<Props> = (props) => {
             </form>
           </Paper>
         </Grid>
+
+        {/** progress bar */}
+        <LinearProgressBar />
       </Grid>
     </Container>
   );
@@ -214,14 +229,15 @@ const mapStateToProps = (state: any) => {
     phoneNumber: state.userReducer.user.phoneNumber,
     email: state.userReducer.user.email,
     avatar: state.imageReducer.imageFile,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 
 /* Send data to redux store */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getUserTypeList: () => {
-      dispatch(userTypeActions.actionGetUserTypeListUrl());
+    sendUserTypeList: (userTypeList: UserType[]) => {
+      dispatch(userTypeActions.actionReceiveUserTypeList(userTypeList));
     },
     sendUserType: (userType: UserType) => {
       dispatch(userTypeActions.actionReceiveUserType(userType));
@@ -234,6 +250,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     sendImageErrorMessage: (errorMessage: string) => {
       dispatch(imageActions.actionReceiveErrorMessage(errorMessage));
+    },
+    sendDisableFlag: (isDisable: boolean) => {
+      dispatch(commonActions.actionDisableFlag(isDisable));
     },
   };
 };

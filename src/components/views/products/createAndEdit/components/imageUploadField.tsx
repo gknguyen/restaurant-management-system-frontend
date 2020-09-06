@@ -48,11 +48,14 @@ const ImageUploadField: React.FC = () => {
       justify="flex-start"
       alignItems="flex-start"
     >
+      {/** header */}
       <Grid container={true} justify="flex-start">
         <Typography className={classes.typography} component="h1" variant="h6">
           Image Upload:
         </Typography>
       </Grid>
+
+      {/** contents */}
       <Grid container={true} justify="center" className={classes.imagesDropZone}>
         <ImagesDropZone />
       </Grid>

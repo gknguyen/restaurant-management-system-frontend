@@ -24,7 +24,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
+  /** redux params */
   description: string;
+  isDisable: boolean;
+  /** redux functions */
   sendDescriptionValue: Function;
 }
 
@@ -40,9 +43,12 @@ const DescriptionField: React.FC<Props> = (props) => {
 
   return (
     <Grid className={classes.grid} container={true} item={true} xs={true}>
+      {/** header */}
       <Typography className={classes.typography} component="h1" variant="h6">
         Description:
       </Typography>
+
+      {/** contents */}
       <TextareaAutosize
         className={classes.textAreaBox}
         rowsMin={3}
@@ -50,6 +56,7 @@ const DescriptionField: React.FC<Props> = (props) => {
         placeholder="Empty"
         defaultValue={descriptionDefaultValue}
         onChange={descriptionChangeHandler}
+        disabled={props.isDisable}
       />
     </Grid>
   );
@@ -59,6 +66,7 @@ const DescriptionField: React.FC<Props> = (props) => {
 const mapStateToProps = (state: any) => {
   return {
     description: state.productReducer.product.description,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 

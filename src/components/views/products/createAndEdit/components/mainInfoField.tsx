@@ -39,6 +39,7 @@ interface Props {
   menuType: MenuType;
   product: Product;
   errorMessages: Product;
+  isDisable: boolean;
   /** functions */
   sendProductTypeName: Function;
   sendProductType: Function;
@@ -111,16 +112,19 @@ const MainInfoField: React.FC<Props> = (props) => {
 
   return (
     <Container className={classes.grid} disableGutters>
+      {/** header */}
       <Grid container={true}>
         <Typography className={classes.typography} component="h1" variant="h6">
           Details:
         </Typography>
       </Grid>
+
+      {/** contents */}
       <Grid container={true}>
         <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
           <TextField
             className={classes.textField}
-            required={true}
+            // required={true}
             select={true}
             fullWidth={true}
             id="outlined-select-required"
@@ -131,6 +135,7 @@ const MainInfoField: React.FC<Props> = (props) => {
             onChange={productTypeChangeHandler}
             error={props.errorMessages.productTypeName ? true : false}
             helperText={props.errorMessages.productTypeName}
+            disabled={props.isDisable}
           >
             {props.productTypeList.map((productType) => (
               <MenuItem key={productType.id} value={productType.typeName}>
@@ -142,7 +147,7 @@ const MainInfoField: React.FC<Props> = (props) => {
         <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
           <TextField
             className={classes.textField}
-            required={true}
+            // required={true}
             select={true}
             fullWidth={true}
             id="outlined-select-required"
@@ -153,6 +158,7 @@ const MainInfoField: React.FC<Props> = (props) => {
             onChange={menuTypeChangeHandler}
             error={props.errorMessages.menuTypeName ? true : false}
             helperText={props.errorMessages.menuTypeName}
+            disabled={props.isDisable}
           >
             {props.menuTypeList.map((menuType) => (
               <MenuItem key={menuType.id} value={menuType.typeName}>
@@ -165,7 +171,7 @@ const MainInfoField: React.FC<Props> = (props) => {
       <Grid container={true}>
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Name"
@@ -175,10 +181,11 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={nameChangeHandler}
           error={props.errorMessages.name ? true : false}
           helperText={props.errorMessages.name}
+          disabled={props.isDisable}
         />
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Price"
@@ -189,10 +196,11 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={priceChangeHandler}
           error={props.errorMessages.price ? true : false}
           helperText={props.errorMessages.price}
+          disabled={props.isDisable}
         />
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Unit"
@@ -202,10 +210,11 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={unitChangeHandler}
           error={props.errorMessages.unit ? true : false}
           helperText={props.errorMessages.unit}
+          disabled={props.isDisable}
         />
         <TextField
           className={classes.textField}
-          required={true}
+          // required={true}
           fullWidth={true}
           id="outlined-required"
           label="Amount"
@@ -216,6 +225,7 @@ const MainInfoField: React.FC<Props> = (props) => {
           onChange={amountChangeHandler}
           error={props.errorMessages.amount ? true : false}
           helperText={props.errorMessages.amount}
+          disabled={props.isDisable}
         />
       </Grid>
     </Container>
@@ -231,6 +241,7 @@ const mapStateToProps = (state: any) => {
     menuType: state.menuTypeReducer.menuType,
     product: state.productReducer.product,
     errorMessages: state.productReducer.errorMessages,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 

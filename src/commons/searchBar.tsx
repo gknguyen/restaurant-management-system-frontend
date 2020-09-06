@@ -76,7 +76,12 @@ const SearchBar: React.FC<Props> = (props) => {
       </Grid>
 
       {/** submit button */}
-      <input id="search-button" type="submit" style={{ display: 'none' }} />
+      <input
+        id="search-button"
+        type="submit"
+        style={{ display: 'none' }}
+        disabled={props.isDisable}
+      />
       <label htmlFor="search-button">
         <Button
           fullWidth={true}

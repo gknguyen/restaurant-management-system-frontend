@@ -195,7 +195,12 @@ const Login: React.FC<Props> = (props) => {
           </Box>
 
           {/** submit button */}
-          <input id="login-button" type="submit" style={{ display: 'none' }} />
+          <input
+            id="login-button"
+            type="submit"
+            style={{ display: 'none' }}
+            disabled={props.isDisable}
+          />
           <label htmlFor="login-button">
             <Button
               fullWidth={true}
@@ -224,7 +229,7 @@ const Login: React.FC<Props> = (props) => {
             </Grid>
             <Grid item={true} xs={12}>
               <Link href="#" variant="body2">
-                {"Don't have an account? Contact admin for new account"}
+                Don't have an account? Contact admin for new account
               </Link>
             </Grid>
           </Grid>

@@ -17,13 +17,6 @@ export const checkValidate = (createDataForm: any, create: boolean) => {
     errorMessagesForm.username = null;
   }
 
-  if (!createDataForm.password) {
-    errorMessagesForm.password = 'please input password';
-    results = false;
-  } else {
-    errorMessagesForm.password = null;
-  }
-
   if (!createDataForm.fullName) {
     errorMessagesForm.fullName = 'please input full name';
     results = false;
@@ -58,6 +51,13 @@ export const checkValidate = (createDataForm: any, create: boolean) => {
       results = false;
     } else {
       errorMessagesForm.avatar = null;
+    }
+
+    if (!createDataForm.password) {
+      errorMessagesForm.password = 'please input password';
+      results = false;
+    } else {
+      errorMessagesForm.password = null;
     }
   }
 

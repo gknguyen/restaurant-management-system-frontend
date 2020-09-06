@@ -6,7 +6,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../../configs/APIs';
@@ -22,6 +22,7 @@ import DescriptionField from './components/descriptionField';
 import ImageUploadField from './components/imageUploadField';
 import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
+import LinearProgressBar from '../../../../commons/linearProgressBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,12 +57,6 @@ const useStyles = makeStyles((theme: Theme) =>
       // background: 'linear-gradient(45deg, #424242 30%, #9e9e9e 90%)',
       color: 'white',
       margin: '10px',
-    },
-    progressBar: {
-      width: '50%',
-      '& > * + *': {
-        marginTop: theme.spacing(2),
-      },
     },
   }),
 );
@@ -119,7 +114,7 @@ const CreateProduct: React.FC<Props> = (props) => {
     history.push('/menu/productList');
   };
 
-  const createHandler = (event: any) => {
+  const createHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     props.sendDisableFlag(true);
 
@@ -157,11 +152,10 @@ const CreateProduct: React.FC<Props> = (props) => {
             New Product
           </Typography>
         </Grid>
-
         {/** contents */}
         <Grid container={true} item={true} xs={12}>
           <Paper className={classes.paper}>
-            <form>
+            <form onSubmit={createHandler}>
               <Box display="flex">
                 <Grid
                   className={classes.grid}
@@ -171,9 +165,12 @@ const CreateProduct: React.FC<Props> = (props) => {
                   alignItems="flex-start"
                 >
                   <Grid container={true} item={true} md={5} xs="auto">
+                    {/** image field */}
                     <Grid container={true} item={true} xs={12}>
                       <ImageUploadField />
                     </Grid>
+
+                    {/** buttons field */}
                     <Grid container={true} item={true} xs={12} justify="center" alignItems="center">
                       <Button
                         className={classes.goBackButton}
@@ -184,18 +181,28 @@ const CreateProduct: React.FC<Props> = (props) => {
                       >
                         Go Back
                       </Button>
-                      <Button
-                        className={classes.createButton}
-                        variant="contained"
-                        color="primary"
-                        onClick={createHandler}
+                      <input
+                        id="create-button"
+                        type="submit"
+                        style={{ display: 'none' }}
                         disabled={props.isDisable}
-                      >
-                        Create
-                      </Button>
+                      />
+                      <label htmlFor="create-button">
+                        <Button
+                          fullWidth={true}
+                          variant="contained"
+                          color="primary"
+                          component="span"
+                          className={classes.createButton}
+                          disabled={props.isDisable}
+                        >
+                          Create
+                        </Button>
+                      </label>
                     </Grid>
                   </Grid>
 
+                  {/** informations field */}
                   <Grid container={true} item={true} md={7} xs="auto">
                     <Grid
                       container={true}
@@ -217,16 +224,7 @@ const CreateProduct: React.FC<Props> = (props) => {
         </Grid>
 
         {/** progress bar */}
-        <Grid container={true} item={true} xs={12} alignItems="center" justify="center">
-          {props.isDisable ? (
-            <Box className={classes.progressBar}>
-              <LinearProgress />
-              <LinearProgress color="secondary" />
-            </Box>
-          ) : (
-            <Box></Box>
-          )}
-        </Grid>
+        <LinearProgressBar />
       </Grid>
     </Container>
   );

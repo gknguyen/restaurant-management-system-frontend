@@ -42,6 +42,7 @@ export function bytesToSize(bytes: number, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-export function convertDateTime(theDateTime: string, format = 'YYYY/MM/DD HH:mm:ss') {
-  return moment.tz(utc(theDateTime), CURRENT_TIEMZONE).format(format);
+export function convertDateTime(theDateTime: string | Date, format = 'YYYY/MM/DD HH:mm:ss') {
+  if (theDateTime) return moment.tz(utc(theDateTime), CURRENT_TIEMZONE).format(format);
+  else return null;
 }

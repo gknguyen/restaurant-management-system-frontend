@@ -37,13 +37,13 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
     },
     editButton: {
-      background: 'linear-gradient(45deg, #3949ab 30%, #1e88e5 90%)',
+      // background: 'linear-gradient(45deg, #3949ab 30%, #1e88e5 90%)',
       color: 'white',
       margin: '10px',
       width: 95,
     },
     goBackButton: {
-      background: 'linear-gradient(45deg, #424242 30%, #9e9e9e 90%)',
+      // background: 'linear-gradient(45deg, #424242 30%, #9e9e9e 90%)',
       color: 'white',
       margin: '10px',
     },
@@ -80,17 +80,17 @@ const ProductDetails: React.FC<Props> = (props) => {
     apiGet(APIs.getOneProductUrl, { productId }).then((HTTPdata) => {
       const serverProduct = HTTPdata.values;
 
-      const productType = serverProduct.productType || null;
-      const menuType = serverProduct.menuType || null;
+      const productType = serverProduct.productType as ProductType;
+      const menuType = serverProduct.menuType as MenuType;
       const product = {
-        id: serverProduct.id || null,
-        name: serverProduct.name || null,
-        price: serverProduct.price || null,
-        unit: serverProduct.unit || null,
-        amount: serverProduct.amount || null,
-        active: serverProduct.activeStatus || null,
-        image: serverProduct.image || null,
-        description: serverProduct.description || null,
+        id: serverProduct.id,
+        name: serverProduct.name,
+        price: serverProduct.price,
+        unit: serverProduct.unit,
+        amount: serverProduct.amount,
+        active: serverProduct.activeStatus,
+        image: serverProduct.image,
+        description: serverProduct.description,
       } as Product;
 
       props.sendProduct(product);
@@ -114,11 +114,14 @@ const ProductDetails: React.FC<Props> = (props) => {
   return (
     <Container maxWidth="xl">
       <Grid className={classes.grid} container={true} spacing={2} direction="column">
+        {/** header */}
         <Grid container={true} item={true} xs={12}>
           <Typography component="h1" variant="h4">
             Product Details
           </Typography>
         </Grid>
+
+        {/** contents */}
         <Grid container={true} item={true} xs={12}>
           <Paper className={classes.paper}>
             <Box display="flex">
@@ -131,6 +134,7 @@ const ProductDetails: React.FC<Props> = (props) => {
                 alignItems="flex-start"
               >
                 <Grid container={true} item={true} spacing={1} md={5} xs="auto">
+                  {/** image field */}
                   <Grid container={true} item={true} xs={12}>
                     <img
                       alt="Select file"
@@ -138,11 +142,13 @@ const ProductDetails: React.FC<Props> = (props) => {
                       src={props.image ? productImageUrl : NO_IMAGE_URL}
                     />
                   </Grid>
+
+                  {/** buttons field */}
                   <Grid container={true} item={true} xs={12} justify="center" alignItems="flex-end">
                     <Button
                       className={classes.goBackButton}
                       variant="contained"
-                      color="primary"
+                      color="secondary"
                       onClick={goBackHandler}
                     >
                       Go Back
@@ -157,6 +163,8 @@ const ProductDetails: React.FC<Props> = (props) => {
                     </Button>
                   </Grid>
                 </Grid>
+
+                {/** informations field */}
                 <Grid container={true} item={true} md={7} xs="auto" spacing={3} direction="column">
                   <Grid
                     container={true}
@@ -215,8 +223,10 @@ const ProductDetails: React.FC<Props> = (props) => {
             </Box>
           </Paper>
         </Grid>
-        <EditProduct />
       </Grid>
+
+      {/** edit field */}
+      <EditProduct />
     </Container>
   );
 };

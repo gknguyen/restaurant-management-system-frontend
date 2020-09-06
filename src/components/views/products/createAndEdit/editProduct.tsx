@@ -7,11 +7,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React, { useEffect } from 'react';
+import React, { useEffect, FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import api, { apiGet, apiPut } from '../../../../configs/axios';
-import { Product, ProductType, MenuType } from '../../../../configs/interfaces';
+import { Product, ProductType, MenuType, HTTPdata } from '../../../../configs/interfaces';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as productTypeActions from '../../../../redux/productTypeReducers/actions';
@@ -24,6 +24,7 @@ import { checkValidate, errorMessagesForm } from './validate';
 import * as APIs from '../../../../configs/APIs';
 import { showSnackBarAlert } from '../../../../configs/utils';
 import * as imageActions from '../../../../redux/imageReducers/actions';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,15 +45,20 @@ const useStyles = makeStyles((theme: Theme) =>
     typography: {
       padding: '0 5px 5px 5px',
     },
-    createButton: {
+    editButton: {
       // background: 'linear-gradient(45deg, #00c853 30%, #b2ff59 90%)',
       color: 'white',
       margin: '10px',
+      minWidth: '100px',
     },
     goBackButton: {
       // background: 'linear-gradient(45deg, #424242 30%, #9e9e9e 90%)',
       color: 'white',
       margin: '10px',
+    },
+    progressCircular: {
+      // color: '#6798e5',
+      animationDuration: '550ms',
     },
   }),
 );
@@ -107,10 +113,13 @@ const EditProduct: React.FC<Props> = (props) => {
   const handleClose = () => {
     props.sendEditOpenFlag(false);
     props.sendErrorMessageForm({});
+    apiGet(APIs.getOneProductUrl, { productId }).then((HTTPdata) => processDetailData(HTTPdata));
   };
 
-  const editHandler = (event: any) => {
+  const editHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    props.sendDisableFlag(true);
+
     const isOk = checkValidate(editDataForm, false);
     if (isOk) {
       const formData = new FormData();
@@ -126,25 +135,7 @@ const EditProduct: React.FC<Props> = (props) => {
         formData.append('files', props.productImage, props.productImage.name);
 
       apiPut(APIs.editOneProductUrl, { productId }, formData).then((HTTPdata) => {
-        const serverProduct = HTTPdata.values;
-
-        const productType = serverProduct.productType || null;
-        const menuType = serverProduct.menuType || null;
-        const product = {
-          id: serverProduct.id || null,
-          name: serverProduct.name || null,
-          price: serverProduct.price || null,
-          unit: serverProduct.unit || null,
-          amount: serverProduct.amount || null,
-          active: serverProduct.activeStatus || null,
-          image: serverProduct.image || null,
-          description: serverProduct.description || null,
-        } as Product;
-
-        props.sendProduct(product);
-        props.sendProductType(productType);
-        props.sendMenuType(menuType);
-
+        processDetailData(HTTPdata);
         props.sendDisableFlag(false);
         props.sendEditOpenFlag(false);
         showSnackBarAlert(5000, 'success', HTTPdata.message);
@@ -153,6 +144,27 @@ const EditProduct: React.FC<Props> = (props) => {
       props.sendErrorMessageForm(errorMessagesForm);
       props.sendDisableFlag(false);
     }
+  };
+
+  const processDetailData = (HTTPdata: HTTPdata) => {
+    const serverProduct = HTTPdata.values;
+
+    const productType = serverProduct.productType || null;
+    const menuType = serverProduct.menuType || null;
+    const product = {
+      id: serverProduct.id || null,
+      name: serverProduct.name || null,
+      price: serverProduct.price || null,
+      unit: serverProduct.unit || null,
+      amount: serverProduct.amount || null,
+      active: serverProduct.activeStatus || null,
+      image: serverProduct.image || null,
+      description: serverProduct.description || null,
+    } as Product;
+
+    props.sendProduct(product);
+    props.sendProductType(productType);
+    props.sendMenuType(menuType);
   };
 
   return (
@@ -164,13 +176,16 @@ const EditProduct: React.FC<Props> = (props) => {
         open={props.open}
         maxWidth="md"
       >
+        {/** header */}
         <DialogTitle id="customized-dialog-title">
           <Typography component="h1" variant="h5">
             Edit Product
           </Typography>
         </DialogTitle>
+
+        {/** contents */}
         <DialogContent>
-          <form>
+          <form onSubmit={editHandler}>
             <Box display="flex">
               <Grid
                 className={classes.grid}
@@ -180,9 +195,12 @@ const EditProduct: React.FC<Props> = (props) => {
                 alignItems="flex-start"
               >
                 <Grid container={true} item={true} md={5} xs="auto">
+                  {/** image field */}
                   <Grid container={true} item={true} xs={12}>
                     <ImageUploadField />
                   </Grid>
+
+                  {/** buttons field */}
                   <Grid container={true} item={true} xs={12} justify="center" alignItems="center">
                     <Button
                       className={classes.goBackButton}
@@ -192,16 +210,38 @@ const EditProduct: React.FC<Props> = (props) => {
                     >
                       Go Back
                     </Button>
-                    <Button
-                      className={classes.createButton}
-                      variant="contained"
-                      color="primary"
-                      onClick={editHandler}
-                    >
-                      Confirm
-                    </Button>
+                    <input
+                      id="edit-button"
+                      type="submit"
+                      style={{ display: 'none' }}
+                      disabled={props.isDisable}
+                    />
+                    <label htmlFor="edit-button">
+                      <Button
+                        fullWidth={true}
+                        variant="contained"
+                        color="primary"
+                        component="span"
+                        className={classes.editButton}
+                        disabled={props.isDisable}
+                      >
+                        {!props.isDisable ? (
+                          'Confirm'
+                        ) : (
+                          <CircularProgress
+                            className={classes.progressCircular}
+                            variant="indeterminate"
+                            disableShrink
+                            size={24}
+                            thickness={4}
+                          />
+                        )}
+                      </Button>
+                    </label>
                   </Grid>
                 </Grid>
+
+                {/** informations field */}
                 <Grid container={true} item={true} md={7} xs="auto">
                   <Grid
                     container={true}

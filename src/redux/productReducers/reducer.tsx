@@ -50,12 +50,13 @@ const productReducer = (state = initialState, action: any) => {
       return { ...state };
     /* return product main values */
     case ActionType.RECEIVE_PRODUCT:
-      state.product.name = action.data.name;
-      state.product.price = action.data.price;
-      state.product.unit = action.data.unit;
-      state.product.amount = action.data.amount;
-      state.product.image = action.data.image;
-      state.product.description = action.data.description;
+      // state.product.name = action.data.name;
+      // state.product.price = action.data.price;
+      // state.product.unit = action.data.unit;
+      // state.product.amount = action.data.amount;
+      // state.product.image = action.data.image;
+      // state.product.description = action.data.description;
+      state.product = action.data;
       return { ...state };
     /* return each product value */
     case ActionType.RECEIVE_PRODUCT_NAME:

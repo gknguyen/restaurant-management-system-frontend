@@ -54,8 +54,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const defaultFilesValue: File[] = [];
 
 interface Props {
+  /** redux params */
   imageFileName: string;
   errorMessage: string;
+  isDisable: boolean;
+  /** redux functions */
   sendImageFiles: Function;
 }
 
@@ -87,7 +90,7 @@ const ImagesDropZone: React.FC<Props> = (props) => {
         {images.length === 0 ? (
           <Fragment>
             <Grid container={true} direction="column" justify="center" alignItems="center">
-              <input {...getInputProps()} />
+              <input {...getInputProps()} disabled={props.isDisable} />
               <img alt="Select file" className={classes.image} src={docImage} />
               <Typography className={classes.info} color="textSecondary" variant="body1">
                 Drop an image here or click <Link underline="always">browse</Link> thorough your
@@ -127,6 +130,7 @@ const mapStateToProps = (state: any) => {
   return {
     imageFileName: state.imageReducer.imageFileName,
     errorMessage: state.imageReducer.errorMessage,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 
