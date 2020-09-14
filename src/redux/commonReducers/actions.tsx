@@ -9,6 +9,15 @@ export const actionDisableFlag = (isDisable: boolean) => {
   };
 };
 
+export const actionReceiveNavBarOpenFlag = (navBarOpenFlag: boolean) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: ActionType.RECEIVE_NAVBAR_OPEN_FLAG,
+      data: navBarOpenFlag,
+    });
+  };
+};
+
 export const actionReceiveSearchValue = (searchValue: string) => {
   return (dispatch: any) => {
     dispatch({

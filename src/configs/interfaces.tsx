@@ -3,6 +3,12 @@ export interface LoginForm {
   password: string;
 }
 
+export interface UserInfo {
+  role: string;
+  fullName: string;
+  avatar: string;
+}
+
 export interface ProductType {
   id: string;
   typeName: string;

@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { List, Typography } from '@material-ui/core';
 import useRouter from '../../configs/userRouter';
 import NavigationListItem from './components/navigationListItem';
+import { connect } from 'react-redux';
+import * as commonActions from '../../redux/commonReducers/actions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,21 +16,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavigationList = (props: { [x: string]: any; pages: any }) => {
-  const { pages, ...rest } = props;
+interface NavigationListProps {
+  depth: number;
+  pages: any[];
+  router: object;
+}
+
+const NavigationList: React.FC<NavigationListProps> = (props) => {
+  const { ...rest } = props;
 
   return (
-    <List>{pages.reduce((items: any, page: any) => reduceChildRoutes({ items, page, ...rest }), [])}</List>
+    <List>
+      {props.pages.reduce(
+        (items: any, page: any) => reduceChildRoutes({ items, page, ...rest }),
+        [],
+      )}
+    </List>
   );
 };
 
-NavigationList.propTypes = {
-  depth: PropTypes.number,
-  pages: PropTypes.array,
-  router: PropTypes.object,
-};
+interface ReduceChildRoutesProps {
+  /** params */
+  router?: any;
+  items: any;
+  page: any;
+  depth?: any;
+  /** redux params */
+  navBarOpenFlag?: boolean;
+}
 
-const reduceChildRoutes = (props: { router?: any; items: any; page: any; depth?: any }) => {
+const reduceChildRoutes: React.FC<ReduceChildRoutesProps> = (props) => {
   const { router, items, page, depth } = props;
 
   if (page.children) {
@@ -65,15 +82,20 @@ const reduceChildRoutes = (props: { router?: any; items: any; page: any; depth?:
   return items;
 };
 
-interface Props {
+interface NavigationProps {
+  /** params */
   [x: string]: any;
-  title: any;
-  pages: any;
+  title: string;
+  pages: any[];
   component: any;
-  className?: any;
+  className?: string;
+  /** redux params */
+  navBarOpenFlag: boolean;
+  /** redux functions */
+  sendNavBarOpenFlag: Function;
 }
 
-const Navigation: React.FC<Props> = (props) => {
+const Navigation: React.FC<NavigationProps> = (props) => {
   const { title, pages, className, component: Component, ...rest } = props;
 
   const classes = useStyles();
@@ -87,15 +109,24 @@ const Navigation: React.FC<Props> = (props) => {
   );
 };
 
-Navigation.propTypes = {
-  className: PropTypes.string,
-  component: PropTypes.any,
-  pages: PropTypes.array.isRequired,
-  title: PropTypes.string,
-};
-
 Navigation.defaultProps = {
   component: 'nav',
 };
 
-export default Navigation;
+/* collect data from redux store */
+const mapStateToProps = (state: any) => {
+  return {
+    navBarOpenFlag: state.commonReducer.navBarOpenFlag,
+  };
+};
+
+/* Send data to redux store */
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    sendNavBarOpenFlag: (navBarOpenFlag: boolean) => {
+      dispatch(commonActions.actionReceiveNavBarOpenFlag(navBarOpenFlag));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation);

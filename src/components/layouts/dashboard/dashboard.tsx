@@ -1,4 +1,4 @@
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress, Box } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React, { Fragment, Suspense, useState } from 'react';
@@ -6,6 +6,8 @@ import { renderRoutes } from 'react-router-config';
 import NavBar from './components/navBar';
 import BottomBar from './components/bottomBar';
 import TopBar from './components/topBar';
+import { connect } from 'react-redux';
+import * as commonActions from '../../../redux/commonReducers/actions';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -15,32 +17,49 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     overflow: 'hidden',
   },
-  topBar: {
-    zIndex: 2,
-    position: 'relative',
-  },
   container: {
     display: 'flex',
     flex: '1 1 auto',
     overflow: 'hidden',
   },
+  topBar: {
+    zIndex: 2,
+    position: 'relative',
+  },
   navBar: {
     zIndex: 3,
-    width: 256,
-    minWidth: 256,
+    width: '100%',
+    maxWidth: 250,
+    // minWidth: 200,
+    flex: '0 0 auto',
+  },
+  navBarSmall: {
+    zIndex: 3,
+    width: '100%',
+    maxWidth: 80,
+    // minWidth: 50,
     flex: '0 0 auto',
   },
   content: {
+    height: '100vh',
     overflowY: 'auto',
     flex: '1 1 auto',
   },
 }));
 
-const Dashboard: React.FC = (props: any) => {
-  const { route } = props;
+interface Props {
+  /** params */
+  route: any;
+  /** redux params */
+  navBarOpenFlag: boolean;
+  /** redux functions */
+  sendNavBarOpenFlag: Function;
+}
 
+const Dashboard: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const [openNavBarMobile, setOpenNavBarMobile] = useState(false);
+
+  const [openNavBarMobile, setOpenNavBarMobile] = useState(true);
 
   const handleNavBarMobileOpen = () => {
     setOpenNavBarMobile(true);
@@ -51,26 +70,40 @@ const Dashboard: React.FC = (props: any) => {
   };
 
   return (
-    // <div className={classes.root}>
-    <Fragment>
-      <TopBar />
-      <div className={classes.container}>
-        <NavBar
-          className={classes.navBar}
-          onMobileClose={handleNavBarMobileClose}
-          openMobile={openNavBarMobile}
-        />
-        <main className={classes.content}>
-          <Suspense fallback={<LinearProgress />}>{renderRoutes(route.routes)}</Suspense>
-        </main>
-      </div>
-    </Fragment>
-    // </div>
+    <Box className={classes.root}>
+      <Fragment>
+        <TopBar />
+        <Box className={classes.container}>
+          <NavBar
+            // className={props.navBarOpenFlag ? classes.navBar : classes.navBarSmall}
+            className={classes.navBar}
+            // onMobileClose={handleNavBarMobileClose}
+            // openMobile={openNavBarMobile}
+            openMobile={props.navBarOpenFlag}
+          />
+          <main className={classes.content}>
+            <Suspense fallback={<LinearProgress />}>{renderRoutes(props.route.routes)}</Suspense>
+          </main>
+        </Box>
+      </Fragment>
+    </Box>
   );
 };
 
-Dashboard.propTypes = {
-  route: PropTypes.object,
+/* collect data from redux store */
+const mapStateToProps = (state: any) => {
+  return {
+    navBarOpenFlag: state.commonReducer.navBarOpenFlag,
+  };
 };
 
-export default Dashboard;
+/* Send data to redux store */
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    sendNavBarOpenFlag: (navBarOpenFlag: boolean) => {
+      dispatch(commonActions.actionReceiveNavBarOpenFlag(navBarOpenFlag));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

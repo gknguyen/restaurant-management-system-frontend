@@ -1,42 +1,15 @@
-export function getAuthenticatedUser() {
-  const results = {
-    id: '',
-    role: '',
-    username: '',
-    fullName: '',
-    age: 0,
-    phoneNumber: '',
-    email: '',
-    avatar: '',
-    activeStatus: false,
-    loginDateTime: new Date(),
-    authToken: '',
-  };
-  const userDataString = sessionStorage.getItem('user');
-  let userData: any = {};
-  if (userDataString) {
-    userData = JSON.parse(userDataString);
-  }
-  if (userData) {
-    results.id = userData.id;
-    results.role = userData.userType.typeName;
-    results.username = userData.username;
-    results.fullName = userData.fullName;
-    results.age = userData.age;
-    results.phoneNumber = userData.phoneNumber;
-    results.email = userData.email;
-    results.avatar = userData.avatar;
-    results.activeStatus = userData.activeStatus;
-    results.loginDateTime = userData.loginDateTime;
-    results.authToken = userData.authToken;
-  }
-  return results;
-}
+import { UserInfo } from './interfaces';
 
 export function getAuthToken() {
   const tokenDataString = localStorage.getItem('token');
-  const token = tokenDataString ? (JSON.parse(tokenDataString) as string) : '';
-  return token;
+  const token = tokenDataString ? JSON.parse(tokenDataString) : '';
+  return token as string;
+}
+
+export function getdUserInfo() {
+  const userInfoDataString = localStorage.getItem('userInfo');
+  const userInfo = userInfoDataString ? JSON.parse(userInfoDataString) : '';
+  return userInfo as UserInfo;
 }
 
 export function getProductId() {

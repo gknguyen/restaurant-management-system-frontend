@@ -7,20 +7,19 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { ListItem, Button, Collapse, colors } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-
-const CustomRouterLink = forwardRef((props: any, ref: any) => (
-  <div ref={ref} style={{ flexGrow: 1 }}>
-    <RouterLink {...props} />
-  </div>
-));
+import { connect } from 'react-redux';
+import * as commonActions from '../../../redux/commonReducers/actions';
+import { constants } from 'buffer';
 
 const useStyles = makeStyles((theme) => ({
   item: {
+    width: '100%',
     display: 'block',
     paddingTop: 0,
     paddingBottom: 0,
   },
   itemLeaf: {
+    width: '100%',
     display: 'flex',
     paddingTop: 0,
     paddingBottom: 0,
@@ -68,18 +67,32 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
+  smallButton: {
+    minWidth: '0px !important',
+  },
 }));
 
+const CustomRouterLink = forwardRef((props: any, ref: any) => (
+  <div ref={ref} style={{ flexGrow: 1 }}>
+    <RouterLink {...props} />
+  </div>
+));
+
 interface Props {
-  title: any;
-  href?: any;
-  depth: any;
+  /** params */
+  title: string;
+  href?: string;
+  depth: number;
   children?: any;
   icon: any;
-  className?: any;
-  open?: any;
+  className?: string;
+  open?: boolean;
   label: any;
   key?: any;
+  /** redux params */
+  navBarOpenFlag: boolean;
+  /** redux functions */
+  sendNavBarOpenFlag: Function;
 }
 
 const NavigationListItem: React.FC<Props> = (props) => {
@@ -102,27 +115,27 @@ const NavigationListItem: React.FC<Props> = (props) => {
     setOpen((open: any) => !open);
   };
 
-  let paddingLeft = 8;
+  const paddingLeft = depth > 0 ? (props.navBarOpenFlag ? 32 : 0) + 8 * depth : 8;
 
-  if (depth > 0) {
-    paddingLeft = 32 + 8 * depth;
-  }
-
-  const style = {
-    paddingLeft,
-  };
+  const style = { paddingLeft };
 
   if (children) {
     return (
       <ListItem {...rest} className={clsx(classes.item, className)} disableGutters>
-        <Button className={classes.button} onClick={handleToggle} style={style}>
+        <Button
+          className={classes.button}
+          onClick={handleToggle}
+          style={style}
+          classes={{ root: classes.smallButton }}
+        >
           {Icon && <Icon className={classes.icon} />}
-          {title}
-          {open ? (
-            <ExpandLessIcon className={classes.expandIcon} color="inherit" />
-          ) : (
-            <ExpandMoreIcon className={classes.expandIcon} color="inherit" />
-          )}
+          {props.navBarOpenFlag && title}
+          {props.navBarOpenFlag &&
+            (open ? (
+              <ExpandLessIcon className={classes.expandIcon} color="inherit" />
+            ) : (
+              <ExpandMoreIcon className={classes.expandIcon} color="inherit" />
+            ))}
         </Button>
         <Collapse in={open}>{children}</Collapse>
       </ListItem>
@@ -137,9 +150,10 @@ const NavigationListItem: React.FC<Props> = (props) => {
           exact
           style={style}
           to={href}
+          classes={{ root: classes.smallButton }}
         >
           {Icon && <Icon className={classes.icon} />}
-          {title}
+          {props.navBarOpenFlag && title}
           {Label && (
             <span className={classes.label}>
               <Label />
@@ -151,20 +165,25 @@ const NavigationListItem: React.FC<Props> = (props) => {
   }
 };
 
-NavigationListItem.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  depth: PropTypes.number.isRequired,
-  href: PropTypes.string,
-  icon: PropTypes.any,
-  label: PropTypes.any,
-  open: PropTypes.bool,
-  title: PropTypes.string.isRequired,
-};
-
 NavigationListItem.defaultProps = {
   depth: 0,
   open: false,
 };
 
-export default NavigationListItem;
+/* collect data from redux store */
+const mapStateToProps = (state: any) => {
+  return {
+    navBarOpenFlag: state.commonReducer.navBarOpenFlag,
+  };
+};
+
+/* Send data to redux store */
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    sendNavBarOpenFlag: (navBarOpenFlag: boolean) => {
+      dispatch(commonActions.actionReceiveNavBarOpenFlag(navBarOpenFlag));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationListItem);

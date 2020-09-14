@@ -1,5 +1,6 @@
 /* commons */
 export const RECEIVE_DISABLE_FLAG = 'RECEIVE_DISABLE_FLAG';
+export const RECEIVE_NAVBAR_OPEN_FLAG = 'RECEIVE_NAVBAR_OPEN_FLAG';
 export const RECEIVE_SEARCH_VALUE = 'RECEIVE_SEARCH_VALUE';
 
 /* product type */

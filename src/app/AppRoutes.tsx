@@ -10,6 +10,7 @@ import CreateUser from '../components/views/users/createAndEdit/createUser';
 import UserDetails from '../components/views/users/details/userDetails';
 import UserList from '../components/views/users/list/userList';
 import Logout from '../components/views/login/logout';
+import Home from '../components/views/home/home';
 
 const routes = [
   /* ================================ Login ================================ */
@@ -38,6 +39,12 @@ const routes = [
     path: '*',
     component: DashBoardLayout,
     routes: [
+      /* ================================ Main routes ================================ */
+      {
+        path: '/home',
+        exact: true,
+        component: Home,
+      },
       /* ================================ Product routes ================================ */
       {
         path: '/menu/productList',

@@ -15,6 +15,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SearchIcon from '@material-ui/icons/Search';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { connect } from 'react-redux';
+import * as commonActions from '../../../../redux/commonReducers/actions';
+import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,7 +65,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const TopBar = () => {
+interface Props {
+  /** redux params */
+  navBarOpenFlag: boolean;
+  /** redux functions */
+  sendNavBarOpenFlag: Function;
+}
+
+const TopBar: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -100,8 +111,14 @@ const TopBar = () => {
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer">
-            <MenuIcon />
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="open drawer"
+            onClick={() => props.sendNavBarOpenFlag(!props.navBarOpenFlag)}
+          >
+            {props.navBarOpenFlag ? <MenuIcon /> : <MenuOpenIcon />}
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap={true}>
             GK's bar
@@ -136,4 +153,20 @@ const TopBar = () => {
   );
 };
 
-export default TopBar;
+/* collect data from redux store */
+const mapStateToProps = (state: any) => {
+  return {
+    navBarOpenFlag: state.commonReducer.navBarOpenFlag,
+  };
+};
+
+/* Send data to redux store */
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    sendNavBarOpenFlag: (navBarOpenFlag: boolean) => {
+      dispatch(commonActions.actionReceiveNavBarOpenFlag(navBarOpenFlag));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopBar);

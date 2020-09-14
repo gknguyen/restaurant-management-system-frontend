@@ -1,31 +1,29 @@
 import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Link from '@material-ui/core/Link';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import React, { ChangeEvent, useState, FormEvent, useEffect } from 'react';
+import clsx from 'clsx';
+import STATUS_CODE from 'http-status';
+import React, { ChangeEvent, FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../configs/APIs';
-import Axios, { authPost } from '../../../configs/axios';
+import { authPost } from '../../../configs/axios';
 import { loginInputType } from '../../../configs/inputType';
-import { LoginForm, User } from '../../../configs/interfaces';
-import * as userActions from '../../../redux/userReducers/actions';
-import { validate, loginMessagesForm } from './validate';
-import STATUS_CODE from 'http-status';
-import { HTTPdata } from '../../../configs/interfaces';
-import Box from '@material-ui/core/Box';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import clsx from 'clsx';
-import axios from 'axios';
+import { HTTPdata, User, UserInfo } from '../../../configs/interfaces';
 import * as commonActions from '../../../redux/commonReducers/actions';
+import * as userActions from '../../../redux/userReducers/actions';
+import { loginMessagesForm, validate } from './validate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -87,11 +85,11 @@ const Login: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const [errorMessage, setErrorMessage] = useState('');
-  const [errorMessageUsername, setErrorMessageUsername] = useState('');
-  const [errorMessagePassword, setErrorMessagePassword] = useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [errorMessageUsername, setErrorMessageUsername] = React.useState('');
+  const [errorMessagePassword, setErrorMessagePassword] = React.useState('');
 
-  useEffect(() => {
+  React.useEffect(() => {
     localStorage.clear();
     sessionStorage.clear();
   }, []);
@@ -99,13 +97,18 @@ const Login: React.FC<Props> = (props) => {
   const submitLoginForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     props.sendDisableFlag(true);
+
     if (validate(loginForm)) {
       const HTTPdata = (await authPost(APIs.loginUrl, loginForm)) as HTTPdata;
       if (HTTPdata.code === STATUS_CODE.OK) {
-        const token = HTTPdata.values as string;
+        const token = HTTPdata.values.token as string;
+        const userInfo = HTTPdata.values.userInfo as UserInfo;
+
         localStorage.setItem('token', JSON.stringify(token));
-        history.push('/admin/home');
-        window.location.reload(true);
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+        history.push('/home');
+        window.location.reload();
       } else {
         props.sendDisableFlag(false);
       }

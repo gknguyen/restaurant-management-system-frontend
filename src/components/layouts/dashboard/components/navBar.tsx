@@ -1,4 +1,4 @@
-import { Avatar, Divider, Drawer, Hidden, Paper, Typography } from '@material-ui/core';
+import { Avatar, Divider, Drawer, Hidden, Paper, Typography, Box } from '@material-ui/core';
 // import { useSelector } from 'react-redux';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -6,8 +6,12 @@ import PropTypes from 'prop-types';
 import React, { Fragment, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Navigation from '../../../../commons/navigation/navigation';
+import { AWS_S3_BUCKET_URL } from '../../../../configs/constants';
+import { getdUserInfo } from '../../../../configs/localStore';
 import useRouter from '../../../../configs/userRouter';
-import navigationRoutes from './navigationRoutes';
+import navigationRoutes from '../../../../commons/navigation/components/navigationRoutes';
+
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -36,68 +40,103 @@ const useStyles = makeStyles((theme: Theme) => ({
   navigation: {
     marginTop: theme.spacing(2),
   },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+  },
+  drawerOpen: {
+    top: '65px',
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerClose: {
+    top: '65px',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9) + 1,
+    },
+  },
 }));
 
-const NavBar = (props: any) => {
-  const { openMobile, onMobileClose, className, ...rest } = props;
+interface Props {
+  className: string;
+  // onMobileClose: Function;
+  openMobile: boolean;
+  children?: React.ReactNode;
+}
+
+const NavBar: React.FC<Props> = (props) => {
+  const { ...rest } = props;
 
   const classes = useStyles();
   const router = useRouter();
-  // const session = useSelector((state: any) => state.session);
+  const userInfo = getdUserInfo();
+  const userImageUrl = `${AWS_S3_BUCKET_URL}/users/${userInfo.avatar}`;
 
-  useEffect(() => {
-    if (openMobile) {
-      onMobileClose && onMobileClose();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.location.pathname]);
+  React.useEffect(() => {}, [router.location.pathname]);
 
   const navbarContent = (
-    <div className={classes.content}>
-      <div className={classes.profile}>
-        <Avatar
-          alt="Person"
-          className={classes.avatar}
-          component={RouterLink}
-          // src={session.user.avatar}
-          to="/profile/1/timeline"
-        />
-        <Typography className={classes.name} variant="h4">
-          {/* {session.user.first_name} {session.user.last_name} */}
-        </Typography>
-      </div>
-      <Divider className={classes.divider} />
+    <Box className={classes.content}>
+      {props.openMobile && (
+        <Box>
+          <Box className={classes.profile}>
+            <Avatar
+              alt="Person"
+              className={classes.avatar}
+              component={RouterLink}
+              src={userImageUrl}
+              to="/profile/1/timeline"
+            />
+            <Typography className={classes.name} variant="h6">
+              {userInfo.fullName}
+            </Typography>
+          </Box>
+
+          <Divider className={classes.divider} />
+        </Box>
+      )}
+
       <nav className={classes.navigation}>
         {navigationRoutes.map((list) => (
           <Navigation component="div" key={list.title} pages={list.pages} title={list.title} />
         ))}
       </nav>
-    </div>
+    </Box>
   );
 
   return (
     <Fragment>
-      <Hidden lgUp>
-        <Drawer anchor="left" onClose={onMobileClose} open={openMobile} variant="temporary">
-          <div {...rest} className={clsx(classes.root, className)}>
+      <Drawer
+        anchor="left"
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: props.openMobile,
+          [classes.drawerClose]: !props.openMobile,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: props.openMobile,
+            [classes.drawerClose]: !props.openMobile,
+          }),
+        }}
+      >
+        <Hidden xsDown>
+          <Paper {...rest} className={clsx(classes.root, props.className)} elevation={1} square>
             {navbarContent}
-          </div>
-        </Drawer>
-      </Hidden>
-      <Hidden mdDown>
-        <Paper {...rest} className={clsx(classes.root, className)} elevation={1} square>
-          {navbarContent}
-        </Paper>
-      </Hidden>
+          </Paper>
+        </Hidden>
+      </Drawer>
     </Fragment>
   );
-};
-
-NavBar.propTypes = {
-  className: PropTypes.string,
-  onMobileClose: PropTypes.func,
-  openMobile: PropTypes.bool,
 };
 
 export default NavBar;
