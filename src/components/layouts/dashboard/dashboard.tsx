@@ -11,7 +11,7 @@ import * as commonActions from '../../../redux/commonReducers/actions';
 
 const useStyles = makeStyles(() => ({
   root: {
-    height: '100%',
+    height: '100vh',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -41,7 +41,7 @@ const useStyles = makeStyles(() => ({
     flex: '0 0 auto',
   },
   content: {
-    height: '100vh',
+    height: '100%',
     overflowY: 'auto',
     flex: '1 1 auto',
   },
@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   /** params */
-  route: any;
+  route?: any;
   /** redux params */
   navBarOpenFlag: boolean;
   /** redux functions */
@@ -59,15 +59,15 @@ interface Props {
 const Dashboard: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const [openNavBarMobile, setOpenNavBarMobile] = useState(true);
+  // const [openNavBarMobile, setOpenNavBarMobile] = useState(true);
 
-  const handleNavBarMobileOpen = () => {
-    setOpenNavBarMobile(true);
-  };
+  // const handleNavBarMobileOpen = () => {
+  //   setOpenNavBarMobile(true);
+  // };
 
-  const handleNavBarMobileClose = () => {
-    setOpenNavBarMobile(false);
-  };
+  // const handleNavBarMobileClose = () => {
+  //   setOpenNavBarMobile(false);
+  // };
 
   return (
     <Box className={classes.root}>

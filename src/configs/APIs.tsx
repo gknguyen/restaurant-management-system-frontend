@@ -6,7 +6,7 @@ export const loginUrl = '/auth/login/';
 export const getSignedUrl = '/awsS3/getSignedUrl/';
 export const uploadFileToS3Url = '/awsS3/uploadFileToS3/';
 
-/* common APIs */
+/** common APIs */
 export const menuTypeUrl = baseUrl + 'common/menuType/';
 export const getListMenuTypeUrl = menuTypeUrl + 'getList/';
 export const getOneMenuTypeUrl = menuTypeUrl + 'getOne/';
@@ -18,20 +18,24 @@ export const getOneProductTypeUrl = productTypeUrl + 'getOne/';
 export const userTypeUrl = baseUrl + 'common/userType/';
 export const getListUserTypeUrl = userTypeUrl + 'getList/';
 
-/* product screen */
-export const productUrl = baseUrl + 'product/';
-export const getListProductUrl = productUrl + 'getList/';
-export const getOneProductUrl = productUrl + 'getOne/';
-export const searchListProductUrl = productUrl + 'searchList/';
-export const createOneProductUrl = productUrl + 'createOne/';
-export const editOneProductUrl = productUrl + 'editOne/';
-export const deleteListProductUrl = productUrl + 'deleteList/';
+/** main screen */
+export const mainScreenUrl = baseUrl + 'main/';
+export const getListProductForMainScreenUrl = mainScreenUrl + 'getList/';
 
-/* user screen */
-export const userUrl = baseUrl + 'user/';
-export const getListUserUrl = userUrl + 'getList/';
-export const getOneUserUrl = userUrl + 'getOne/';
-export const searchListUserUrl = userUrl + 'searchList/';
-export const createOneUserUrl = userUrl + 'createOne/';
-export const editOneUserUrl = userUrl + 'editOne/';
-export const deleteListUserUrl = userUrl + 'deleteList/';
+/** product screen */
+export const productScreenUrl = baseUrl + 'product/';
+export const getListProductUrl = productScreenUrl + 'getList/';
+export const getOneProductUrl = productScreenUrl + 'getOne/';
+export const searchListProductUrl = productScreenUrl + 'searchList/';
+export const createOneProductUrl = productScreenUrl + 'createOne/';
+export const editOneProductUrl = productScreenUrl + 'editOne/';
+export const deleteListProductUrl = productScreenUrl + 'deleteList/';
+
+/** user screen */
+export const userScreenUrl = baseUrl + 'user/';
+export const getListUserUrl = userScreenUrl + 'getList/';
+export const getOneUserUrl = userScreenUrl + 'getOne/';
+export const searchListUserUrl = userScreenUrl + 'searchList/';
+export const createOneUserUrl = userScreenUrl + 'createOne/';
+export const editOneUserUrl = userScreenUrl + 'editOne/';
+export const deleteListUserUrl = userScreenUrl + 'deleteList/';

@@ -132,8 +132,13 @@ const CreateProduct: React.FC<Props> = (props) => {
       formData.append('files', props.productImage, props.productImage.name);
 
       apiPost(APIs.createOneProductUrl, formData).then((HTTPdata) => {
-        props.sendDisableFlag(false);
         showSnackBarAlert(5000, 'success', HTTPdata.message);
+        props.sendDisableFlag(false);
+        props.sendProductType({});
+        props.sendMenuType({});
+        props.sendProduct({});
+        props.sendErrorMessageForm({});
+        props.sendImageErrorMessage('');
         history.push('/menu/productList');
       });
     } else {

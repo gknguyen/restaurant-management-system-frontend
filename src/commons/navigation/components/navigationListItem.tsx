@@ -115,7 +115,7 @@ const NavigationListItem: React.FC<Props> = (props) => {
     setOpen((open: any) => !open);
   };
 
-  const paddingLeft = depth > 0 ? (props.navBarOpenFlag ? 32 : 0) + 8 * depth : 8;
+  const paddingLeft = depth > 0 ? (props.navBarOpenFlag ? 20 : 0) + 8 * depth : 8;
 
   const style = { paddingLeft };
 

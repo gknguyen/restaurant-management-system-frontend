@@ -17,6 +17,7 @@ export interface ProductType {
 export interface MenuType {
   id: string;
   typeName: string;
+  icon: string;
 }
 
 export interface UserType {
@@ -33,10 +34,10 @@ export interface Product {
   active: boolean | JSX.Element;
   image: string;
   description: string;
-  productType: any;
+  productType: ProductType;
   productTypeId: string;
   productTypeName: string;
-  menuType: any;
+  menuType: MenuType;
   menuTypeId: string;
   menuTypeName: string;
   editDateTime: Date | string;
@@ -61,7 +62,7 @@ export interface User {
   loginDateTime: Date | string;
   authToken: string;
   activeStatus: boolean | JSX.Element;
-  userType: any;
+  userType: UserType;
   userTypeId: string;
   userTypeName: string;
 }

@@ -19,11 +19,12 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { connect } from 'react-redux';
 import * as commonActions from '../../../../redux/commonReducers/actions';
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
+import { Box } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
+      // flexGrow: 1,
     },
     appBar: {
       background: 'linear-gradient(45deg, #4e342e 30%, #a1887f 90%)',
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('sm')]: {
         display: 'block',
       },
+      alignSelf: 'center',
     },
     inputRoot: {
       color: 'inherit',
@@ -108,33 +110,43 @@ const TopBar: React.FC<Props> = (props) => {
   );
 
   return (
-    <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-            onClick={() => props.sendNavBarOpenFlag(!props.navBarOpenFlag)}
-          >
-            {props.navBarOpenFlag ? <MenuIcon /> : <MenuOpenIcon />}
-          </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap={true}>
-            GK's bar
-          </Typography>
-          <div className={classes.root} />
-          <div className={classes.sectionDesktop}>
+    <Box className={classes.root}>
+      <AppBar className={classes.appBar} position="sticky">
+        <Toolbar style={{ justifyContent: 'space-between' }}>
+          {/** tabBar menu */}
+          <Box className={classes.sectionDesktop}>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="open drawer"
+              onClick={() => props.sendNavBarOpenFlag(!props.navBarOpenFlag)}
+            >
+              {props.navBarOpenFlag ? <MenuIcon /> : <MenuOpenIcon />}
+            </IconButton>
+
+            {/** app name */}
+            <Typography className={classes.title} variant="h6" noWrap={true}>
+              GK's bar
+            </Typography>
+          </Box>
+
+          <Box className={classes.sectionDesktop}>
+            {/** mail */}
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />
               </Badge>
             </IconButton>
+
+            {/** notification */}
             <IconButton aria-label="show 17 new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+
+            {/** profile */}
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -145,11 +157,13 @@ const TopBar: React.FC<Props> = (props) => {
             >
               <AccountCircle />
             </IconButton>
-          </div>
+          </Box>
         </Toolbar>
       </AppBar>
+
+      {/** profile menu */}
       {renderMenu}
-    </div>
+    </Box>
   );
 };
 
