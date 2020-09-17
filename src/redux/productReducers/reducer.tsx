@@ -28,18 +28,6 @@ const initialState = {
 const productReducer = (state = initialState, action: any) => {
   /* type - check type of action send to Reducer */
   switch (action.type) {
-    /* return product table head cells */
-    case ActionType.RECEIVE_PRODUCT_TABLE_HEAD_CELLS:
-      state.headCells = action.data;
-      return { ...state };
-    /* return product list */
-    case ActionType.GET_PRODUCT_LIST:
-      state.productList = action.data;
-      return { ...state };
-    /* return product */
-    case ActionType.GET_PRODUCT:
-      state.product = action.data;
-      return { ...state };
     /* return product list */
     case ActionType.RECEIVE_PRODUCT_LIST:
       state.productList = action.data;

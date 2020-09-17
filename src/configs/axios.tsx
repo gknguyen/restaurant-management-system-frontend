@@ -1,10 +1,9 @@
 import axios from 'axios';
-import { getAuthToken } from './localStore';
 import STATUS_CODE from 'http-status';
 import { HTTPdata } from './interfaces';
-import { showSnackBarAlert, logout } from './utils';
+import { getAuthToken } from './localStore';
 import MESSAGE from './messages';
-import getHistory from './myHistory';
+import { showSnackBarAlert } from './utils';
 
 /** ================================================================================== */
 /**

@@ -1,28 +1,27 @@
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Container from '@material-ui/core/Container';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import React, { FormEvent } from 'react';
-import * as imageActions from '../../../../redux/imageReducers/actions';
-import * as userActions from '../../../../redux/userReducers/actions';
-import * as userTypeActions from '../../../../redux/userTypeReducers/actions';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../../configs/APIs';
-import Axios, { apiPut, apiGet } from '../../../../configs/axios';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Dialog from '@material-ui/core/Dialog';
-import { User, UserType, HTTPdata } from '../../../../configs/interfaces';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Typography from '@material-ui/core/Typography';
-import DialogContent from '@material-ui/core/DialogContent';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import AvatarUploadField from './components/avatarUploadField';
-import Button from '@material-ui/core/Button';
-import * as commonActions from '../../../../redux/commonReducers/actions';
-import MainInfoField from './components/mainInfoField';
-import { checkValidate, errorMessagesForm } from './validate';
+import { apiGet, apiPut } from '../../../../configs/axios';
+import { HTTPdata, User, UserType } from '../../../../configs/interfaces';
 import { getUserId } from '../../../../configs/localStore';
 import { showSnackBarAlert } from '../../../../configs/utils';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import * as commonActions from '../../../../redux/commonReducers/actions';
+import * as userActions from '../../../../redux/userReducers/actions';
+import * as userTypeActions from '../../../../redux/userTypeReducers/actions';
+import AvatarUploadField from './components/avatarUploadField';
+import MainInfoField from './components/mainInfoField';
+import { checkValidate, errorMessagesForm } from './validate';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -96,7 +95,9 @@ const EditUser: React.FC<Props> = (props) => {
   }, []);
 
   const handleClose = () => {
-    apiGet(APIs.getOneUserUrl, { userId }).then((HTTPdata) => processDetailData(HTTPdata));
+    apiGet(APIs.getOneUserForUserScreenUrl, { userId }).then((HTTPdata) =>
+      processDetailData(HTTPdata),
+    );
     props.sendErrorMessageForm({});
     props.sendEditOpenFlag(false);
   };
@@ -118,7 +119,7 @@ const EditUser: React.FC<Props> = (props) => {
       formData.append('avatar', editDataForm.avatar || '');
       if (props.avatar.name) formData.append('files', props.avatar, props.avatar.name);
 
-      apiPut(APIs.editOneUserUrl, { userId }, formData).then((HTTPdata) => {
+      apiPut(APIs.editOneUserForUserScreenUrl, { userId }, formData).then((HTTPdata) => {
         processDetailData(HTTPdata);
         props.sendDisableFlag(false);
         props.sendEditOpenFlag(false);

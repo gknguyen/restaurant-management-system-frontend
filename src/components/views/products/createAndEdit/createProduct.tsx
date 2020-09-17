@@ -2,13 +2,13 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import LinearProgressBar from '../../../../commons/linearProgressBar';
 import * as APIs from '../../../../configs/APIs';
 import { apiGet, apiPost } from '../../../../configs/axios';
 import { MenuType, Product, ProductType } from '../../../../configs/interfaces';
@@ -22,7 +22,6 @@ import DescriptionField from './components/descriptionField';
 import ImageUploadField from './components/imageUploadField';
 import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
-import LinearProgressBar from '../../../../commons/linearProgressBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const createDataForm: any = {};
 
 interface Props {
-  /** params */
+  /** redux params */
   productTypeName: string;
   menuTypeName: string;
   name: string;
@@ -74,7 +73,7 @@ interface Props {
   description: string;
   productImage: File;
   isDisable: boolean;
-  /** functions */
+  /** redux functions */
   sendProductTypeList: Function;
   sendProductType: Function;
   sendMenuTypeList: Function;
@@ -99,10 +98,12 @@ const CreateProduct: React.FC<Props> = (props) => {
   createDataForm.image = props.productImage.name;
 
   React.useEffect(() => {
-    apiGet(APIs.getListProductTypeUrl).then((HTTPdata) =>
-      props.sendProductTypeList(HTTPdata.values),
-    );
-    apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => props.sendMenuTypeList(HTTPdata.values));
+    apiGet(APIs.getListProductTypeUrl).then((HTTPdata) => {
+      props.sendProductTypeList(HTTPdata.values);
+    });
+    apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => {
+      props.sendMenuTypeList(HTTPdata.values);
+    });
   }, []);
 
   const goBackHandler = () => {
@@ -131,7 +132,7 @@ const CreateProduct: React.FC<Props> = (props) => {
       formData.append('image', createDataForm.image);
       formData.append('files', props.productImage, props.productImage.name);
 
-      apiPost(APIs.createOneProductUrl, formData).then((HTTPdata) => {
+      apiPost(APIs.createOneProductForProductScreenUrl, formData).then((HTTPdata) => {
         showSnackBarAlert(5000, 'success', HTTPdata.message);
         props.sendDisableFlag(false);
         props.sendProductType({});

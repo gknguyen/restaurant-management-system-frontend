@@ -61,11 +61,12 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 'auto',
   },
   active: {
-    color: theme.palette.primary.main,
-    fontWeight: theme.typography.fontWeightMedium,
-    '& $icon': {
-      color: theme.palette.primary.main,
-    },
+    background: 'linear-gradient(45deg, #4e342e 30%, #a1887f 90%)',
+    color: 'white',
+  },
+  activeDisable: {
+    background: '#e0e0e0',
+    color: 'white',
   },
   smallButton: {
     minWidth: '0px !important',
@@ -91,8 +92,9 @@ interface Props {
   key?: any;
   /** redux params */
   navBarOpenFlag: boolean;
+  isDisable: boolean;
   /** redux functions */
-  sendNavBarOpenFlag: Function;
+  // sendNavBarOpenFlag: Function;
 }
 
 const NavigationListItem: React.FC<Props> = (props) => {
@@ -105,6 +107,8 @@ const NavigationListItem: React.FC<Props> = (props) => {
     className,
     open: openProp,
     label: Label,
+    navBarOpenFlag,
+    isDisable,
     ...rest
   } = props;
 
@@ -127,10 +131,11 @@ const NavigationListItem: React.FC<Props> = (props) => {
           onClick={handleToggle}
           style={style}
           classes={{ root: classes.smallButton }}
+          disabled={isDisable}
         >
           {Icon && <Icon className={classes.icon} />}
-          {props.navBarOpenFlag && title}
-          {props.navBarOpenFlag &&
+          {navBarOpenFlag && title}
+          {navBarOpenFlag &&
             (open ? (
               <ExpandLessIcon className={classes.expandIcon} color="inherit" />
             ) : (
@@ -144,16 +149,17 @@ const NavigationListItem: React.FC<Props> = (props) => {
     return (
       <ListItem {...rest} className={clsx(classes.itemLeaf, className)} disableGutters>
         <Button
-          activeClassName={classes.active}
+          activeClassName={isDisable ? classes.activeDisable : classes.active}
           className={clsx(classes.buttonLeaf, `depth-${depth}`)}
           component={CustomRouterLink}
           exact
           style={style}
           to={href}
           classes={{ root: classes.smallButton }}
+          disabled={isDisable}
         >
           {Icon && <Icon className={classes.icon} />}
-          {props.navBarOpenFlag && title}
+          {navBarOpenFlag && title}
           {Label && (
             <span className={classes.label}>
               <Label />
@@ -174,15 +180,16 @@ NavigationListItem.defaultProps = {
 const mapStateToProps = (state: any) => {
   return {
     navBarOpenFlag: state.commonReducer.navBarOpenFlag,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 
 /* Send data to redux store */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    sendNavBarOpenFlag: (navBarOpenFlag: boolean) => {
-      dispatch(commonActions.actionReceiveNavBarOpenFlag(navBarOpenFlag));
-    },
+    // sendNavBarOpenFlag: (navBarOpenFlag: boolean) => {
+    //   dispatch(commonActions.actionReceiveNavBarOpenFlag(navBarOpenFlag));
+    // },
   };
 };
 

@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  /** params */
+  /** redux params */
   productTypeName: string;
   menuTypeName: string;
   name: string;
@@ -60,7 +60,7 @@ interface Props {
   amount: number;
   description: string;
   image: string;
-  /** functions */
+  /** redux functions */
   sendProductType: Function;
   sendMenuType: Function;
   sendProduct: Function;
@@ -77,7 +77,7 @@ const ProductDetails: React.FC<Props> = (props) => {
   const productImageUrl = `${AWS_S3_BUCKET_URL}/products/${props.image}`;
 
   React.useEffect(() => {
-    apiGet(APIs.getOneProductUrl, { productId }).then((HTTPdata) => {
+    apiGet(APIs.getOneProductForProductScreenUrl, { productId }).then((HTTPdata) => {
       const serverProduct = HTTPdata.values;
 
       const productType = serverProduct.productType as ProductType;

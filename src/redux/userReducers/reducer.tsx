@@ -43,18 +43,6 @@ const userReducer = (state = initialState, action: any) => {
     case ActionType.RECEIVE_USER_SEARCH_VALUE:
       state.searchValue = action.data;
       return { ...state };
-    /* return user table head cells */
-    case ActionType.RECEIVE_USER_TABLE_HEAD_CELLS:
-      state.headCells = action.data;
-      return { ...state };
-    /* return user list */
-    case ActionType.GET_USER_LIST:
-      state.userList = action.data;
-      return { ...state };
-    /* return user */
-    case ActionType.GET_USER:
-      state.user = action.data;
-      return { ...state };
     /* return user list value */
     case ActionType.RECEIVE_USER_LIST:
       state.userList = action.data;

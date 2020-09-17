@@ -1,25 +1,21 @@
-import React, { MouseEvent } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Box } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import SearchIcon from '@material-ui/icons/Search';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import { connect } from 'react-redux';
-import * as commonActions from '../../../../redux/commonReducers/actions';
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
-import { Box } from '@material-ui/core';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import React from 'react';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import * as commonActions from '../../../../redux/commonReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

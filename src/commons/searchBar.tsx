@@ -38,9 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  /** params */
+  /** redux params */
   isDisable: boolean;
-  /** functions */
+  /** redux functions */
   searchHandlerCallBack: Function;
   sendDisableFlag: Function;
   // sendSearchValue: Function;

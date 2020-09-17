@@ -13,6 +13,8 @@ import {
   CardActions,
   Button,
   Icon,
+  Divider,
+  Box,
 } from '@material-ui/core';
 import { apiGet } from '../../../configs/axios';
 import * as APIs from '../../../configs/APIs';
@@ -20,6 +22,8 @@ import { AWS_S3_BUCKET_URL } from '../../../configs/constants';
 import { MenuType, Product } from '../../../configs/interfaces';
 import * as commonActions from '../../../redux/commonReducers/actions';
 import { red } from '@material-ui/core/colors';
+import * as menuTypeActions from '../../../redux/menuTypeReducers/actions';
+import * as productActions from '../../../redux/productReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,23 +63,28 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {
   /** redux params */
   isDisable: boolean;
+  menuTypeList: MenuType[];
+  productList: Product[];
   /** redux functions */
   sendDisableFlag: Function;
+  sendMenuTypeList: Function;
+  sendProductList: Function;
 }
 
 const Home: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const [menuTypeList, setMenuTypeList] = React.useState<MenuType[]>([]);
-  const [productList, setProductList] = React.useState<Product[]>([]);
-
   React.useEffect(() => {
-    apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => setMenuTypeList(HTTPdata.values));
-    apiGet(APIs.getListProductForMainScreenUrl).then((HTTPdata) => setProductList(HTTPdata.values));
+    apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => {
+      props.sendMenuTypeList(HTTPdata.values);
+    });
+    apiGet(APIs.getListProductForMainScreenUrl).then((HTTPdata) => {
+      props.sendProductList(HTTPdata.values);
+    });
   }, []);
 
-  const menuTypeListField = menuTypeList.map((menuType, index) => {
+  const menuTypeListField = props.menuTypeList.map((menuType, index) => {
     if (menuType) {
       return (
         <Grid container item xs={1} key={index}>
@@ -87,17 +96,15 @@ const Home: React.FC<Props> = (props) => {
     }
   });
 
-  const productListField = productList.map((product, index) => {
+  const productListField = props.productList.map((product, index) => {
     if (product) {
-      const productImageUrl = `${AWS_S3_BUCKET_URL}/products/${product.image}`;
+      const productImageUrl = product.image
+        ? `${AWS_S3_BUCKET_URL}/products/${product.image}`
+        : undefined;
       return (
         <Grid container item xs={3} key={index}>
           <Card className={classes.card}>
-            <CardMedia
-              className={classes.cardMedia}
-              // classes={{ root: classes.cardImage }}
-              image={productImageUrl}
-            />
+            <CardMedia className={classes.cardMedia} image={productImageUrl} />
             <CardHeader
               classes={{
                 root: classes.cardHeader,
@@ -108,7 +115,7 @@ const Home: React.FC<Props> = (props) => {
               subheader={`${product.price} ${product.unit}`}
               avatar={
                 <Avatar aria-label="recipe" className={classes.cardAvatar}>
-                  <Icon>{product.menuType.icon}</Icon>
+                  <Icon>{product.menuType?.icon}</Icon>
                 </Avatar>
               }
             />
@@ -127,15 +134,20 @@ const Home: React.FC<Props> = (props) => {
     <Container maxWidth="xl">
       <Grid className={classes.grid} container={true} spacing={2} direction="column">
         {/** header */}
-        <Grid container={true} item={true} xs={12}>
-          <Typography component="h1" variant="h4">
-            Menu
-          </Typography>
+        <Grid container item xs={12}>
+          <Grid container item xs={1}>
+            <Typography component="h1" variant="h4">
+              Menu
+            </Typography>
+          </Grid>
+          <Grid container item xs={11}>
+            {menuTypeListField}
+          </Grid>
         </Grid>
 
-        <Grid container>{menuTypeListField}</Grid>
+        <Divider />
 
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{ paddingTop: 30 }}>
           {productListField}
         </Grid>
       </Grid>
@@ -147,6 +159,8 @@ const Home: React.FC<Props> = (props) => {
 const mapStateToProps = (state: any) => {
   return {
     isDisable: state.commonReducer.isDisable,
+    menuTypeList: state.menuTypeReducer.menuTypeList,
+    productList: state.productReducer.productList,
   };
 };
 
@@ -155,6 +169,12 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     sendDisableFlag: (isDisable: boolean) => {
       dispatch(commonActions.actionDisableFlag(isDisable));
+    },
+    sendMenuTypeList: (menuTypeList: MenuType[]) => {
+      dispatch(menuTypeActions.actionReceiveMenuTypeList(menuTypeList));
+    },
+    sendProductList: (productList: Product[]) => {
+      dispatch(productActions.actionReceiveProductList(productList));
     },
   };
 };

@@ -74,9 +74,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 const loginForm: any = {};
 
 interface Props {
-  /** params */
+  /** redux params */
   isDisable: boolean;
-  /** functions */
+  /** redux functions */
   sendLoginUserData: Function;
   sendDisableFlag: Function;
 }

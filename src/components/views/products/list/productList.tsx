@@ -58,13 +58,12 @@ const headers = [
 ];
 
 interface Props {
-  /** params */
+  /** redux params */
   productList: any[];
   productIdList: string[];
   isDisable: boolean;
-  /** functions */
+  /** redux functions */
   sendProductList: Function;
-  searchProductList: Function;
   sendDisableFlag: Function;
 }
 
@@ -77,11 +76,11 @@ const ProductList: React.FC<Props> = (props) => {
 
   React.useEffect(() => {
     props.sendDisableFlag(true);
-    apiGet(APIs.getListProductUrl).then((HTTPdata) => processDataToTable(HTTPdata));
+    apiGet(APIs.getListProductForProductScreenUrl).then((HTTPdata) => processDataToTable(HTTPdata));
   }, []);
 
   const searchHandler = (searchValue: string) => {
-    apiGet(APIs.searchListProductUrl, { searchValue }).then((HTTPdata) =>
+    apiGet(APIs.searchListProductForProductScreenUrl, { searchValue }).then((HTTPdata) =>
       processDataToTable(HTTPdata),
     );
   };
@@ -118,8 +117,8 @@ const ProductList: React.FC<Props> = (props) => {
   };
 
   const deleteHandler = () => {
-    apiDelete(APIs.deleteListProductUrl, { productIdList }).then(() =>
-      window.location.reload(true),
+    apiDelete(APIs.deleteListProductForProductScreenUrl, { productIdList }).then(() =>
+      window.location.reload(),
     );
     setOpen(false);
   };
@@ -229,9 +228,6 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     sendProductList: (productList: Product[]) => {
       dispatch(productActions.actionReceiveProductList(productList));
-    },
-    searchProductList: (searchValue: string) => {
-      dispatch(productActions.actionSearchProductListUrl(searchValue));
     },
     sendDisableFlag: (isDisable: boolean) => {
       dispatch(commonActions.actionDisableFlag(isDisable));

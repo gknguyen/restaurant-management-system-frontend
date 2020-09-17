@@ -1,6 +1,7 @@
 import { Dialog, Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import { green, red } from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -8,21 +9,19 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import SearchBar from '../../../../commons/searchBar';
-import { UserHeadCell, HTTPdata, User } from '../../../../configs/interfaces';
-import * as userActions from '../../../../redux/userReducers/actions';
-import * as commonActions from '../../../../redux/commonReducers/actions';
-import { apiPost, apiGet, apiDelete } from '../../../../configs/axios';
-import * as APIs from '../../../../configs/APIs';
-import { trimDate, convertDateTime } from '../../../../configs/utils';
-import ListTable from '../../../../commons/listTable';
-import { green, red } from '@material-ui/core/colors';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
+import React from 'react';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import ListTable from '../../../../commons/listTable';
+import SearchBar from '../../../../commons/searchBar';
+import * as APIs from '../../../../configs/APIs';
+import { apiDelete, apiGet } from '../../../../configs/axios';
+import { HTTPdata, User } from '../../../../configs/interfaces';
+import { convertDateTime } from '../../../../configs/utils';
+import * as commonActions from '../../../../redux/commonReducers/actions';
+import * as userActions from '../../../../redux/userReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,15 +69,12 @@ const headers = [
 ];
 
 interface Props {
-  /** params */
+  /** redux params */
   userList: User[];
   userIdList: string[];
   searchValue: string;
   isDisable: boolean;
-  /** functions */
-  // sendUserTableHeadCells: Function;
-  // getUserList: Function;
-  searchUserList: Function;
+  /** redux functions */
   sendUserList: Function;
   sendDisableFlag: Function;
 }
@@ -92,11 +88,11 @@ const UserList: React.FC<Props> = (props) => {
 
   React.useEffect(() => {
     props.sendDisableFlag(true);
-    apiGet(APIs.getListUserUrl).then((HTTPdata) => processDataToTable(HTTPdata));
+    apiGet(APIs.getListUserForUserScreenUrl).then((HTTPdata) => processDataToTable(HTTPdata));
   }, []);
 
   const searchHandler = (searchValue: string) => {
-    apiGet(APIs.searchListUserUrl, { searchValue }).then((HTTPdata) =>
+    apiGet(APIs.searchListUserForUserScreenUrl, { searchValue }).then((HTTPdata) =>
       processDataToTable(HTTPdata),
     );
   };
@@ -132,7 +128,9 @@ const UserList: React.FC<Props> = (props) => {
   };
 
   const deleteHandler = () => {
-    apiDelete(APIs.deleteListUserUrl, { userIdList }).then(() => window.location.reload(true));
+    apiDelete(APIs.deleteListUserForUserScreenUrl, { userIdList }).then(() =>
+      window.location.reload(true),
+    );
     setOpen(false);
   };
 
@@ -241,15 +239,6 @@ const mapStateToProps = (state: any) => {
 /* Send data to redux store */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    // sendUserTableHeadCells: (headCells: UserHeadCell[]) => {
-    //   dispatch(userActions.actionReceiveUserTableHeadCells(headCells));
-    // },
-    // getUserList: () => {
-    //   dispatch(userActions.actionGetUserListUrl());
-    // },
-    searchUserList: (searchValue: string) => {
-      dispatch(userActions.actionSearchUserListUrl(searchValue));
-    },
     sendUserList: (userList: User[]) => {
       dispatch(userActions.actionReceiveUserList(userList));
     },

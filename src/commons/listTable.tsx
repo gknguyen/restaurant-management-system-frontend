@@ -62,10 +62,13 @@ interface Props {
   /** params */
   headers: any[];
   cells: any[];
-  isDisable: boolean;
   /** functions */
   onRowClickCallBack: Function;
   onSelectionCallBack: Function;
+  /** redux params */
+  isDisable: boolean;
+  /** redux functions */
+  sendDisableFlag: Function;
 }
 
 const ListTable: React.FC<Props> = (props) => {

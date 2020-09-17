@@ -92,11 +92,11 @@ interface NavigationProps {
   /** redux params */
   navBarOpenFlag: boolean;
   /** redux functions */
-  sendNavBarOpenFlag: Function;
+  // sendNavBarOpenFlag: Function;
 }
 
 const Navigation: React.FC<NavigationProps> = (props) => {
-  const { title, pages, className, component: Component, ...rest } = props;
+  const { title, pages, className, component: Component, navBarOpenFlag, ...rest } = props;
 
   const classes = useStyles();
   const router = useRouter();
@@ -123,9 +123,9 @@ const mapStateToProps = (state: any) => {
 /* Send data to redux store */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    sendNavBarOpenFlag: (navBarOpenFlag: boolean) => {
-      dispatch(commonActions.actionReceiveNavBarOpenFlag(navBarOpenFlag));
-    },
+    // sendNavBarOpenFlag: (navBarOpenFlag: boolean) => {
+    //   dispatch(commonActions.actionReceiveNavBarOpenFlag(navBarOpenFlag));
+    // },
   };
 };
 

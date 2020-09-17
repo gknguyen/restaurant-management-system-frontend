@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -28,13 +29,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TopBar: React.FC = () => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   return (
-    <div className={classes.root}>
+    <Box className={classes.root}>
       <AppBar className={classes.appBar} position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="open drawer"
+          >
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap={true}>
@@ -42,7 +47,7 @@ const TopBar: React.FC = () => {
           </Typography>
         </Toolbar>
       </AppBar>
-    </div>
+    </Box>
   );
 };
 

@@ -41,9 +41,7 @@ interface Props {
   errorMessages: Product;
   isDisable: boolean;
   /** functions */
-  sendProductTypeName: Function;
   sendProductType: Function;
-  sendMenuTypeName: Function;
   sendMenuType: Function;
   sendName: Function;
   sendPrice: Function;
@@ -249,14 +247,8 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     /** values */
-    sendProductTypeName: (productTypeName: string) => {
-      dispatch(productTypeActions.actionGetProductTypeIdUrl(productTypeName));
-    },
     sendProductType: (productType: ProductType) => {
       dispatch(productTypeActions.actionReceiveProductType(productType));
-    },
-    sendMenuTypeName: (menuTypeName: string) => {
-      dispatch(menuTypeActions.actionGetMenuTypeIdUrl(menuTypeName));
     },
     sendMenuType: (menuType: MenuType) => {
       dispatch(menuTypeActions.actionReceiveMenuType(menuType));

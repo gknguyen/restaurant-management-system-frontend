@@ -1,13 +1,12 @@
-import { LinearProgress, Box } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import React, { Fragment, Suspense, useState } from 'react';
-import { renderRoutes } from 'react-router-config';
-import NavBar from './components/navBar';
-import BottomBar from './components/bottomBar';
-import TopBar from './components/topBar';
+import { Box, LinearProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import React, { Fragment, Suspense } from 'react';
 import { connect } from 'react-redux';
+import { renderRoutes } from 'react-router-config';
 import * as commonActions from '../../../redux/commonReducers/actions';
+import BottomBar from '../auth/components/bottomBar';
+import NavBar from './components/navBar';
+import TopBar from './components/topBar';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -59,28 +58,12 @@ interface Props {
 const Dashboard: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  // const [openNavBarMobile, setOpenNavBarMobile] = useState(true);
-
-  // const handleNavBarMobileOpen = () => {
-  //   setOpenNavBarMobile(true);
-  // };
-
-  // const handleNavBarMobileClose = () => {
-  //   setOpenNavBarMobile(false);
-  // };
-
   return (
     <Box className={classes.root}>
       <Fragment>
         <TopBar />
         <Box className={classes.container}>
-          <NavBar
-            // className={props.navBarOpenFlag ? classes.navBar : classes.navBarSmall}
-            className={classes.navBar}
-            // onMobileClose={handleNavBarMobileClose}
-            // openMobile={openNavBarMobile}
-            openMobile={props.navBarOpenFlag}
-          />
+          <NavBar className={classes.navBar} openMobile={props.navBarOpenFlag} />
           <main className={classes.content}>
             <Suspense fallback={<LinearProgress />}>{renderRoutes(props.route.routes)}</Suspense>
           </main>

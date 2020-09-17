@@ -8,18 +8,18 @@ import Typography from '@material-ui/core/Typography';
 import React, { FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import LinearProgressBar from '../../../../commons/linearProgressBar';
 import * as APIs from '../../../../configs/APIs';
-import Axios, { apiPost, apiGet } from '../../../../configs/axios';
+import { apiGet, apiPost } from '../../../../configs/axios';
 import { User, UserType } from '../../../../configs/interfaces';
+import { showSnackBarAlert } from '../../../../configs/utils';
+import * as commonActions from '../../../../redux/commonReducers/actions';
 import * as imageActions from '../../../../redux/imageReducers/actions';
 import * as userActions from '../../../../redux/userReducers/actions';
 import * as userTypeActions from '../../../../redux/userTypeReducers/actions';
 import AvatarUploadField from './components/avatarUploadField';
 import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
-import * as commonActions from '../../../../redux/commonReducers/actions';
-import LinearProgressBar from '../../../../commons/linearProgressBar';
-import { showSnackBarAlert } from '../../../../configs/utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const createDataForm: any = {};
 
 interface Props {
-  /** params */
+  /** redux params */
   userTypeName: string;
   username: string;
   password: string;
@@ -70,7 +70,7 @@ interface Props {
   email: string;
   avatar: File;
   isDisable: boolean;
-  /** functions */
+  /** redux functions */
   sendUserTypeList: Function;
   sendUserType: Function;
   sendUser: Function;
@@ -122,7 +122,7 @@ const CreateUser: React.FC<Props> = (props) => {
       formData.append('avatar', createDataForm.avatar);
       formData.append('files', props.avatar, props.avatar.name);
 
-      apiPost(APIs.createOneUserUrl, formData).then((HTTPdata) => {
+      apiPost(APIs.createOneUserForUserScreenUrl, formData).then((HTTPdata) => {
         props.sendDisableFlag(false);
         showSnackBarAlert(5000, 'success', HTTPdata.message);
         history.push('/userList');

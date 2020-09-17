@@ -1,15 +1,13 @@
-import { Avatar, Divider, Drawer, Hidden, Paper, Typography, Box } from '@material-ui/core';
-// import { useSelector } from 'react-redux';
+import { Avatar, Box, Divider, Drawer, Hidden, Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import navigationRoutes from '../../../../commons/navigation/components/navigationRoutes';
 import Navigation from '../../../../commons/navigation/navigation';
 import { AWS_S3_BUCKET_URL } from '../../../../configs/constants';
 import { getdUserInfo } from '../../../../configs/localStore';
 import useRouter from '../../../../configs/userRouter';
-import navigationRoutes from '../../../../commons/navigation/components/navigationRoutes';
 
 const drawerWidth = 240;
 
@@ -47,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   drawerOpen: {
     top: '65px',
+    // height: '90%',
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
@@ -55,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   drawerClose: {
     top: '65px',
+    // height: '90%',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -69,13 +69,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   className: string;
-  // onMobileClose: Function;
   openMobile: boolean;
   children?: React.ReactNode;
 }
 
 const NavBar: React.FC<Props> = (props) => {
-  const { ...rest } = props;
+  const { openMobile, ...rest } = props;
 
   const classes = useStyles();
   const router = useRouter();
@@ -86,7 +85,7 @@ const NavBar: React.FC<Props> = (props) => {
 
   const navbarContent = (
     <Box className={classes.content}>
-      {props.openMobile && (
+      {openMobile && (
         <Box>
           <Box className={classes.profile}>
             <Avatar
@@ -119,13 +118,13 @@ const NavBar: React.FC<Props> = (props) => {
         anchor="left"
         variant="permanent"
         className={clsx(classes.drawer, {
-          [classes.drawerOpen]: props.openMobile,
-          [classes.drawerClose]: !props.openMobile,
+          [classes.drawerOpen]: openMobile,
+          [classes.drawerClose]: !openMobile,
         })}
         classes={{
           paper: clsx({
-            [classes.drawerOpen]: props.openMobile,
-            [classes.drawerClose]: !props.openMobile,
+            [classes.drawerOpen]: openMobile,
+            [classes.drawerClose]: !openMobile,
           }),
         }}
       >

@@ -52,8 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  /** params */
-  // user: User;
+  /** redux params */
   userTypeName: string;
   username: string;
   fullName: string;
@@ -63,11 +62,10 @@ interface Props {
   avatar: string;
   loginDateTime: Date;
   activeStatus: boolean;
-  /** functions */
+  /** redux functions */
   sendUserType: Function;
   sendUser: Function;
   sendEditOpenFlag: Function;
-  // sendUserId: Function;
 }
 
 const UserDetails: React.FC<Props> = (props) => {
@@ -78,7 +76,7 @@ const UserDetails: React.FC<Props> = (props) => {
   const userImageUrl = `${AWS_S3_BUCKET_URL}/users/${props.avatar}`;
 
   useEffect(() => {
-    apiGet(APIs.getOneUserUrl, { userId }).then((HTTPdata) => {
+    apiGet(APIs.getOneUserForUserScreenUrl, { userId }).then((HTTPdata) => {
       const serverUser = HTTPdata.values;
 
       const userType = serverUser.userType as UserType;
@@ -260,7 +258,6 @@ const UserDetails: React.FC<Props> = (props) => {
 /* collect data from redux store */
 const mapStateToProps = (state: any) => {
   return {
-    // user: state.userReducer.user,
     userTypeName: state.userTypeReducer.userType.typeName,
     username: state.userReducer.user.username,
     fullName: state.userReducer.user.fullName,
@@ -285,9 +282,6 @@ const mapDispatchToProps = (dispatch: any) => {
     sendEditOpenFlag: (open: boolean) => {
       dispatch(userActions.actionReceiveEditOpenFlag(open));
     },
-    // sendUserId: (userId: string) => {
-    //   dispatch(userActions.actionGetUserUrl(userId));
-    // },
   };
 };
 

@@ -1,5 +1,6 @@
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -7,24 +8,22 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React, { useEffect, FormEvent } from 'react';
+import React, { FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import api, { apiGet, apiPut } from '../../../../configs/axios';
-import { Product, ProductType, MenuType, HTTPdata } from '../../../../configs/interfaces';
+import * as APIs from '../../../../configs/APIs';
+import { apiGet, apiPut } from '../../../../configs/axios';
+import { HTTPdata, MenuType, Product, ProductType } from '../../../../configs/interfaces';
+import { getProductId } from '../../../../configs/localStore';
+import { showSnackBarAlert } from '../../../../configs/utils';
+import * as commonActions from '../../../../redux/commonReducers/actions';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
 import * as productTypeActions from '../../../../redux/productTypeReducers/actions';
-import * as commonActions from '../../../../redux/commonReducers/actions';
-import { getAuthToken, getProductId } from '../../../../configs/localStore';
 import DescriptionField from './components/descriptionField';
 import ImageUploadField from './components/imageUploadField';
 import MainInfoField from './components/mainInfoField';
 import { checkValidate, errorMessagesForm } from './validate';
-import * as APIs from '../../../../configs/APIs';
-import { showSnackBarAlert } from '../../../../configs/utils';
-import * as imageActions from '../../../../redux/imageReducers/actions';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const editDataForm: any = {};
 
 interface Props {
-  /** params */
+  /** redux params */
   productTypeName: string;
   menuTypeName: string;
   name: string;
@@ -77,7 +76,7 @@ interface Props {
   productImage: File;
   open: boolean;
   isDisable: boolean;
-  /** functions */
+  /** redux functions */
   sendProductTypeList: Function;
   sendMenuTypeList: Function;
   sendEditOpenFlag: Function;
@@ -104,16 +103,20 @@ const EditProduct: React.FC<Props> = (props) => {
   // console.log('editDataForm: ', editDataForm);
 
   React.useEffect(() => {
-    apiGet(APIs.getListProductTypeUrl).then((HTTPdata) =>
-      props.sendProductTypeList(HTTPdata.values),
-    );
-    apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => props.sendMenuTypeList(HTTPdata.values));
+    apiGet(APIs.getListProductTypeUrl).then((HTTPdata) => {
+      props.sendProductTypeList(HTTPdata.values);
+    });
+    apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => {
+      props.sendMenuTypeList(HTTPdata.values);
+    });
   }, []);
 
   const handleClose = () => {
     props.sendEditOpenFlag(false);
     props.sendErrorMessageForm({});
-    apiGet(APIs.getOneProductUrl, { productId }).then((HTTPdata) => processDetailData(HTTPdata));
+    apiGet(APIs.getOneProductForProductScreenUrl, { productId }).then((HTTPdata) =>
+      processDetailData(HTTPdata),
+    );
   };
 
   const editHandler = (event: FormEvent<HTMLFormElement>) => {
@@ -134,7 +137,7 @@ const EditProduct: React.FC<Props> = (props) => {
       if (props.productImage.name)
         formData.append('files', props.productImage, props.productImage.name);
 
-      apiPut(APIs.editOneProductUrl, { productId }, formData).then((HTTPdata) => {
+      apiPut(APIs.editOneProductForProductScreenUrl, { productId }, formData).then((HTTPdata) => {
         processDetailData(HTTPdata);
         props.sendDisableFlag(false);
         props.sendEditOpenFlag(false);

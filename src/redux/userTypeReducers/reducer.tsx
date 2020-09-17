@@ -12,18 +12,6 @@ const userTypeReducer = (state = initialState, action: any) => {
   /* type - check type of action send to Reducer */
   switch (action.type) {
     /* return user type list */
-    case ActionType.GET_USER_TYPE_LIST:
-      state.userTypeList = action.data;
-      return { ...state };
-    /* return user type */
-    case ActionType.GET_USER_TYPE:
-      state.userType = action.data;
-      return { ...state };
-    /* return user type id */
-    case ActionType.GET_USER_TYPE_ID:
-      state.userType.id = action.data;
-      return { ...state };
-    /* return user type list */
     case ActionType.RECEIVE_USER_TYPE_LIST:
       state.userTypeList = action.data;
       return { ...state };

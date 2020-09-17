@@ -1,3 +1,4 @@
+import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -6,10 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { MenuType, Product, ProductType, User, UserType } from '../../../../../configs/interfaces';
+import { User, UserType } from '../../../../../configs/interfaces';
 import * as userActions from '../../../../../redux/userReducers/actions';
 import * as userTypeActions from '../../../../../redux/userTypeReducers/actions';
-import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const mainValues: any = {};
 
 interface Props {
-  /** input params */
+  /** params */
   isEdit: boolean;
   /** redux params */
   userTypeList: UserType[];
