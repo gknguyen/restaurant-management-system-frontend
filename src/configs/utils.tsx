@@ -46,3 +46,10 @@ export function convertDateTime(theDateTime: string | Date, format = 'YYYY/MM/DD
   if (theDateTime) return moment.tz(utc(theDateTime), CURRENT_TIEMZONE).format(format);
   else return null;
 }
+
+export function formatPrice(price: number | string) {
+  if (typeof price === 'number') {
+    const formatedPrice = String(price).replace(/(.)(?=(\d{3})+$)/g, '$1,');
+    return formatedPrice;
+  } else return price;
+}

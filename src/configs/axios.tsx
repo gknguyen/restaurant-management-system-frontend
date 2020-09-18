@@ -37,18 +37,18 @@ const api = axios.create({
 });
 
 /** Add a request interceptor */
-api.interceptors.request.use(
-  function(config) {
-    if (!config.headers.token) {
-      window.location.replace('/auth/logout');
-      showSnackBarAlert(60000, 'error', MESSAGE.HTTP.ERROR_401 + ' : token not found');
-    }
-    return config;
-  },
-  function(error) {
-    return Promise.reject(error);
-  },
-);
+// api.interceptors.request.use(
+//   function(config) {
+//     if (!config.headers.token) {
+//       window.location.replace('/auth/logout');
+//       showSnackBarAlert(60000, 'error', MESSAGE.HTTP.ERROR_401 + ' : token not found');
+//     }
+//     return config;
+//   },
+//   function(error) {
+//     return Promise.reject(error);
+//   },
+// );
 
 /** Add a response interceptor */
 api.interceptors.response.use(

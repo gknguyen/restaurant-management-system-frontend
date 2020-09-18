@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  route: any;
+  route?: any;
 }
 
 const Auth: React.FC<Props> = (props) => {

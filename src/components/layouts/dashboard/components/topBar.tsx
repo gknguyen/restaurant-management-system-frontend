@@ -16,6 +16,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as commonActions from '../../../../redux/commonReducers/actions';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -128,15 +129,20 @@ const TopBar: React.FC<Props> = (props) => {
           </Box>
 
           <Box className={classes.sectionDesktop}>
+            {/** cart */}
+            <IconButton color="inherit">
+              <ShoppingCartIcon />
+            </IconButton>
+
             {/** mail */}
-            <IconButton aria-label="show 4 new mails" color="inherit">
+            <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />
               </Badge>
             </IconButton>
 
             {/** notification */}
-            <IconButton aria-label="show 17 new notifications" color="inherit">
+            <IconButton color="inherit">
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>
@@ -145,7 +151,6 @@ const TopBar: React.FC<Props> = (props) => {
             {/** profile */}
             <IconButton
               edge="end"
-              aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}

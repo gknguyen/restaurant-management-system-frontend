@@ -28,7 +28,7 @@ export interface UserType {
 export interface Product {
   id: string;
   name: string;
-  price: number;
+  price: number | string;
   unit: string;
   amount: number;
   active: boolean | JSX.Element;

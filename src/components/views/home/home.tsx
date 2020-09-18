@@ -24,6 +24,7 @@ import * as commonActions from '../../../redux/commonReducers/actions';
 import { red } from '@material-ui/core/colors';
 import * as menuTypeActions from '../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../redux/productReducers/actions';
+import { formatPrice } from '../../../configs/utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,34 +76,48 @@ const Home: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
+  const [menuTypeList, setMenuTypeList] = React.useState<MenuType[]>(props.menuTypeList);
+  const [productList, setProductList] = React.useState<Product[]>(props.productList);
+
   React.useEffect(() => {
     apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => {
+      setMenuTypeList(HTTPdata.values);
       props.sendMenuTypeList(HTTPdata.values);
     });
     apiGet(APIs.getListProductForMainScreenUrl).then((HTTPdata) => {
+      setProductList(HTTPdata.values);
       props.sendProductList(HTTPdata.values);
     });
   }, []);
 
-  const menuTypeListField = props.menuTypeList.map((menuType, index) => {
+  const filterMenuHandler = (typeName: string) => {
+    const filterProductList = props.productList.filter(
+      (product) => product.menuType.typeName === typeName,
+    );
+    setProductList(filterProductList);
+  };
+
+  const allMenuHandler = () => {
+    setProductList(props.productList);
+  };
+
+  const menuTypeListField = menuTypeList.map((menuType, index) => {
     if (menuType) {
       return (
-        <Grid container item xs={1} key={index}>
-          <Button fullWidth>
-            <Icon>{menuType.icon}</Icon>
-          </Button>
-        </Grid>
+        <Button key={index} onClick={() => filterMenuHandler(menuType.typeName)}>
+          <Icon>{menuType.icon}</Icon>
+        </Button>
       );
     }
   });
 
-  const productListField = props.productList.map((product, index) => {
+  const productListField = productList.map((product, index) => {
     if (product) {
       const productImageUrl = product.image
         ? `${AWS_S3_BUCKET_URL}/products/${product.image}`
         : undefined;
       return (
-        <Grid container item xs={3} key={index}>
+        <Grid container item lg={3} md={4} sm={6} xs={12} key={index}>
           <Card className={classes.card}>
             <CardMedia className={classes.cardMedia} image={productImageUrl} />
             <CardHeader
@@ -112,7 +127,7 @@ const Home: React.FC<Props> = (props) => {
                 subheader: classes.cardHeaderSubHeader,
               }}
               title={product.name}
-              subheader={`${product.price} ${product.unit}`}
+              subheader={`${formatPrice(product.price)} ${product.unit}`}
               avatar={
                 <Avatar aria-label="recipe" className={classes.cardAvatar}>
                   <Icon>{product.menuType?.icon}</Icon>
@@ -135,12 +150,15 @@ const Home: React.FC<Props> = (props) => {
       <Grid className={classes.grid} container={true} spacing={2} direction="column">
         {/** header */}
         <Grid container item xs={12}>
-          <Grid container item xs={1}>
+          <Grid container item lg={2} md={12}>
             <Typography component="h1" variant="h4">
               Menu
             </Typography>
           </Grid>
-          <Grid container item xs={11}>
+          <Grid container item lg={10} md={12}>
+            <Button onClick={() => allMenuHandler()}>
+              <Icon>apps</Icon>
+            </Button>
             {menuTypeListField}
           </Grid>
         </Grid>

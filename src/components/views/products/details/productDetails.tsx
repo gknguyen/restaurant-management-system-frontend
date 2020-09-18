@@ -14,6 +14,7 @@ import { apiGet } from '../../../../configs/axios';
 import { AWS_S3_BUCKET_URL, NO_IMAGE_URL } from '../../../../configs/constants';
 import { MenuType, Product, ProductType } from '../../../../configs/interfaces';
 import { getProductId } from '../../../../configs/localStore';
+import { formatPrice } from '../../../../configs/utils';
 import * as imageActions from '../../../../redux/imageReducers/actions';
 import * as menuTypeActions from '../../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
@@ -185,7 +186,7 @@ const ProductDetails: React.FC<Props> = (props) => {
                     alignItems="flex-start"
                   >
                     <Typography>
-                      {props.price} {props.unit}
+                      {formatPrice(props.price)} {props.unit}
                     </Typography>
                   </Grid>
                   <Grid

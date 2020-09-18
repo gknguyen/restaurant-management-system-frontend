@@ -18,7 +18,7 @@ import { apiDelete, apiGet } from '../../../../configs/axios';
 import { HTTPdata, Product } from '../../../../configs/interfaces';
 import * as commonActions from '../../../../redux/commonReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
-import { convertDateTime } from '../../../../configs/utils';
+import { convertDateTime, formatPrice } from '../../../../configs/utils';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import { green, red } from '@material-ui/core/colors';
@@ -92,7 +92,7 @@ const ProductList: React.FC<Props> = (props) => {
       const product = {
         id: serverProduct.id || null,
         name: serverProduct.name || null,
-        price: serverProduct.price || null,
+        price: serverProduct.price ? formatPrice(serverProduct.price) : null,
         unit: serverProduct.unit || null,
         amount: serverProduct.amount || null,
         active: serverProduct.activeStatus ? (
