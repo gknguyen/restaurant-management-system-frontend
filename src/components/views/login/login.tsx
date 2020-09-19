@@ -27,8 +27,9 @@ import { loginMessagesForm, validate } from './validate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    padding: '110px 0px 110px 0px',
-    height: '88vh',
+    // padding: '110px 0px 110px 0px',
+    // height: '80vh',
+    height: '100%',
   },
   paper: {
     display: 'flex',
@@ -94,7 +95,7 @@ const Login: React.FC<Props> = (props) => {
     sessionStorage.clear();
   }, []);
 
-  const submitLoginForm = async (event: FormEvent<HTMLFormElement>) => {
+  const submitLoginForm = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     props.sendDisableFlag(true);
 
@@ -119,7 +120,7 @@ const Login: React.FC<Props> = (props) => {
     }
   };
 
-  const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+  const onInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name.toString();
     const value = event.target.value.toString();
     loginForm[name] = value;

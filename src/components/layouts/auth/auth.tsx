@@ -6,6 +6,13 @@ import BottomBar from './components/bottomBar';
 import TopBar from './components/topBar';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    height: '100vh',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+  },
   content: {
     height: '100%',
     paddingTop: 56,
@@ -25,13 +32,15 @@ const Auth: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
-    <Fragment>
-      <TopBar />
-      <Box className={classes.content}>
-        <Suspense fallback={<LinearProgress />}>{renderRoutes(route.routes)}</Suspense>
-      </Box>
-      <BottomBar />
-    </Fragment>
+    <Box className={classes.root}>
+      <Fragment>
+        <TopBar />
+        <Box className={classes.content}>
+          <Suspense fallback={<LinearProgress />}>{renderRoutes(route.routes)}</Suspense>
+        </Box>
+        <BottomBar />
+      </Fragment>
+    </Box>
   );
 };
 
