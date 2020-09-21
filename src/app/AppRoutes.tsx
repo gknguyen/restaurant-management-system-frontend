@@ -6,8 +6,8 @@ import Login from '../components/views/login/login';
 import CreateProduct from '../components/views/products/createAndEdit/createProduct';
 import ProductDetails from '../components/views/products/details/productDetails';
 import ProductList from '../components/views/products/list/productList';
-import CreateUser from '../components/views/users/createAndEdit/createUser';
-import UserDetails from '../components/views/users/details/userDetails';
+// import CreateUser from '../components/views/users/createAndEdit/createUser';
+// import UserDetails from '../components/views/users/details/userDetails';
 import UserList from '../components/views/users/list/userList';
 import Logout from '../components/views/login/logout';
 import Home from '../components/views/home/home';
@@ -68,16 +68,16 @@ const routes = [
         exact: true,
         component: UserList,
       },
-      {
-        path: '/createUser',
-        exact: true,
-        component: CreateUser,
-      },
-      {
-        path: '/userDetails',
-        exact: true,
-        component: UserDetails,
-      },
+      // {
+      //   path: '/createUser',
+      //   exact: true,
+      //   component: CreateUser,
+      // },
+      // {
+      //   path: '/userDetails',
+      //   exact: true,
+      //   component: UserDetails,
+      // },
     ],
   },
 ];

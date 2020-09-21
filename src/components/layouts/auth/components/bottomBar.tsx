@@ -9,8 +9,8 @@ import { Link } from '@material-ui/core';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
-      top: 'auto',
-      bottom: 0,
+      // top: 'auto',
+      // bottom: 0,
       background: 'linear-gradient(45deg, #4e342e 30%, #a1887f 90%)',
     },
     toolBar: {
@@ -25,7 +25,7 @@ const BottomBar: React.FC = () => {
   const history = useHistory();
 
   return (
-    <AppBar position="fixed" className={classes.appBar}>
+    <AppBar className={classes.appBar} position="sticky">
       <Toolbar className={classes.toolBar}>
         <Typography>
           Powered by{' '}

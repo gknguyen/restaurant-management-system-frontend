@@ -64,9 +64,9 @@ const Dashboard: React.FC<Props> = (props) => {
         <TopBar />
         <Box className={classes.container}>
           <NavBar className={classes.navBar} openMobile={props.navBarOpenFlag} />
-          <main className={classes.content}>
+          <Box component="main" className={classes.content}>
             <Suspense fallback={<LinearProgress />}>{renderRoutes(props.route.routes)}</Suspense>
-          </main>
+          </Box>
         </Box>
       </Fragment>
     </Box>

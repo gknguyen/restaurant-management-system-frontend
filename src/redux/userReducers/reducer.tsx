@@ -3,18 +3,12 @@ import * as ActionType from '../constant';
 const initialState = {
   loginUser: {},
   searchValue: '',
-  headCells: [],
   userList: [],
   userIdList: [],
   user: {
     id: '',
     username: '',
     password: '',
-    fullName: '',
-    age: 0,
-    phoneNumber: '',
-    email: '',
-    avatar: '',
     loginDateTime: '',
     authToken: '',
     activeStatus: false,
@@ -23,11 +17,6 @@ const initialState = {
     userTypeName: '',
     username: '',
     password: '',
-    fullName: '',
-    age: '',
-    phoneNumber: '',
-    email: '',
-    avatar: '',
   },
   open: false,
 };
@@ -62,40 +51,19 @@ const userReducer = (state = initialState, action: any) => {
     case ActionType.RECEIVE_USER_PASSWORD:
       state.user.password = action.data;
       return { ...state };
-    case ActionType.RECEIVE_USER_FULLNAME:
-      state.user.fullName = action.data;
-      return { ...state };
-    case ActionType.RECEIVE_USER_AGE:
-      state.user.age = action.data;
-      return { ...state };
-    case ActionType.RECEIVE_USER_PHONENUMBER:
-      state.user.phoneNumber = action.data;
-      return { ...state };
-    case ActionType.RECEIVE_USER_EMAIL:
-      state.user.email = action.data;
-      return { ...state };
     /* return user error message */
     case ActionType.RECEIVE_USER_ERROR_MESSAGES:
       state.errorMessages = action.data;
       return { ...state };
     /* return each user error message */
-    case ActionType.RECEIVE_USER_ERROR_MESSAGES_USERNAME:
+    case ActionType.RECEIVE_USER_ERROR_MESSAGE_USER_TYPE:
+      state.errorMessages.userTypeName = action.data;
+      return { ...state };
+    case ActionType.RECEIVE_USER_ERROR_MESSAGE_USERNAME:
       state.errorMessages.username = action.data;
       return { ...state };
-    case ActionType.RECEIVE_USER_ERROR_MESSAGES_PASSWORD:
+    case ActionType.RECEIVE_USER_ERROR_MESSAGE_PASSWORD:
       state.errorMessages.password = action.data;
-      return { ...state };
-    case ActionType.RECEIVE_USER_ERROR_MESSAGES_FULLNAME:
-      state.errorMessages.fullName = action.data;
-      return { ...state };
-    case ActionType.RECEIVE_USER_ERROR_MESSAGES_AGE:
-      state.errorMessages.age = action.data;
-      return { ...state };
-    case ActionType.RECEIVE_USER_ERROR_MESSAGES_PHONE:
-      state.errorMessages.phoneNumber = action.data;
-      return { ...state };
-    case ActionType.RECEIVE_USER_ERROR_MESSAGES_EMAIL:
-      state.errorMessages.email = action.data;
       return { ...state };
     /* return edit open flag */
     case ActionType.RECEIVE_USER_EDIT_OPEN_FLAG:

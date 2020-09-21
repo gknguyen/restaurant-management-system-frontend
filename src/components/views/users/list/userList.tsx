@@ -1,27 +1,22 @@
-import { Dialog, Typography } from '@material-ui/core';
+import { MenuItem, TextField, Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import { green, red } from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
 import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import ListTable from '../../../../commons/listTable';
 import SearchBar from '../../../../commons/searchBar';
 import * as APIs from '../../../../configs/APIs';
-import { apiDelete, apiGet } from '../../../../configs/axios';
-import { HTTPdata, User } from '../../../../configs/interfaces';
-import { convertDateTime } from '../../../../configs/utils';
+import { apiGet, apiPost } from '../../../../configs/axios';
+import { HTTPdata, User, UserType } from '../../../../configs/interfaces';
+import { convertDateTime, showSnackBarAlert } from '../../../../configs/utils';
 import * as commonActions from '../../../../redux/commonReducers/actions';
 import * as userActions from '../../../../redux/userReducers/actions';
+import * as userTypeActions from '../../../../redux/userTypeReducers/actions';
+import CreateUser from '../create/createUser';
+import UserTable from './components/userTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,38 +52,131 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const headers = [
-  { field: 'id', title: 'Id', hidden: true },
-  { field: 'username', title: 'Username', sorting: false },
-  { field: 'fullName', title: 'Name', sorting: false },
-  { field: 'phoneNumber', title: 'Phone', sorting: false },
-  { field: 'email', title: 'Email', sorting: false },
-  { field: 'activeStatus', title: 'Active', sorting: false },
-  { field: 'loginDateTime', title: 'Login At', sorting: false },
-  { field: 'userTypeName', title: 'Type', sorting: false },
-];
-
 interface Props {
   /** redux params */
   userList: User[];
   userIdList: string[];
   searchValue: string;
   isDisable: boolean;
+  userTypeList: UserType[];
   /** redux functions */
   sendUserList: Function;
   sendDisableFlag: Function;
+  sendUserTypeList: Function;
 }
 
 const UserList: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const [open, setOpen] = React.useState(false);
-  const [userIdList, setUserIdList] = React.useState<string[]>([]);
+  const headers = [
+    { field: 'id', title: 'Id', hidden: true },
+    {
+      field: 'username',
+      title: 'Username',
+      sorting: false,
+      headerStyle: {
+        width: 500,
+        minWidth: 150,
+      },
+      cellStyle: {
+        width: 500,
+        minWidth: 150,
+      },
+      editComponent: (properties: any) => (
+        <TextField
+          fullWidth={true}
+          value={properties.value}
+          variant="outlined"
+          margin="dense"
+          onChange={(event) => properties.onChange(event.target.value)}
+          disabled={props.isDisable}
+        />
+      ),
+    },
+    {
+      field: 'activeStatus',
+      title: 'Status',
+      sorting: false,
+      headerStyle: {
+        width: 500,
+        minWidth: 150,
+      },
+      cellStyle: {
+        width: 500,
+        minWidth: 150,
+      },
+      editComponent: (properties: any) => (
+        <TextField
+          select={true}
+          fullWidth={true}
+          value={properties.value}
+          variant="outlined"
+          margin="dense"
+          onChange={(event) => properties.onChange(event.target.value)}
+          disabled={props.isDisable}
+        >
+          <MenuItem key={1} value={'active'}>
+            active
+          </MenuItem>
+          <MenuItem key={2} value={'deactivate'}>
+            deactivate
+          </MenuItem>
+        </TextField>
+      ),
+    },
+    {
+      field: 'loginDateTime',
+      title: 'Login At',
+      sorting: false,
+      headerStyle: {
+        width: 500,
+        minWidth: 150,
+      },
+      cellStyle: {
+        width: 500,
+        minWidth: 150,
+      },
+      editable: 'never',
+    },
+    {
+      field: 'userTypeName',
+      title: 'Type',
+      sorting: false,
+      headerStyle: {
+        width: 500,
+        minWidth: 150,
+      },
+      cellStyle: {
+        width: 500,
+        minWidth: 150,
+      },
+      editComponent: (properties: any) => (
+        <TextField
+          select={true}
+          fullWidth={true}
+          value={properties.value}
+          variant="outlined"
+          margin="dense"
+          onChange={(event) => properties.onChange(event.target.value)}
+          disabled={props.isDisable}
+        >
+          {props.userTypeList.map((userType) => (
+            <MenuItem key={userType.id} value={userType.typeName}>
+              {userType.typeName}
+            </MenuItem>
+          ))}
+        </TextField>
+      ),
+    },
+  ];
+
+  const [open, setOpen] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     props.sendDisableFlag(true);
     apiGet(APIs.getListUserForUserScreenUrl).then((HTTPdata) => processDataToTable(HTTPdata));
+    apiGet(APIs.getListUserTypeUrl).then((HTTPdata) => props.sendUserTypeList(HTTPdata.values));
   }, []);
 
   const searchHandler = (searchValue: string) => {
@@ -105,14 +193,7 @@ const UserList: React.FC<Props> = (props) => {
       const user = {
         id: serverUser.id,
         username: serverUser.username,
-        fullName: serverUser.fullName,
-        phoneNumber: serverUser.phoneNumber,
-        email: serverUser.email,
-        activeStatus: serverUser.activeStatus ? (
-          <CheckCircleIcon style={{ color: green[500] }} />
-        ) : (
-          <ErrorIcon style={{ color: red[600] }} />
-        ),
+        activeStatus: serverUser.activeStatus ? 'active' : 'deactivate',
         loginDateTime: convertDateTime(serverUser.loginDateTime),
         userTypeName: serverUser.userType.typeName,
       } as User;
@@ -123,50 +204,22 @@ const UserList: React.FC<Props> = (props) => {
     props.sendDisableFlag(false);
   };
 
+  const updateHandler = (newUserList: User[]) => {
+    props.sendUserList(newUserList);
+  };
+
   const createHandler = () => {
-    history.push('/createUser');
+    setOpen(true);
   };
 
-  const deleteHandler = () => {
-    apiDelete(APIs.deleteListUserForUserScreenUrl, { userIdList }).then(() =>
-      window.location.reload(true),
-    );
+  const createConfirmHandler = (createUserForm: User) => {
     setOpen(false);
+    apiPost(APIs.createOneUserForUserScreenUrl, createUserForm).then((HTTPdata) => {
+      props.sendDisableFlag(false);
+      showSnackBarAlert(5000, 'success', HTTPdata.message);
+      apiGet(APIs.getListUserForUserScreenUrl).then((HTTPdata) => processDataToTable(HTTPdata));
+    });
   };
-
-  const detailHandler = (userId: string) => {
-    sessionStorage.setItem('userId', userId);
-    history.push('/userDetails');
-  };
-
-  const onSelectionHandler = (userIdList: string[]) => {
-    setUserIdList(userIdList);
-  };
-
-  const handleClickOpen = () => {
-    if (userIdList && userIdList.length > 0) setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const deleteDialog = (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Do yo want to delete these users?</DialogTitle>
-      <DialogContent>
-        <DialogContentText>These users will be deleted permanently</DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={deleteHandler} color="primary">
-          Yes
-        </Button>
-        <Button onClick={handleClose} color="primary">
-          No
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
 
   return (
     <Container maxWidth="xl">
@@ -195,33 +248,22 @@ const UserList: React.FC<Props> = (props) => {
             >
               Create
             </Button>
-            <Button
-              className={classes.deleteButton}
-              onClick={handleClickOpen}
-              size="medium"
-              variant="contained"
-              color="secondary"
-              disabled={props.isDisable}
-            >
-              Delete
-            </Button>
           </Grid>
 
           {/** table field */}
           <Grid container={true} item={true} xs={12}>
             {/* <UserTable /> */}
-            <ListTable
-              headers={headers}
-              cells={props.userList}
-              onRowClickCallBack={detailHandler}
-              onSelectionCallBack={onSelectionHandler}
-            />
+            <UserTable headers={headers} cells={props.userList} onUpdateCallBack={updateHandler} />
           </Grid>
         </Grid>
       </Box>
 
-      {/** confirm dialog */}
-      {deleteDialog}
+      {/** create user dialog */}
+      <CreateUser
+        open={open}
+        confirmHandlerCallBack={createConfirmHandler}
+        closeHandlerCallBack={(open: boolean) => setOpen(open)}
+      />
     </Container>
   );
 };
@@ -233,6 +275,7 @@ const mapStateToProps = (state: any) => {
     userIdList: state.userReducer.userIdList,
     searchValue: state.commonReducer.searchValue,
     isDisable: state.commonReducer.isDisable,
+    userTypeList: state.userTypeReducer.userTypeList,
   };
 };
 
@@ -244,6 +287,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     sendDisableFlag: (isDisable: boolean) => {
       dispatch(commonActions.actionDisableFlag(isDisable));
+    },
+    sendUserTypeList: (userTypeList: UserType[]) => {
+      dispatch(userTypeActions.actionReceiveUserTypeList(userTypeList));
     },
   };
 };

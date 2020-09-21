@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../configs/APIs';
 import { authPost } from '../../../configs/axios';
-import { loginInputType } from '../../../configs/inputType';
+import { LoginInputType } from '../../../configs/inputType';
 import { HTTPdata, User, UserInfo } from '../../../configs/interfaces';
 import * as commonActions from '../../../redux/commonReducers/actions';
 import * as userActions from '../../../redux/userReducers/actions';
@@ -27,9 +27,10 @@ import { loginMessagesForm, validate } from './validate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
+    justifyContent: 'center',
     // padding: '110px 0px 110px 0px',
     // height: '80vh',
-    height: '100%',
+    // height: '50%',
   },
   paper: {
     display: 'flex',
@@ -100,19 +101,19 @@ const Login: React.FC<Props> = (props) => {
     props.sendDisableFlag(true);
 
     if (validate(loginForm)) {
-      const HTTPdata = (await authPost(APIs.loginUrl, loginForm)) as HTTPdata;
-      if (HTTPdata.code === STATUS_CODE.OK) {
-        const token = HTTPdata.values.token as string;
-        const userInfo = HTTPdata.values.userInfo as UserInfo;
+      authPost(APIs.loginUrl, loginForm).then((HTTPdata) => {
+        if (HTTPdata.code === STATUS_CODE.OK) {
+          const token = HTTPdata.values.token as string;
+          const userInfo = HTTPdata.values.userInfo as UserInfo;
 
-        localStorage.setItem('token', JSON.stringify(token));
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+          localStorage.setItem('token', JSON.stringify(token));
+          localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
-        history.push('/home');
-        window.location.reload();
-      } else {
-        props.sendDisableFlag(false);
-      }
+          window.location.href = '/home';
+        } else {
+          props.sendDisableFlag(false);
+        }
+      });
     } else {
       setErrorMessageUsername(loginMessagesForm.username);
       setErrorMessagePassword(loginMessagesForm.password);
@@ -130,10 +131,10 @@ const Login: React.FC<Props> = (props) => {
   const validateEach = (name: string) => {
     setErrorMessage('');
     switch (name) {
-      case loginInputType.username:
+      case LoginInputType.username:
         setErrorMessageUsername('');
         break;
-      case loginInputType.password:
+      case LoginInputType.password:
         setErrorMessagePassword('');
         break;
       default:
@@ -142,7 +143,7 @@ const Login: React.FC<Props> = (props) => {
   };
 
   return (
-    <Container className={classes.container} component="main" maxWidth="xs">
+    <Container className={classes.container} maxWidth="xs">
       <CssBaseline />
       <Box className={classes.paper}>
         {/** header */}
@@ -209,8 +210,9 @@ const Login: React.FC<Props> = (props) => {
             <Button
               fullWidth={true}
               variant="contained"
-              color="primary"
+              size="medium"
               component="span"
+              color="primary"
               className={classes.submit}
               disabled={props.isDisable}
             >
@@ -225,7 +227,7 @@ const Login: React.FC<Props> = (props) => {
           </label>
 
           {/** other links */}
-          <Grid container={true}>
+          {/* <Grid container={true}>
             <Grid item={true} xs={12}>
               <Link href="#" variant="body2">
                 Forgot password?
@@ -236,7 +238,7 @@ const Login: React.FC<Props> = (props) => {
                 Don't have an account? Contact admin for new account
               </Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </form>
       </Box>
     </Container>

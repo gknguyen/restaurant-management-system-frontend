@@ -10,10 +10,13 @@ import React from 'react';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
+      // flexGrow: 1,
     },
     appBar: {
       background: 'linear-gradient(45deg, #4e342e 30%, #a1887f 90%)',
+    },
+    toolBar: {
+      minHeight: 40,
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -32,8 +35,8 @@ const TopBar: React.FC = () => {
 
   return (
     <Box className={classes.root}>
-      <AppBar className={classes.appBar} position="static">
-        <Toolbar>
+      <AppBar className={classes.appBar} position="sticky">
+        <Toolbar className={classes.toolBar}>
           <IconButton
             edge="start"
             className={classes.menuButton}

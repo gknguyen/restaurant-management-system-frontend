@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
   },
   navigation: {
-    marginTop: theme.spacing(2),
+    // marginTop: theme.spacing(2),
   },
   drawer: {
     width: drawerWidth,
@@ -78,14 +78,15 @@ const NavBar: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const router = useRouter();
-  const userInfo = getdUserInfo();
-  const userImageUrl = `${AWS_S3_BUCKET_URL}/users/${userInfo.avatar}`;
+  // const userInfo = getdUserInfo();
+
+  // const userImageUrl = `${AWS_S3_BUCKET_URL}/users/${userInfo.avatar}`;
 
   React.useEffect(() => {}, [router.location.pathname]);
 
   const navbarContent = (
     <Box className={classes.content}>
-      {openMobile && (
+      {/* {openMobile && (
         <Box>
           <Box className={classes.profile}>
             <Avatar
@@ -102,7 +103,7 @@ const NavBar: React.FC<Props> = (props) => {
 
           <Divider className={classes.divider} />
         </Box>
-      )}
+      )} */}
 
       <nav className={classes.navigation}>
         {navigationRoutes.map((list) => (

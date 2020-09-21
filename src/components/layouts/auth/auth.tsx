@@ -12,13 +12,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
+    justifyContent: 'space-between',
   },
   content: {
-    height: '100%',
-    paddingTop: 56,
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: 40,
-    },
+    // height: '100%',
+    // justifyContent: 'center',
+    // paddingTop: 56,
+    // [theme.breakpoints.up('sm')]: {
+    //   paddingTop: 40,
+    // },
   },
 }));
 
@@ -35,7 +37,7 @@ const Auth: React.FC<Props> = (props) => {
     <Box className={classes.root}>
       <Fragment>
         <TopBar />
-        <Box className={classes.content}>
+        <Box component="main" className={classes.content}>
           <Suspense fallback={<LinearProgress />}>{renderRoutes(route.routes)}</Suspense>
         </Box>
         <BottomBar />

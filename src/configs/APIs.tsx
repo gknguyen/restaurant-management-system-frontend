@@ -48,4 +48,5 @@ export const getOneUserForUserScreenUrl = userScreenUrl + 'getOne/';
 export const searchListUserForUserScreenUrl = userScreenUrl + 'searchList/';
 export const createOneUserForUserScreenUrl = userScreenUrl + 'createOne/';
 export const editOneUserForUserScreenUrl = userScreenUrl + 'editOne/';
+export const deleteOneUserForUserScreenUrl = userScreenUrl + 'deleteOne/';
 export const deleteListUserForUserScreenUrl = userScreenUrl + 'deleteList/';

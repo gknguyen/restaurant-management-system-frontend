@@ -1,6 +1,3 @@
-import React, { forwardRef } from 'react';
-import { connect } from 'react-redux';
-import MaterialTable, { Icons } from 'material-table';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import Check from '@material-ui/icons/Check';
@@ -16,27 +13,8 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import { createStyles, makeStyles, Theme, createMuiTheme } from '@material-ui/core/styles';
-import * as commonActions from '../redux/commonReducers/actions';
-import { IconButton, Menu, MenuItem, TextField, ThemeProvider, Box } from '@material-ui/core';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-  }),
-);
-
-const theme = createMuiTheme({
-  overrides: {
-    MuiSvgIcon: {
-      root: {
-        // color: '#ffffff',
-      },
-    },
-  },
-});
+import { Icons } from 'material-table';
+import React, { forwardRef } from 'react';
 
 const tableIcons: Icons = {
   Add: forwardRef((props: any, ref: any) => <AddBox {...props} ref={ref} />),
@@ -58,65 +36,4 @@ const tableIcons: Icons = {
   ViewColumn: forwardRef((props: any, ref: any) => <ViewColumn {...props} ref={ref} />),
 };
 
-interface Props {
-  /** params */
-  headers: any[];
-  cells: any[];
-  /** functions */
-  onRowClickCallBack: Function;
-  onSelectionCallBack: Function;
-  /** redux params */
-  isDisable: boolean;
-  /** redux functions */
-  sendDisableFlag: Function;
-}
-
-const ListTable: React.FC<Props> = (props) => {
-  const classes = useStyles();
-
-  return (
-    <ThemeProvider theme={theme}>
-      <MaterialTable
-        icons={tableIcons}
-        style={{ width: '100%' }}
-        columns={props.headers}
-        data={props.cells}
-        onRowClick={(event, selectedRow) => {
-          props.onRowClickCallBack(selectedRow.id);
-        }}
-        onSelectionChange={(rows) => {
-          const productIdList: string[] = [];
-          rows.map((row) => productIdList.push(row.id));
-          props.onSelectionCallBack(productIdList);
-        }}
-        options={{
-          search: false,
-          toolbar: false,
-          selection: true,
-          headerStyle: {
-            background: 'linear-gradient(0deg, #4e342e 30%, #a1887f 90%)',
-            color: '#ffffff',
-          },
-        }}
-      />
-    </ThemeProvider>
-  );
-};
-
-/* collect data from redux store */
-const mapStateToProps = (state: any) => {
-  return {
-    isDisable: state.commonReducer.isDisable,
-  };
-};
-
-/* Send data to redux store */
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    sendDisableFlag: (isDisable: boolean) => {
-      dispatch(commonActions.actionDisableFlag(isDisable));
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ListTable);
+export default tableIcons;

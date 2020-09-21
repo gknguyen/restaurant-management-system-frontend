@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box, Divider, Grid } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as commonActions from '../../../../redux/commonReducers/actions';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { getdUserInfo } from '../../../../configs/localStore';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,6 +62,10 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
+    divider: {
+      width: 3,
+      backgroundColor: 'white',
+    },
   }),
 );
 
@@ -74,6 +79,7 @@ interface Props {
 const TopBar: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
+  const userInfo = getdUserInfo();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -142,13 +148,16 @@ const TopBar: React.FC<Props> = (props) => {
             </IconButton>
 
             {/** notification */}
-            <IconButton color="inherit">
+            <IconButton color="inherit" style={{ paddingRight: 50 }}>
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
 
             {/** profile */}
+            <Typography className={classes.title} variant="h6" noWrap={true}>
+              {userInfo.username}
+            </Typography>
             <IconButton
               edge="end"
               aria-controls={menuId}

@@ -4,9 +4,8 @@ export interface LoginForm {
 }
 
 export interface UserInfo {
+  username: string;
   role: string;
-  fullName: string;
-  avatar: string;
 }
 
 export interface ProductType {
@@ -61,7 +60,7 @@ export interface User {
   avatar: string;
   loginDateTime: Date | string;
   authToken: string;
-  activeStatus: boolean | JSX.Element;
+  activeStatus: boolean | JSX.Element | string;
   userType: UserType;
   userTypeId: string;
   userTypeName: string;

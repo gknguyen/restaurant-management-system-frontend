@@ -11,7 +11,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import ListTable from '../../../../commons/listTable';
+import ListTable from '../../../../commons/tables/listTable';
 import SearchBar from '../../../../commons/searchBar';
 import * as APIs from '../../../../configs/APIs';
 import { apiDelete, apiGet } from '../../../../configs/axios';
