@@ -42,6 +42,8 @@ const useStyles = makeStyles((theme: Theme) =>
     cardMedia: {
       height: 0,
       paddingTop: '56.25%', // 16:9
+      border: '1px solid #90776f',
+      borderRadius: '3%',
     },
     cardImage: {
       width: 150,
@@ -104,9 +106,11 @@ const Home: React.FC<Props> = (props) => {
   const menuTypeListField = menuTypeList.map((menuType, index) => {
     if (menuType) {
       return (
-        <Button key={index} onClick={() => filterMenuHandler(menuType.typeName)}>
-          <Icon>{menuType.icon}</Icon>
-        </Button>
+        <Grid item>
+          <Button key={index} onClick={() => filterMenuHandler(menuType.typeName)}>
+            <Icon>{menuType.icon}</Icon>
+          </Button>
+        </Grid>
       );
     }
   });
@@ -149,18 +153,15 @@ const Home: React.FC<Props> = (props) => {
     <Container maxWidth="xl">
       <Grid className={classes.grid} container={true} spacing={2} direction="column">
         {/** header */}
-        <Grid container item xs={12}>
-          <Grid container item lg={2} md={12}>
-            <Typography component="h1" variant="h4">
-              Menu
-            </Typography>
-          </Grid>
-          <Grid container item lg={10} md={12}>
+        <Grid container item xs={12} spacing={3} alignItems="center">
+          <Grid item>
             <Button onClick={() => allMenuHandler()}>
-              <Icon>apps</Icon>
+              <Typography component="h1" variant="h4">
+                Menu
+              </Typography>
             </Button>
-            {menuTypeListField}
           </Grid>
+          {menuTypeListField}
         </Grid>
 
         <Divider />

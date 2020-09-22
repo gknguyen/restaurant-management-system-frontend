@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     flexWrap: 'wrap',
     alignItems: 'center',
+    wordBreak: 'break-all',
     '&:hover': {
       cursor: 'pointer',
     },
