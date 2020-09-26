@@ -1,30 +1,30 @@
-import React, { FormEvent } from 'react';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  Container,
+  Divider,
+  Grid,
+  Typography,
+  TextField,
+} from '@material-ui/core';
+import { red } from '@material-ui/core/colors';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Container,
-  Typography,
-  Grid,
-  Card,
-  CardHeader,
-  Avatar,
-  CardMedia,
-  CardActions,
-  Button,
-  Icon,
-  Divider,
-  Box,
-} from '@material-ui/core';
-import { apiGet } from '../../../configs/axios';
 import * as APIs from '../../../configs/APIs';
+import { apiGet } from '../../../configs/axios';
 import { AWS_S3_BUCKET_URL } from '../../../configs/constants';
-import { MenuType, Product } from '../../../configs/interfaces';
+import { MenuType, Product, OrderDetail, Order } from '../../../configs/interfaces';
+import { formatPrice, reverseformatPrice } from '../../../configs/utils';
 import * as commonActions from '../../../redux/commonReducers/actions';
-import { red } from '@material-ui/core/colors';
 import * as menuTypeActions from '../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../redux/productReducers/actions';
-import { formatPrice } from '../../../configs/utils';
+import * as orderActions from '../../../redux/orderReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,13 +49,17 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 150,
     },
     cardHeader: {
-      // textAlign: 'center',
+      textAlign: 'center',
+      padding: '10px 16px',
     },
     cardHeaderTitle: {
       fontSize: 18,
     },
     cardHeaderSubHeader: {
       fontSize: 15,
+    },
+    cardContent: {
+      padding: '0px 16px 10px 16px',
     },
     cardAvatar: {
       backgroundColor: red[500],
@@ -68,10 +72,12 @@ interface Props {
   isDisable: boolean;
   menuTypeList: MenuType[];
   productList: Product[];
+  order: Order;
   /** redux functions */
   sendDisableFlag: Function;
   sendMenuTypeList: Function;
   sendProductList: Function;
+  sendOrder: Function;
 }
 
 const Home: React.FC<Props> = (props) => {
@@ -80,6 +86,11 @@ const Home: React.FC<Props> = (props) => {
 
   const [menuTypeList, setMenuTypeList] = React.useState<MenuType[]>(props.menuTypeList);
   const [productList, setProductList] = React.useState<Product[]>(props.productList);
+  const [orderDetail, setOrderDetail] = React.useState<OrderDetail>({} as OrderDetail);
+  const [valueIndex, setValueindex] = React.useState<number | undefined>(undefined);
+  const [value, setValue] = React.useState<string>('');
+  const [errorIndex, setErrorIndex] = React.useState<number | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
 
   React.useEffect(() => {
     apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => {
@@ -92,6 +103,7 @@ const Home: React.FC<Props> = (props) => {
     });
   }, []);
 
+  /** filter */
   const filterMenuHandler = (typeName: string) => {
     const filterProductList = props.productList.filter(
       (product) => product.menuType.typeName === typeName,
@@ -103,12 +115,74 @@ const Home: React.FC<Props> = (props) => {
     setProductList(props.productList);
   };
 
+  /** update cart */
+  const inputAmountHandler = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    unit: string,
+  ) => {
+    props.order.finalPrice = 0;
+    const orderDetailForm = {
+      product: {} as Product,
+      quantity: 0,
+      totalPrice: 0,
+    } as OrderDetail;
+    orderDetailForm.product.name = event.target.name;
+    orderDetailForm.product.unit = unit;
+    orderDetailForm.quantity = parseInt(event.target.value);
+    setOrderDetail(orderDetailForm);
+    setErrorIndex(undefined);
+    setErrorMessage('');
+    setValueindex(index);
+    setValue(event.target.value);
+  };
+
+  const orderHandler = (
+    index: number,
+    name: string,
+    formatedPrice: string | number,
+    unit: string,
+  ) => {
+    if (name === orderDetail.product?.name && orderDetail.quantity > 0) {
+      let addNew = true;
+      for (let detail of props.order.orderDetails) {
+        if (detail.product.name === name) {
+          detail.product.price = reverseformatPrice(formatedPrice);
+          detail.product.unit = unit;
+          detail.quantity += orderDetail.quantity;
+          detail.totalPrice += reverseformatPrice(formatedPrice) * orderDetail.quantity;
+          addNew = false;
+          break;
+        }
+      }
+      if (addNew) {
+        orderDetail.product.price = reverseformatPrice(formatedPrice);
+        orderDetail.product.unit = unit;
+        orderDetail.totalPrice = reverseformatPrice(formatedPrice) * orderDetail.quantity;
+        props.order.orderDetails.push(orderDetail);
+      }
+      for (let detail of props.order.orderDetails) {
+        props.order.finalPrice += detail.totalPrice;
+      }
+      props.sendOrder(props.order);
+      setErrorIndex(undefined);
+      setErrorMessage('');
+      setValueindex(undefined);
+      setValue('');
+      setOrderDetail({} as OrderDetail);
+    } else {
+      setErrorIndex(index);
+      setErrorMessage('Please enter the quantity');
+    }
+  };
+
+  /** render */
   const menuTypeListField = menuTypeList.map((menuType, index) => {
     if (menuType) {
       return (
-        <Grid item>
-          <Button key={index} onClick={() => filterMenuHandler(menuType.typeName)}>
-            <Icon>{menuType.icon}</Icon>
+        <Grid key={index} item>
+          <Button color="primary" onClick={() => filterMenuHandler(menuType.typeName)}>
+            {menuType.typeName}
           </Button>
         </Grid>
       );
@@ -124,6 +198,7 @@ const Home: React.FC<Props> = (props) => {
         <Grid container item lg={3} md={4} sm={6} xs={12} key={index}>
           <Card className={classes.card}>
             <CardMedia className={classes.cardMedia} image={productImageUrl} />
+
             <CardHeader
               classes={{
                 root: classes.cardHeader,
@@ -132,14 +207,41 @@ const Home: React.FC<Props> = (props) => {
               }}
               title={product.name}
               subheader={`${formatPrice(product.price)} ${product.unit}`}
-              avatar={
-                <Avatar aria-label="recipe" className={classes.cardAvatar}>
-                  <Icon>{product.menuType?.icon}</Icon>
-                </Avatar>
-              }
             />
+
+            <CardContent
+              classes={{
+                root: classes.cardContent,
+              }}
+            >
+              <Grid container alignItems="flex-start" justify="center" spacing={2}>
+                <Grid item style={{ height: 80 }}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    type="number"
+                    margin="dense"
+                    name={product.name}
+                    value={valueIndex === index ? value : ''}
+                    onChange={(event) => inputAmountHandler(index, event, product.unit)}
+                    style={{ width: '100%', maxWidth: 200, minWidth: 100 }}
+                    error={errorIndex === index}
+                    helperText={errorIndex === index ? errorMessage : undefined}
+                  />
+                </Grid>
+                <Grid item style={{ paddingTop: 23 }}>
+                  <Typography>Pieces</Typography>
+                </Grid>
+              </Grid>
+            </CardContent>
+
             <CardActions>
-              <Button variant="contained" color="primary" fullWidth>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={() => orderHandler(index, product.name, product.price, product.unit)}
+              >
                 Order
               </Button>
             </CardActions>
@@ -180,6 +282,7 @@ const mapStateToProps = (state: any) => {
     isDisable: state.commonReducer.isDisable,
     menuTypeList: state.menuTypeReducer.menuTypeList,
     productList: state.productReducer.productList,
+    order: state.orderReducer.order,
   };
 };
 
@@ -194,6 +297,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     sendProductList: (productList: Product[]) => {
       dispatch(productActions.actionReceiveProductList(productList));
+    },
+    sendOrder: (order: Order) => {
+      dispatch(orderActions.actionReceiveOrder(order));
     },
   };
 };

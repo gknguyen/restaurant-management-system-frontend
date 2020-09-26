@@ -18,6 +18,7 @@ import { useHistory } from 'react-router-dom';
 import * as commonActions from '../../../../redux/commonReducers/actions';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { getdUserInfo } from '../../../../configs/localStore';
+import Cart from '../../../views/home/cart';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -81,6 +82,7 @@ const TopBar: React.FC<Props> = (props) => {
   const history = useHistory();
   const userInfo = getdUserInfo();
 
+  const [cartOpen, setCartOpen] = React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const menuId = 'primary-search-account-menu';
@@ -136,7 +138,7 @@ const TopBar: React.FC<Props> = (props) => {
 
           <Box className={classes.sectionDesktop}>
             {/** cart */}
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={() => setCartOpen(true)}>
               <ShoppingCartIcon />
             </IconButton>
 
@@ -173,6 +175,13 @@ const TopBar: React.FC<Props> = (props) => {
 
       {/** profile menu */}
       {renderMenu}
+
+      {/** cart */}
+      <Cart
+        open={cartOpen}
+        confirmCallBack={() => setCartOpen(false)}
+        cancelCallBack={() => setCartOpen(false)}
+      />
     </Box>
   );
 };

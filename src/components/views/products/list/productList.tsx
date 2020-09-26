@@ -22,6 +22,7 @@ import { convertDateTime, formatPrice } from '../../../../configs/utils';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import { green, red } from '@material-ui/core/colors';
+import ComfirmDialog from '../../../../commons/dialogs/confirmDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -140,22 +141,22 @@ const ProductList: React.FC<Props> = (props) => {
     setOpen(false);
   };
 
-  const deleteDialog = (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Do yo want to delete these products?</DialogTitle>
-      <DialogContent>
-        <DialogContentText>These products will be deleted permanently</DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={deleteHandler} color="primary">
-          Yes
-        </Button>
-        <Button onClick={handleClose} color="primary">
-          No
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
+  // const deleteDialog = (
+  //   <Dialog open={open} onClose={handleClose}>
+  //     <DialogTitle>Do yo want to delete these products?</DialogTitle>
+  //     <DialogContent>
+  //       <DialogContentText>These products will be deleted permanently</DialogContentText>
+  //     </DialogContent>
+  //     <DialogActions>
+  //       <Button onClick={deleteHandler} color="primary">
+  //         Yes
+  //       </Button>
+  //       <Button onClick={handleClose} color="primary">
+  //         No
+  //       </Button>
+  //     </DialogActions>
+  //   </Dialog>
+  // );
 
   return (
     <Container maxWidth="xl">
@@ -209,7 +210,14 @@ const ProductList: React.FC<Props> = (props) => {
       </Box>
 
       {/** confirm dialog */}
-      {deleteDialog}
+      {/* {deleteDialog} */}
+      <ComfirmDialog
+        open={open}
+        header="Do yo want to delete these products?"
+        content="These products will be deleted permanently"
+        confirmCallBack={deleteHandler}
+        cancelCallBack={handleClose}
+      />
     </Container>
   );
 };

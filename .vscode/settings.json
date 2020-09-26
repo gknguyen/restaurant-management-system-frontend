@@ -23,5 +23,6 @@
   "cSpell.words": [
     "oracledb"
   ],
-  "liveServer.settings.port": 5501
+  "liveServer.settings.port": 5501,
+  "typescript.tsdk": "d:\\GK Technology\\All Projects\\GIT repositories\\restaurant-management-system-frontend\\node_modules\\typescript\\lib"
 }

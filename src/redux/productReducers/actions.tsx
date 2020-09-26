@@ -1,4 +1,4 @@
-import { Product, ProductHeadCell } from '../../configs/interfaces';
+import { Product } from '../../configs/interfaces';
 import * as ActionType from '../constant';
 
 /* =============================================================================== */

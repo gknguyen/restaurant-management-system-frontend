@@ -53,3 +53,10 @@ export function formatPrice(price: number | string) {
     return formatedPrice;
   } else return price;
 }
+
+export function reverseformatPrice(formatedPrice: number | string) {
+  if (typeof formatedPrice === 'string') {
+    const price = parseInt(String(formatedPrice).replace(/(.)(?=(\d{3})+$)/g, ''));
+    return price;
+  } else return formatedPrice;
+}

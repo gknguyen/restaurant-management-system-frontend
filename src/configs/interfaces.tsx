@@ -9,23 +9,23 @@ export interface UserInfo {
 }
 
 export interface ProductType {
-  id: string;
+  readonly id: string;
   typeName: string;
 }
 
 export interface MenuType {
-  id: string;
+  readonly id: string;
   typeName: string;
   icon: string;
 }
 
 export interface UserType {
-  id: string;
+  readonly id: string;
   typeName: string;
 }
 
 export interface Product {
-  id: string;
+  readonly id: string;
   name: string;
   price: number | string;
   unit: string;
@@ -42,15 +42,23 @@ export interface Product {
   editDateTime: Date | string;
 }
 
-export interface ProductHeadCell {
-  id: keyof Product;
-  disablePadding: boolean;
-  numeric: boolean;
-  label: string;
+export interface Order {
+  readonly id: string;
+  customer: any;
+  orderDetails: OrderDetail[];
+  finalPrice: number;
+}
+
+export interface OrderDetail {
+  readonly id: string;
+  product: Product;
+  quantity: number;
+  totalPrice: number;
+  [x: string]: any;
 }
 
 export interface User {
-  id: string;
+  readonly id: string;
   username: string;
   password: string;
   fullName: string;
@@ -64,13 +72,6 @@ export interface User {
   userType: UserType;
   userTypeId: string;
   userTypeName: string;
-}
-
-export interface UserHeadCell {
-  id: keyof User;
-  disablePadding: boolean;
-  numeric: boolean;
-  label: string;
 }
 
 export interface HTTPdata {

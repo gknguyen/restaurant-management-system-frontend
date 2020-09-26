@@ -159,7 +159,7 @@ const Login: React.FC<Props> = (props) => {
           <TextField
             variant="outlined"
             margin="normal"
-            required={true}
+            // required={true}
             fullWidth={true}
             id="username"
             name="username"
@@ -174,7 +174,7 @@ const Login: React.FC<Props> = (props) => {
           <TextField
             variant="outlined"
             margin="normal"
-            required={true}
+            // required={true}
             fullWidth={true}
             id="password"
             name="password"

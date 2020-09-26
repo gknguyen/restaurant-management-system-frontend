@@ -6,6 +6,7 @@ import productTypeReducer from './productTypeReducers/reducer';
 import menuTypeReducer from './menuTypeReducers/reducer';
 import userTypeReducer from './userTypeReducers/reducer';
 import commonReducer from './commonReducers/reducer';
+import orderReducer from './orderReducers/reducer';
 
 /** generate reducer for project */
 const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   productReducer,
   imageReducer,
   userReducer,
+  orderReducer,
 });
 
 export default rootReducer;

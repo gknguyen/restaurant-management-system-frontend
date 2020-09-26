@@ -4,7 +4,6 @@ import React, { Fragment, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 import * as commonActions from '../../../redux/commonReducers/actions';
-import BottomBar from '../auth/components/bottomBar';
 import NavBar from './components/navBar';
 import TopBar from './components/topBar';
 
