@@ -19,6 +19,7 @@ import * as commonActions from '../../../../redux/commonReducers/actions';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { getdUserInfo } from '../../../../configs/localStore';
 import Cart from '../../../views/home/cart';
+import { OrderDetail } from '../../../../configs/interfaces';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,6 +74,8 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {
   /** redux params */
   navBarOpenFlag: boolean;
+  productInCartNumber: number;
+  isDisable: boolean;
   /** redux functions */
   sendNavBarOpenFlag: Function;
 }
@@ -138,19 +141,25 @@ const TopBar: React.FC<Props> = (props) => {
 
           <Box className={classes.sectionDesktop}>
             {/** cart */}
-            <IconButton color="inherit" onClick={() => setCartOpen(true)}>
-              <ShoppingCartIcon />
+            <IconButton
+              color="inherit"
+              onClick={() => setCartOpen(true)}
+              disabled={props.isDisable}
+            >
+              <Badge badgeContent={props.productInCartNumber} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
             </IconButton>
 
             {/** mail */}
-            <IconButton color="inherit">
+            <IconButton color="inherit" disabled={props.isDisable}>
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />
               </Badge>
             </IconButton>
 
             {/** notification */}
-            <IconButton color="inherit" style={{ paddingRight: 50 }}>
+            <IconButton color="inherit" style={{ paddingRight: 50 }} disabled={props.isDisable}>
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>
@@ -166,6 +175,7 @@ const TopBar: React.FC<Props> = (props) => {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
+              disabled={props.isDisable}
             >
               <AccountCircle />
             </IconButton>
@@ -177,11 +187,7 @@ const TopBar: React.FC<Props> = (props) => {
       {renderMenu}
 
       {/** cart */}
-      <Cart
-        open={cartOpen}
-        confirmCallBack={() => setCartOpen(false)}
-        cancelCallBack={() => setCartOpen(false)}
-      />
+      <Cart open={cartOpen} cancelCallBack={() => setCartOpen(false)} />
     </Box>
   );
 };
@@ -190,6 +196,8 @@ const TopBar: React.FC<Props> = (props) => {
 const mapStateToProps = (state: any) => {
   return {
     navBarOpenFlag: state.commonReducer.navBarOpenFlag,
+    productInCartNumber: state.orderReducer.order.orderDetails.length,
+    isDisable: state.commonReducer.isDisable,
   };
 };
 

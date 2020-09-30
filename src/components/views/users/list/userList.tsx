@@ -223,40 +223,38 @@ const UserList: React.FC<Props> = (props) => {
 
   return (
     <Container maxWidth="xl">
-      <Box display="flex">
-        <Grid className={classes.grid} container={true} spacing={2} direction="row">
-          <Grid container={true} item={true} xs={12}>
-            <Typography component="h1" variant="h4">
-              User List
-            </Typography>
-          </Grid>
-
-          {/** search field */}
-          <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
-            <SearchBar searchHandlerCallBack={searchHandler} />
-          </Grid>
-
-          {/** buttons field */}
-          <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
-            <Button
-              className={classes.createButton}
-              onClick={createHandler}
-              size="medium"
-              variant="contained"
-              color="primary"
-              disabled={props.isDisable}
-            >
-              Create
-            </Button>
-          </Grid>
-
-          {/** table field */}
-          <Grid container={true} item={true} xs={12}>
-            {/* <UserTable /> */}
-            <UserTable headers={headers} cells={props.userList} onUpdateCallBack={updateHandler} />
-          </Grid>
+      <Grid className={classes.grid} container={true} spacing={2} direction="row">
+        <Grid container={true} item={true} xs={12}>
+          <Typography component="h1" variant="h4">
+            User List
+          </Typography>
         </Grid>
-      </Box>
+
+        {/** search field */}
+        <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
+          <SearchBar searchHandlerCallBack={searchHandler} />
+        </Grid>
+
+        {/** buttons field */}
+        <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
+          <Button
+            className={classes.createButton}
+            onClick={createHandler}
+            size="medium"
+            variant="contained"
+            color="primary"
+            disabled={props.isDisable}
+          >
+            Create
+          </Button>
+        </Grid>
+
+        {/** table field */}
+        <Grid container={true} item={true} xs={12}>
+          {/* <UserTable /> */}
+          <UserTable headers={headers} cells={props.userList} onUpdateCallBack={updateHandler} />
+        </Grid>
+      </Grid>
 
       {/** create user dialog */}
       <CreateUser

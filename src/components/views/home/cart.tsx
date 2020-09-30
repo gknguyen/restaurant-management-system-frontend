@@ -15,6 +15,7 @@ import tableIcons from '../../../commons/tables/tableIcons';
 import { OrderDetail, Order } from '../../../configs/interfaces';
 import { formatPrice } from '../../../configs/utils';
 import * as orderActions from '../../../redux/orderReducers/actions';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -113,9 +114,9 @@ interface Props {
   /** params */
   open: boolean;
   /** functions */
-  confirmCallBack: Function;
   cancelCallBack: Function;
   /** redux params */
+  order: Order;
   orderDetails: OrderDetail[];
   finalPrice: number;
   /** redux functions */
@@ -126,8 +127,14 @@ interface Props {
 
 const Cart: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const history = useHistory();
 
   React.useEffect(() => {}, []);
+
+  const confirmHandler = () => {
+    history.push('/customer', { order: props.order });
+    props.cancelCallBack();
+  };
 
   return (
     <Dialog
@@ -192,7 +199,7 @@ const Cart: React.FC<Props> = (props) => {
         <Typography style={{ padding: 10 }}>Total: {formatPrice(props.finalPrice)} VND</Typography>
       </DialogContent>
       <DialogActions>
-        <Button color="primary" onClick={() => props.confirmCallBack()}>
+        <Button color="primary" onClick={() => confirmHandler()}>
           Confirm
         </Button>
         <Button
@@ -216,6 +223,7 @@ const Cart: React.FC<Props> = (props) => {
 /* collect data from redux store */
 const mapStateToProps = (state: any) => {
   return {
+    order: state.orderReducer.order,
     orderDetails: state.orderReducer.order.orderDetails,
     finalPrice: state.orderReducer.order.finalPrice,
   };

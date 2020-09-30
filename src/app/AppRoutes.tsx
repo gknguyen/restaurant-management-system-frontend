@@ -11,6 +11,7 @@ import ProductList from '../components/views/products/list/productList';
 import UserList from '../components/views/users/list/userList';
 import Logout from '../components/views/login/logout';
 import Home from '../components/views/home/home';
+import Customer from '../components/views/home/customer';
 
 const routes = [
   /* ================================ Login ================================ */
@@ -44,6 +45,11 @@ const routes = [
         path: '/home',
         exact: true,
         component: Home,
+      },
+      {
+        path: '/customer',
+        exact: true,
+        component: Customer,
       },
       /* ================================ Product routes ================================ */
       {

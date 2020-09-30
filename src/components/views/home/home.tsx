@@ -20,7 +20,7 @@ import * as APIs from '../../../configs/APIs';
 import { apiGet } from '../../../configs/axios';
 import { AWS_S3_BUCKET_URL } from '../../../configs/constants';
 import { MenuType, Product, OrderDetail, Order } from '../../../configs/interfaces';
-import { formatPrice, reverseformatPrice } from '../../../configs/utils';
+import { formatPrice, reverseformatPrice, showSnackBarAlert } from '../../../configs/utils';
 import * as commonActions from '../../../redux/commonReducers/actions';
 import * as menuTypeActions from '../../../redux/menuTypeReducers/actions';
 import * as productActions from '../../../redux/productReducers/actions';
@@ -165,6 +165,11 @@ const Home: React.FC<Props> = (props) => {
         props.order.finalPrice += detail.totalPrice;
       }
       props.sendOrder(props.order);
+      showSnackBarAlert(
+        5000,
+        'success',
+        `book ${orderDetail.product.name} : ${orderDetail.quantity}`,
+      );
       setErrorIndex(undefined);
       setErrorMessage('');
       setValueindex(undefined);
