@@ -3,8 +3,8 @@ import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/co
 import MaterialTable from 'material-table';
 import React from 'react';
 import { connect } from 'react-redux';
-import * as commonActions from '../../redux/commonReducers/actions';
-import tableIcons from './tableIcons';
+import * as commonActions from '../../../../../redux/commonReducers/actions';
+import tableIcons from '../../../../../commons/tables/tableIcons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +37,7 @@ interface Props {
   sendDisableFlag: Function;
 }
 
-const ListTable: React.FC<Props> = (props) => {
+const OrderTable: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
@@ -86,4 +86,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListTable);
+export default connect(mapStateToProps, mapDispatchToProps)(OrderTable);

@@ -49,7 +49,7 @@ const UserTable: React.FC<Props> = (props) => {
         style={{ width: '100%' }}
         columns={props.headers}
         data={props.cells}
-        // isLoading={props.isDisable}
+        isLoading={props.isDisable}
         options={{
           search: false,
           toolbar: false,

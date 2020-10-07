@@ -42,11 +42,22 @@ export interface Product {
   editDateTime: Date | string;
 }
 
+export interface Customer {
+  readonly id: string;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+  address: string;
+  [x: string]: any;
+}
+
 export interface Order {
   readonly id: string;
-  customer: any;
+  customer: Customer;
   orderDetails: OrderDetail[];
   finalPrice: number;
+  activeStatus: boolean | JSX.Element;
+  createDateTime: Date | string;
 }
 
 export interface OrderDetail {

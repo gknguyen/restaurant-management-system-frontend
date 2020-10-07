@@ -92,7 +92,8 @@ const SearchBar: React.FC<Props> = (props) => {
           className={classes.searchButton}
           disabled={props.isDisable}
         >
-          {!props.isDisable ? (
+          <SearchIcon />
+          {/* {!props.isDisable ? (
             <SearchIcon />
           ) : (
             <CircularProgress
@@ -102,7 +103,7 @@ const SearchBar: React.FC<Props> = (props) => {
               size={24}
               thickness={4}
             />
-          )}
+          )} */}
         </Button>
       </label>
     </form>

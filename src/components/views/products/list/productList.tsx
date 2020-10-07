@@ -1,28 +1,24 @@
-import { Dialog, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import { green, red } from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import ListTable from '../../../../commons/tables/listTable';
+import ComfirmDialog from '../../../../commons/dialogs/confirmDialog';
 import SearchBar from '../../../../commons/searchBar';
 import * as APIs from '../../../../configs/APIs';
 import { apiDelete, apiGet } from '../../../../configs/axios';
 import { HTTPdata, Product } from '../../../../configs/interfaces';
+import { convertDateTime, formatPrice } from '../../../../configs/utils';
 import * as commonActions from '../../../../redux/commonReducers/actions';
 import * as productActions from '../../../../redux/productReducers/actions';
-import { convertDateTime, formatPrice } from '../../../../configs/utils';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import { green, red } from '@material-ui/core/colors';
-import ComfirmDialog from '../../../../commons/dialogs/confirmDialog';
+import ProductTable from './components/productTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -125,8 +121,8 @@ const ProductList: React.FC<Props> = (props) => {
   };
 
   const detailHandler = (productId: string) => {
-    sessionStorage.setItem('productId', productId);
-    history.push('/menu/productDetails');
+    // sessionStorage.setItem('productId', productId);
+    history.push('/menu/productDetails', { productId });
   };
 
   const onSelectionHandler = (productIdList: string[]) => {
@@ -141,76 +137,56 @@ const ProductList: React.FC<Props> = (props) => {
     setOpen(false);
   };
 
-  // const deleteDialog = (
-  //   <Dialog open={open} onClose={handleClose}>
-  //     <DialogTitle>Do yo want to delete these products?</DialogTitle>
-  //     <DialogContent>
-  //       <DialogContentText>These products will be deleted permanently</DialogContentText>
-  //     </DialogContent>
-  //     <DialogActions>
-  //       <Button onClick={deleteHandler} color="primary">
-  //         Yes
-  //       </Button>
-  //       <Button onClick={handleClose} color="primary">
-  //         No
-  //       </Button>
-  //     </DialogActions>
-  //   </Dialog>
-  // );
-
   return (
     <Container maxWidth="xl">
-      <Box display="flex">
-        <Grid className={classes.grid} container={true} spacing={2} direction="row">
-          <Grid container={true} item={true} xs={12}>
-            <Typography component="h1" variant="h4">
-              Product List
-            </Typography>
-          </Grid>
-
-          {/** search field */}
-          <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
-            <SearchBar searchHandlerCallBack={searchHandler} />
-          </Grid>
-
-          {/** buttons field */}
-          <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
-            <Button
-              className={classes.createButton}
-              onClick={createHandler}
-              size="medium"
-              variant="contained"
-              color="primary"
-              disabled={props.isDisable}
-            >
-              Create
-            </Button>
-            <Button
-              className={classes.deleteButton}
-              onClick={handleClickOpen}
-              size="medium"
-              variant="contained"
-              color="secondary"
-              disabled={props.isDisable}
-            >
-              Delete
-            </Button>
-          </Grid>
-
-          {/** table field */}
-          <Grid container={true} item={true} xs={12}>
-            <ListTable
-              headers={headers}
-              cells={props.productList}
-              onRowClickCallBack={detailHandler}
-              onSelectionCallBack={onSelectionHandler}
-            />
-          </Grid>
+      <Grid className={classes.grid} container={true} spacing={2} direction="row">
+        <Grid container={true} item={true} xs={12}>
+          <Typography component="h1" variant="h4">
+            Product List
+          </Typography>
         </Grid>
-      </Box>
+
+        {/** search field */}
+        <Grid container={true} item={true} md={6} xs="auto" justify="flex-start">
+          <SearchBar searchHandlerCallBack={searchHandler} />
+        </Grid>
+
+        {/** buttons field */}
+        <Grid container={true} item={true} md={6} xs="auto" justify="flex-end">
+          <Button
+            className={classes.createButton}
+            onClick={createHandler}
+            size="medium"
+            variant="contained"
+            color="primary"
+            disabled={props.isDisable}
+          >
+            Create
+          </Button>
+          <Button
+            className={classes.deleteButton}
+            onClick={handleClickOpen}
+            size="medium"
+            variant="contained"
+            color="secondary"
+            disabled={props.isDisable}
+          >
+            Delete
+          </Button>
+        </Grid>
+
+        {/** table field */}
+        <Grid container={true} item={true} xs={12}>
+          <ProductTable
+            headers={headers}
+            cells={props.productList}
+            onRowClickCallBack={detailHandler}
+            onSelectionCallBack={onSelectionHandler}
+          />
+        </Grid>
+      </Grid>
 
       {/** confirm dialog */}
-      {/* {deleteDialog} */}
       <ComfirmDialog
         open={open}
         header="Do yo want to delete these products?"
