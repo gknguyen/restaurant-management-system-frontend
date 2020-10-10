@@ -26,3 +26,12 @@ export const actionReceiveSearchValue = (searchValue: string) => {
     });
   };
 };
+
+export const actionDisableCartButton = (disableCartButton: boolean) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: ActionType.RECEIVE_DISABLE_CART_BUTTON,
+      data: disableCartButton,
+    });
+  };
+};

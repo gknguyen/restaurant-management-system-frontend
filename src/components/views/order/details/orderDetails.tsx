@@ -16,12 +16,18 @@ import {
   TableCell,
   TableBody,
   TableFooter,
+  Card,
+  Button,
 } from '@material-ui/core';
 import { getOrderId } from '../../../../configs/localStore';
 import { formatPrice } from '../../../../configs/utils';
 import { Order } from '../../../../configs/interfaces';
 import * as orderActions from '../../../../redux/orderReducers/actions';
 import * as commonActions from '../../../../redux/commonReducers/actions';
+import { CURRENCY } from '../../../../configs/constants';
+import { green, red } from '@material-ui/core/colors';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,9 +45,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     orderHeader: {
       textAlign: 'center',
+      marginBottom: 10,
     },
     table: {
       maxWidth: 800,
+    },
+    card: {
+      marginBottom: 10,
+      padding: 20,
     },
   }),
 );
@@ -62,9 +73,12 @@ const OrderDetails: React.FC<Props> = (props) => {
   // const historyState = history.location.state as any;
   // const orderId = historyState.orderId;
 
+  const [order, setOrder] = React.useState<Order>(props.order);
+
   React.useEffect(() => {
     apiGet(APIs.getOneOrderForOrderScreenUrl, { orderId }).then((HTTPdata) => {
-      props.sendOrder(HTTPdata.values);
+      // props.sendOrder(HTTPdata.values);
+      setOrder(HTTPdata.values);
     });
   }, []);
 
@@ -81,39 +95,103 @@ const OrderDetails: React.FC<Props> = (props) => {
         <Grid container item xs={12} justify="center">
           <Paper className={classes.paper}>
             <Typography className={classes.orderHeader} variant="h5">
-              Cart Summary
+              Cart Summary{' '}
+              {order.activeStatus ? (
+                <CheckCircleIcon style={{ color: green[500] }} />
+              ) : (
+                <ErrorIcon style={{ color: red[600] }} />
+              )}
             </Typography>
-            <TableContainer component={Paper}>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell colSpan={4}>Order Detail</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {props.order.orderDetails.map((orderDetail, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{orderDetail.product.name}</TableCell>
-                      <TableCell>
-                        {formatPrice(orderDetail.product.price)} {orderDetail.product.unit}
-                      </TableCell>
-                      <TableCell>{orderDetail.quantity}</TableCell>
-                      <TableCell>
-                        {formatPrice(orderDetail.totalPrice)} {orderDetail.product.unit}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    {/* <TableCell colSpan={2}></TableCell> */}
-                    {/* <TableCell>Total Price: </TableCell> */}
-                    <TableCell>Total: {formatPrice(props.order.finalPrice)} VND</TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </TableContainer>
+
+            <Card className={classes.card} variant="outlined">
+              <Typography variant="h6" gutterBottom>
+                <b>Customer information</b>
+              </Typography>
+
+              <Grid container>
+                <Grid item xs={12} sm={6} md={2}>
+                  <b>Name:</b>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {order.customer.fullName}
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={2}>
+                  <b>Phone:</b>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {order.customer.phoneNumber}
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={2}>
+                  <b>Email:</b>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {order.customer.email}
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={2}>
+                  <b>Address:</b>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {order.customer.address}
+                </Grid>
+              </Grid>
+            </Card>
+
+            <Card className={classes.card} variant="outlined">
+              <Typography variant="h6" gutterBottom>
+                <b>Order Detail</b>
+              </Typography>
+
+              <TableContainer component={Paper}>
+                <Table size="small">
+                  <TableBody>
+                    {order.orderDetails.map((orderDetail, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{orderDetail.product.name}</TableCell>
+                        <TableCell>
+                          {formatPrice(orderDetail.product.price)} {orderDetail.product.unit}
+                        </TableCell>
+                        <TableCell>{orderDetail.quantity}</TableCell>
+                        <TableCell>
+                          {formatPrice(orderDetail.totalPrice)} {orderDetail.product.unit}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Card>
+
+            <Card className={classes.card} variant="outlined">
+              <Typography variant="h6" gutterBottom>
+                <b>General Information</b>
+              </Typography>
+
+              <Grid container>
+                <Grid item xs={12} sm={6} md={2}>
+                  <b>Total:</b>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {formatPrice(order.finalPrice)} {CURRENCY}
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={2}>
+                  <b>Create At:</b>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {order.createDateTime}
+                </Grid>
+              </Grid>
+            </Card>
           </Paper>
+        </Grid>
+
+        <Grid container item xs={12} justify="center">
+          <Button variant="contained" color="secondary" onClick={() => history.push('/orderList')}>
+            Go Back
+          </Button>
         </Grid>
       </Grid>
     </Container>

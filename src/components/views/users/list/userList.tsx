@@ -119,8 +119,8 @@ const UserList: React.FC<Props> = (props) => {
           <MenuItem key={1} value={'active'}>
             active
           </MenuItem>
-          <MenuItem key={2} value={'deactivate'}>
-            deactivate
+          <MenuItem key={2} value={'inactive'}>
+            inactive
           </MenuItem>
         </TextField>
       ),
@@ -193,7 +193,7 @@ const UserList: React.FC<Props> = (props) => {
       const user = {
         id: serverUser.id,
         username: serverUser.username,
-        activeStatus: serverUser.activeStatus ? 'active' : 'deactivate',
+        activeStatus: serverUser.activeStatus ? 'active' : 'inactive',
         loginDateTime: convertDateTime(serverUser.loginDateTime),
         userTypeName: serverUser.userType.typeName,
       } as User;

@@ -2,14 +2,14 @@ import {
   Button,
   Card,
   CardActions,
+  CardContent,
   CardHeader,
   CardMedia,
-  CardContent,
   Container,
   Divider,
   Grid,
-  Typography,
   TextField,
+  Typography,
 } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -19,12 +19,12 @@ import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../configs/APIs';
 import { apiGet } from '../../../configs/axios';
 import { AWS_S3_BUCKET_URL, CURRENCY } from '../../../configs/constants';
-import { MenuType, Product, OrderDetail, Order } from '../../../configs/interfaces';
+import { MenuType, Order, OrderDetail, Product } from '../../../configs/interfaces';
 import { formatPrice, reverseformatPrice, showSnackBarAlert } from '../../../configs/utils';
 import * as commonActions from '../../../redux/commonReducers/actions';
 import * as menuTypeActions from '../../../redux/menuTypeReducers/actions';
-import * as productActions from '../../../redux/productReducers/actions';
 import * as orderActions from '../../../redux/orderReducers/actions';
+import * as productActions from '../../../redux/productReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -93,6 +93,7 @@ const Home: React.FC<Props> = (props) => {
   const [errorMessage, setErrorMessage] = React.useState<string>('');
 
   React.useEffect(() => {
+    // props.sendDisableCartButton(false);
     apiGet(APIs.getListMenuTypeUrl).then((HTTPdata) => {
       setMenuTypeList(HTTPdata.values);
       props.sendMenuTypeList(HTTPdata.values);

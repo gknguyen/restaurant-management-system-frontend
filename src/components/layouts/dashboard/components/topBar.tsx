@@ -19,7 +19,7 @@ import * as commonActions from '../../../../redux/commonReducers/actions';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { getdUserInfo } from '../../../../configs/localStore';
 import Cart from '../../../views/home/cart';
-import { OrderDetail } from '../../../../configs/interfaces';
+import { OrderDetail, Order } from '../../../../configs/interfaces';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,8 +76,11 @@ interface Props {
   navBarOpenFlag: boolean;
   productInCartNumber: number;
   isDisable: boolean;
+  disableCartButton: boolean;
+  order: Order;
   /** redux functions */
   sendNavBarOpenFlag: Function;
+  sendDisableCartButton: Function;
 }
 
 const TopBar: React.FC<Props> = (props) => {
@@ -101,6 +104,10 @@ const TopBar: React.FC<Props> = (props) => {
   const handleLogout = () => {
     history.push('/auth/login');
   };
+
+  if (props.order.orderDetails && props.order.orderDetails.length > 0)
+    props.sendDisableCartButton(false);
+  else props.sendDisableCartButton(true);
 
   const renderMenu = (
     <Menu
@@ -144,7 +151,7 @@ const TopBar: React.FC<Props> = (props) => {
             <IconButton
               color="inherit"
               onClick={() => setCartOpen(true)}
-              disabled={props.isDisable}
+              disabled={props.disableCartButton || props.isDisable}
             >
               <Badge badgeContent={props.productInCartNumber} color="secondary">
                 <ShoppingCartIcon />
@@ -198,6 +205,8 @@ const mapStateToProps = (state: any) => {
     navBarOpenFlag: state.commonReducer.navBarOpenFlag,
     productInCartNumber: state.orderReducer.order.orderDetails.length,
     isDisable: state.commonReducer.isDisable,
+    disableCartButton: state.commonReducer.disableCartButton,
+    order: state.orderReducer.order,
   };
 };
 
@@ -206,6 +215,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     sendNavBarOpenFlag: (navBarOpenFlag: boolean) => {
       dispatch(commonActions.actionReceiveNavBarOpenFlag(navBarOpenFlag));
+    },
+    sendDisableCartButton: (disableCartButton: boolean) => {
+      dispatch(commonActions.actionDisableCartButton(disableCartButton));
     },
   };
 };

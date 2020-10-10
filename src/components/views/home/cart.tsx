@@ -17,6 +17,7 @@ import { formatPrice } from '../../../configs/utils';
 import * as orderActions from '../../../redux/orderReducers/actions';
 import { useHistory } from 'react-router-dom';
 import { CURRENCY } from '../../../configs/constants';
+import * as commonActions from '../../../redux/commonReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -124,6 +125,7 @@ interface Props {
   sendOrder: Function;
   sendOrderDetailList: Function;
   sendOrderFinalPrice: Function;
+  sendDisableCartButton: Function;
 }
 
 const Cart: React.FC<Props> = (props) => {
@@ -134,6 +136,17 @@ const Cart: React.FC<Props> = (props) => {
 
   const confirmHandler = () => {
     history.push('/customer', { order: props.order });
+    props.sendDisableCartButton(true);
+    props.cancelCallBack();
+  };
+
+  const cancelHandler = () => {
+    props.sendOrder({
+      customer: {},
+      orderDetails: [],
+      finalPrice: 0,
+    });
+    props.sendDisableCartButton(true);
     props.cancelCallBack();
   };
 
@@ -205,17 +218,7 @@ const Cart: React.FC<Props> = (props) => {
         <Button color="primary" onClick={() => confirmHandler()}>
           Confirm
         </Button>
-        <Button
-          color="primary"
-          onClick={() => {
-            props.sendOrder({
-              customer: {},
-              orderDetails: [],
-              finalPrice: 0,
-            });
-            props.cancelCallBack();
-          }}
-        >
+        <Button color="primary" onClick={() => cancelHandler()}>
           Clear
         </Button>
       </DialogActions>
@@ -243,6 +246,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     sendOrderFinalPrice: (price: number) => {
       dispatch(orderActions.actionReceiveOrderFinalPrice(price));
+    },
+    sendDisableCartButton: (disableCartButton: boolean) => {
+      dispatch(commonActions.actionDisableCartButton(disableCartButton));
     },
   };
 };

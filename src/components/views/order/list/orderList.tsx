@@ -64,11 +64,12 @@ const OrderList: React.FC<Props> = (props) => {
         finalPrice: serverOrder.finalPrice
           ? `${formatPrice(serverOrder.finalPrice)} ${CURRENCY}`
           : null,
-        activeStatus: serverOrder.activeStatus ? (
-          <CheckCircleIcon style={{ color: green[500] }} />
-        ) : (
-          <ErrorIcon style={{ color: red[600] }} />
-        ),
+        // activeStatus: serverOrder.activeStatus ? (
+        //   <CheckCircleIcon style={{ color: green[500] }} />
+        // ) : (
+        //   <ErrorIcon style={{ color: red[600] }} />
+        // ),
+        activeStatus: serverOrder.activeStatus ? 'active' : 'inactive',
         createDateTime: serverOrder.createDateTime
           ? convertDateTime(serverOrder.createDateTime)
           : null,

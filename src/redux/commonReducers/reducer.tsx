@@ -4,6 +4,7 @@ const initialState = {
   isDisable: false,
   navBarOpenFlag: true,
   searchValue: '',
+  disableCartButton: true,
 };
 
 const commonReducer = (state = initialState, action: any) => {
@@ -20,6 +21,10 @@ const commonReducer = (state = initialState, action: any) => {
     /* return search value */
     case ActionType.RECEIVE_SEARCH_VALUE:
       state.searchValue = action.data;
+      return { ...state };
+    /* return search value */
+    case ActionType.RECEIVE_DISABLE_CART_BUTTON:
+      state.disableCartButton = action.data;
       return { ...state };
     /* return to new state */
     default:
