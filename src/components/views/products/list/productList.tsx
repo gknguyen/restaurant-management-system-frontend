@@ -121,8 +121,9 @@ const ProductList: React.FC<Props> = (props) => {
   };
 
   const detailHandler = (productId: string) => {
-    // sessionStorage.setItem('productId', productId);
-    history.push('/menu/productDetails', { productId });
+    sessionStorage.setItem('productId', productId);
+    history.push('/menu/productDetails');
+    // history.push('/menu/productDetails', { productId });
   };
 
   const onSelectionHandler = (productIdList: string[]) => {

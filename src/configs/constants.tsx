@@ -9,3 +9,5 @@ export const HEADER_FILE_UPLOAD = {
 };
 
 export const CURRENT_TIEMZONE = 'Asia/Ho_Chi_Minh';
+
+export const CURRENCY = 'VND';

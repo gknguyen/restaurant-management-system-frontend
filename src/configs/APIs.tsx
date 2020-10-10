@@ -36,6 +36,7 @@ export const createOrderForMainScreenUrl = mainScreenUrl + 'createOne/';
 /** order screen */
 export const orderScreenUrl = baseUrl + 'order/';
 export const getListOrderForOrderScreenUrl = orderScreenUrl + 'getList/';
+export const getOneOrderForOrderScreenUrl = orderScreenUrl + 'getOne/';
 
 /** product screen */
 export const productScreenUrl = baseUrl + 'product/';

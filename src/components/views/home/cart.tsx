@@ -16,6 +16,7 @@ import { OrderDetail, Order } from '../../../configs/interfaces';
 import { formatPrice } from '../../../configs/utils';
 import * as orderActions from '../../../redux/orderReducers/actions';
 import { useHistory } from 'react-router-dom';
+import { CURRENCY } from '../../../configs/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -196,7 +197,9 @@ const Cart: React.FC<Props> = (props) => {
           }}
         />
 
-        <Typography style={{ padding: 10 }}>Total: {formatPrice(props.finalPrice)} VND</Typography>
+        <Typography style={{ padding: 10 }}>
+          Total: {formatPrice(props.finalPrice)} {CURRENCY}
+        </Typography>
       </DialogContent>
       <DialogActions>
         <Button color="primary" onClick={() => confirmHandler()}>

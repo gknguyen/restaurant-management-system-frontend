@@ -21,3 +21,8 @@ export function getUserId() {
   const userId = sessionStorage.getItem('userId');
   return userId;
 }
+
+export function getOrderId() {
+  const orderId = sessionStorage.getItem('orderId');
+  return orderId;
+}

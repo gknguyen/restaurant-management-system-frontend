@@ -73,17 +73,13 @@ interface Props {
 const ProductDetails: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
-  // const productId = getProductId();
-
-  const historyState = history.location.state as any;
-  const productId = historyState.productId;
+  const productId = getProductId();
+  // const historyState = history.location.state as any;
+  // const productId = historyState.productId;
 
   const productImageUrl = `${AWS_S3_BUCKET_URL}/products/${props.image}`;
 
   React.useEffect(() => {
-    // const historyState = history.location.state as any;
-    // const productId = historyState.productId;
-
     apiGet(APIs.getOneProductForProductScreenUrl, { productId }).then((HTTPdata) => {
       const serverProduct = HTTPdata.values;
 

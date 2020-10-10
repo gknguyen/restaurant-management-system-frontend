@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import * as APIs from '../../../configs/APIs';
 import { apiGet } from '../../../configs/axios';
-import { AWS_S3_BUCKET_URL } from '../../../configs/constants';
+import { AWS_S3_BUCKET_URL, CURRENCY } from '../../../configs/constants';
 import { MenuType, Product, OrderDetail, Order } from '../../../configs/interfaces';
 import { formatPrice, reverseformatPrice, showSnackBarAlert } from '../../../configs/utils';
 import * as commonActions from '../../../redux/commonReducers/actions';
@@ -211,7 +211,7 @@ const Home: React.FC<Props> = (props) => {
                 subheader: classes.cardHeaderSubHeader,
               }}
               title={product.name}
-              subheader={`${formatPrice(product.price)} ${product.unit}`}
+              subheader={`${formatPrice(product.price)} ${CURRENCY}`}
             />
 
             <CardContent

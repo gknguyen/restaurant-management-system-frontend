@@ -12,6 +12,7 @@ import { formatPrice, convertDateTime } from '../../../../configs/utils';
 import { green, red } from '@material-ui/core/colors';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
+import { CURRENCY } from '../../../../configs/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +61,9 @@ const OrderList: React.FC<Props> = (props) => {
         id: serverOrder.id || null,
         fullName: serverOrder.customer.fullName || null,
         phoneNumber: serverOrder.customer.phoneNumber || null,
-        finalPrice: serverOrder.finalPrice ? formatPrice(serverOrder.finalPrice) : null,
+        finalPrice: serverOrder.finalPrice
+          ? `${formatPrice(serverOrder.finalPrice)} ${CURRENCY}`
+          : null,
         activeStatus: serverOrder.activeStatus ? (
           <CheckCircleIcon style={{ color: green[500] }} />
         ) : (
@@ -78,7 +81,9 @@ const OrderList: React.FC<Props> = (props) => {
   };
 
   const detailHandler = (orderId: string) => {
-    history.push('/orderDetails', { orderId });
+    sessionStorage.setItem('orderId', orderId);
+    history.push('/orderDetails');
+    // history.push('/orderDetails', { orderId });
   };
 
   return (

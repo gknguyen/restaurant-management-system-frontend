@@ -82,7 +82,11 @@ const CustomerInfo: React.FC<Props> = (props) => {
     apiPost(APIs.createOrderForMainScreenUrl, order).then((HTTPdata) => {
       props.sendDisableFlag(false);
       showSnackBarAlert(5000, 'success', HTTPdata.message);
-      history.push('/home');
+
+      const orderId = HTTPdata.values;
+      sessionStorage.setItem('orderId', orderId);
+      history.push('/orderDetails');
+      // history.push('/home');
     });
   };
 

@@ -51,15 +51,15 @@ const OrderTable: React.FC<Props> = (props) => {
         onRowClick={(event, selectedRow) => {
           props.onRowClickCallBack(selectedRow.id);
         }}
-        onSelectionChange={(rows) => {
-          const productIdList: string[] = [];
-          rows.map((row) => productIdList.push(row.id));
-          props.onSelectionCallBack(productIdList);
-        }}
+        // onSelectionChange={(rows) => {
+        //   const productIdList: string[] = [];
+        //   rows.map((row) => productIdList.push(row.id));
+        //   props.onSelectionCallBack(productIdList);
+        // }}
         options={{
           search: false,
           toolbar: false,
-          selection: true,
+          selection: false,
           headerStyle: {
             background: 'linear-gradient(0deg, #4e342e 30%, #a1887f 90%)',
             color: '#ffffff',
