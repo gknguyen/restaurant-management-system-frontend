@@ -25,6 +25,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import { formatPrice, showSnackBarAlert } from '../../../configs/utils';
 import { apiPost } from '../../../configs/axios';
 import * as APIs from '../../../configs/APIs';
+import STATUS_CODE from 'http-status';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,16 +79,20 @@ const CustomerInfo: React.FC<Props> = (props) => {
   const confirmHandler = () => {
     props.sendDisableFlag(true);
     order.customer = customer;
-    console.log({ order });
     apiPost(APIs.createOrderForMainScreenUrl, order).then((HTTPdata) => {
       props.sendDisableFlag(false);
-      showSnackBarAlert(5000, 'success', HTTPdata.message);
-
-      const orderId = HTTPdata.values;
-      sessionStorage.setItem('orderId', orderId);
-      history.push('/orderDetails');
-      // history.push('/home');
+      if (HTTPdata.code === STATUS_CODE.OK) {
+        showSnackBarAlert(5000, 'success', HTTPdata.message);
+        const orderId = HTTPdata.values;
+        sessionStorage.setItem('orderId', orderId);
+        history.push('/orderDetails');
+      }
     });
+  };
+
+  const searchHandler = (searchValue: string) => {
+    if (!searchValue) {
+    }
   };
 
   return (
@@ -105,7 +110,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
           <Paper className={classes.paper}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <SearchBar searchHandlerCallBack={() => {}} />
+                <SearchBar searchHandlerCallBack={() => {}} label="Phone Number..." />
               </Grid>
               <Grid item xs={6}>
                 <TextField

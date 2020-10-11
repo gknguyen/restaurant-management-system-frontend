@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   /** redux params */
   isDisable: boolean;
+  label?: string;
   /** redux functions */
   searchHandlerCallBack: Function;
   sendDisableFlag: Function;
@@ -71,6 +72,7 @@ const SearchBar: React.FC<Props> = (props) => {
           size="small"
           type="search"
           variant="outlined"
+          label={props.label}
           onChange={changeHandler}
         />
       </Grid>

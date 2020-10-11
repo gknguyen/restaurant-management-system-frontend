@@ -8,6 +8,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import RestaurantIcon from '@material-ui/icons/Restaurant';
 import { UserTypeName } from '../../../configs/inputType';
 import { getdUserInfo } from '../../../configs/localStore';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 const userInfo = getdUserInfo();
 
@@ -49,6 +50,11 @@ if (userInfo.role === UserTypeName.admin)
           title: 'Customers',
           href: '/customerList',
           icon: PeopleIcon,
+        },
+        {
+          title: 'Employees',
+          href: '/EmployeeList',
+          icon: AssignmentIndIcon,
         },
         {
           title: 'Storages',
@@ -104,6 +110,11 @@ else if (userInfo.role === UserTypeName.manager)
           title: 'Customers',
           href: '/customerList',
           icon: PeopleIcon,
+        },
+        {
+          title: 'Employees',
+          href: '/EmployeeList',
+          icon: AssignmentIndIcon,
         },
         {
           title: 'Storages',
