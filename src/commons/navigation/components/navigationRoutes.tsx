@@ -113,7 +113,7 @@ else if (userInfo.role === UserTypeName.manager)
         },
         {
           title: 'Employees',
-          href: '/EmployeeList',
+          href: '/employeeList',
           icon: AssignmentIndIcon,
         },
         {

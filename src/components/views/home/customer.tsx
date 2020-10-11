@@ -23,7 +23,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableFooter from '@material-ui/core/TableFooter';
 import { formatPrice, showSnackBarAlert } from '../../../configs/utils';
-import { apiPost } from '../../../configs/axios';
+import { apiPost, apiGet } from '../../../configs/axios';
 import * as APIs from '../../../configs/APIs';
 import STATUS_CODE from 'http-status';
 
@@ -63,6 +63,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
   const history = useHistory();
 
   const [order, setOrder] = React.useState<Order>(props.order);
+  const [customer, setCustomer] = React.useState<Customer>(props.order.customer);
 
   React.useEffect(() => {
     const historyState = history.location.state as any;
@@ -91,7 +92,15 @@ const CustomerInfo: React.FC<Props> = (props) => {
   };
 
   const searchHandler = (searchValue: string) => {
-    if (!searchValue) {
+    if (searchValue) {
+      props.sendDisableFlag(true);
+      apiGet(APIs.searchCustomerForMainScreenUrl, { searchValue }).then((HTTPdata) => {
+        props.sendDisableFlag(false);
+        if (HTTPdata.code === STATUS_CODE.OK) {
+          showSnackBarAlert(5000, 'success', HTTPdata.message);
+          setCustomer(HTTPdata.values);
+        }
+      });
     }
   };
 
@@ -110,7 +119,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
           <Paper className={classes.paper}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <SearchBar searchHandlerCallBack={() => {}} label="Phone Number..." />
+                <SearchBar searchHandlerCallBack={searchHandler} label="Phone Number..." />
               </Grid>
               <Grid item xs={6}>
                 <TextField
@@ -119,6 +128,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
                   label="Full Name"
                   name="fullName"
                   fullWidth
+                  value={customer.fullName}
                   onChange={onInputChangeHandler}
                 />
               </Grid>
@@ -129,6 +139,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
                   label="Phone Number"
                   name="phoneNumber"
                   fullWidth
+                  value={customer.phoneNumber}
                   onChange={onInputChangeHandler}
                 />
               </Grid>
@@ -139,6 +150,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
                   label="Email"
                   name="email"
                   fullWidth
+                  value={customer.email}
                   onChange={onInputChangeHandler}
                 />
               </Grid>
@@ -149,6 +161,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
                   label="Address"
                   name="address"
                   fullWidth
+                  value={customer.address}
                   onChange={onInputChangeHandler}
                 />
               </Grid>
