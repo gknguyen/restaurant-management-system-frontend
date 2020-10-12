@@ -20,6 +20,8 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { getdUserInfo } from '../../../../configs/localStore';
 import Cart from '../../../views/home/cart';
 import { OrderDetail, Order } from '../../../../configs/interfaces';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import UnpaidOrderList from '../../../views/home/unpaidOrderList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,6 +91,7 @@ const TopBar: React.FC<Props> = (props) => {
   const userInfo = getdUserInfo();
 
   const [cartOpen, setCartOpen] = React.useState<boolean>(false);
+  const [unpaidOrderListOpen, setUnpaidOrderListOpen] = React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const menuId = 'primary-search-account-menu';
@@ -147,6 +150,15 @@ const TopBar: React.FC<Props> = (props) => {
           </Box>
 
           <Box className={classes.sectionDesktop}>
+            {/** order list */}
+            <IconButton
+              color="inherit"
+              onClick={() => setUnpaidOrderListOpen(true)}
+              disabled={props.isDisable}
+            >
+              <AssignmentIcon />
+            </IconButton>
+
             {/** cart */}
             <IconButton
               color="inherit"
@@ -195,6 +207,12 @@ const TopBar: React.FC<Props> = (props) => {
 
       {/** cart */}
       <Cart open={cartOpen} cancelCallBack={() => setCartOpen(false)} />
+
+      {/** unpaid order List */}
+      <UnpaidOrderList
+        open={unpaidOrderListOpen}
+        cancelCallBack={() => setUnpaidOrderListOpen(false)}
+      />
     </Box>
   );
 };

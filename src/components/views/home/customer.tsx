@@ -26,6 +26,7 @@ import { formatPrice, showSnackBarAlert } from '../../../configs/utils';
 import { apiPost, apiGet } from '../../../configs/axios';
 import * as APIs from '../../../configs/APIs';
 import STATUS_CODE from 'http-status';
+import { CURRENCY } from '../../../configs/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -119,13 +120,16 @@ const CustomerInfo: React.FC<Props> = (props) => {
           <Paper className={classes.paper}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <SearchBar searchHandlerCallBack={searchHandler} label="Phone Number..." />
+                <SearchBar
+                  searchHandlerCallBack={searchHandler}
+                  label="Input phone number here..."
+                />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   variant="outlined"
                   size="small"
-                  label="Full Name"
+                  placeholder="Full Name"
                   name="fullName"
                   fullWidth
                   value={customer.fullName}
@@ -136,7 +140,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
                 <TextField
                   variant="outlined"
                   size="small"
-                  label="Phone Number"
+                  placeholder="Phone Number"
                   name="phoneNumber"
                   fullWidth
                   value={customer.phoneNumber}
@@ -147,7 +151,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
                 <TextField
                   variant="outlined"
                   size="small"
-                  label="Email"
+                  placeholder="Email"
                   name="email"
                   fullWidth
                   value={customer.email}
@@ -158,7 +162,7 @@ const CustomerInfo: React.FC<Props> = (props) => {
                 <TextField
                   variant="outlined"
                   size="small"
-                  label="Address"
+                  placeholder="Address"
                   name="address"
                   fullWidth
                   value={customer.address}
@@ -231,9 +235,9 @@ const CustomerInfo: React.FC<Props> = (props) => {
                 </TableBody>
                 <TableFooter>
                   <TableRow>
-                    {/* <TableCell colSpan={2}></TableCell> */}
-                    {/* <TableCell>Total Price: </TableCell> */}
-                    <TableCell>Total: {formatPrice(order.finalPrice)} VND</TableCell>
+                    <TableCell>
+                      Total: {formatPrice(order.finalPrice)} {CURRENCY}
+                    </TableCell>
                   </TableRow>
                 </TableFooter>
               </Table>

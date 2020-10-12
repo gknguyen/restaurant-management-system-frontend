@@ -32,6 +32,7 @@ screen APIs
 export const mainScreenUrl = baseUrl + 'main/';
 export const getListProductForMainScreenUrl = mainScreenUrl + 'getProductList/';
 export const searchCustomerForMainScreenUrl = mainScreenUrl + 'searchCustomer/';
+export const getUnpaidOrderListForMainScreenUrl = mainScreenUrl + 'getUnpaidOrderList/';
 export const createOrderForMainScreenUrl = mainScreenUrl + 'createOrder/';
 
 /** order screen */

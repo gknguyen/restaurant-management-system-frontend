@@ -10,6 +10,7 @@ import {
   Grid,
   TextField,
   Typography,
+  Breadcrumbs,
 } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -162,9 +163,8 @@ const Home: React.FC<Props> = (props) => {
         orderDetail.totalPrice = reverseformatPrice(formatedPrice) * orderDetail.quantity;
         props.order.orderDetails.push(orderDetail);
       }
-      for (let detail of props.order.orderDetails) {
-        props.order.finalPrice += detail.totalPrice;
-      }
+      for (const detail of props.order.orderDetails) props.order.finalPrice += detail.totalPrice;
+
       props.sendOrder(props.order);
       showSnackBarAlert(
         5000,
@@ -223,17 +223,20 @@ const Home: React.FC<Props> = (props) => {
               <Grid container alignItems="flex-start" justify="center" spacing={2}>
                 <Grid item style={{ height: 80 }}>
                   <TextField
-                    variant="outlined"
+                    // variant="outlined"
                     size="small"
                     type="number"
                     margin="dense"
                     name={product.name}
                     value={valueIndex === index ? value : ''}
                     onChange={(event) => inputAmountHandler(index, event, product.unit)}
-                    style={{ width: '100%', maxWidth: 200, minWidth: 100 }}
+                    style={{ width: 100 }}
                     error={errorIndex === index}
                     helperText={errorIndex === index ? errorMessage : undefined}
                   />
+                </Grid>
+                <Grid item style={{ paddingTop: 23 }}>
+                  <Typography> / {product.amount}</Typography>
                 </Grid>
                 <Grid item style={{ paddingTop: 23 }}>
                   <Typography>Pieces</Typography>

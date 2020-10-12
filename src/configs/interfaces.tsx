@@ -53,6 +53,7 @@ export interface Customer {
 
 export interface Order {
   readonly id: string;
+  no: number;
   customer: Customer;
   orderDetails: OrderDetail[];
   finalPrice: number;
