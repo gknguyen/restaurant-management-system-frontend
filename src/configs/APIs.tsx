@@ -49,6 +49,10 @@ export const createOneProductForProductScreenUrl = productScreenUrl + 'createOne
 export const editOneProductForProductScreenUrl = productScreenUrl + 'editOne/';
 export const deleteListProductForProductScreenUrl = productScreenUrl + 'deleteList/';
 
+/** customer screen */
+export const customerScreenUrl = baseUrl + 'customer/';
+export const getListCustomerForCustomerScreenUrl = customerScreenUrl + 'getList/';
+
 /** user screen */
 export const userScreenUrl = baseUrl + 'user/';
 export const getListUserForUserScreenUrl = userScreenUrl + 'getList/';

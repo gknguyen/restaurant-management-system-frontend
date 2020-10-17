@@ -5,6 +5,8 @@ import * as commonActions from '../../../../redux/commonReducers/actions';
 import * as APIs from '../../../../configs/APIs';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Container, Box, Grid, Typography } from '@material-ui/core';
+import CustomerTable from './components/customerTable';
+import { apiGet } from '../../../../configs/axios';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,7 +40,13 @@ const CustomerList: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  React.useEffect(() => {}, []);
+  const [customerList, setCustomerList] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    apiGet(APIs.getListCustomerForCustomerScreenUrl).then((HTTPdata) => {
+      setCustomerList(HTTPdata.values);
+    });
+  }, []);
 
   return (
     <Container maxWidth="xl">
@@ -47,6 +55,11 @@ const CustomerList: React.FC<Props> = (props) => {
           <Typography component="h1" variant="h4">
             Customer List
           </Typography>
+        </Grid>
+
+        {/** table field */}
+        <Grid container item xs={12}>
+          <CustomerTable headers={headers} cells={customerList} />
         </Grid>
       </Grid>
     </Container>
