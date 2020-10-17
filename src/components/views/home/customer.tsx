@@ -11,6 +11,7 @@ import {
   TextField,
   Card,
   Button,
+  MenuItem,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import SearchBar from '../../../commons/searchBar';
@@ -27,6 +28,7 @@ import { apiPost, apiGet } from '../../../configs/axios';
 import * as APIs from '../../../configs/APIs';
 import STATUS_CODE from 'http-status';
 import { CURRENCY } from '../../../configs/constants';
+import * as orderActions from '../../../redux/orderReducers/actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +46,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     orderHeader: {
       textAlign: 'center',
+      marginBottom: 10,
+    },
+    tableHeader: {
+      background: 'linear-gradient(0deg, #4e342e 30%, #a1887f 90%)',
     },
   }),
 );
@@ -57,6 +63,8 @@ interface Props {
   isDisable: boolean;
   /** redux functions */
   sendDisableFlag: Function;
+  sendOrder: Function;
+  sendLoadUnpaidOrderList: Function;
 }
 
 const CustomerInfo: React.FC<Props> = (props) => {
@@ -65,11 +73,15 @@ const CustomerInfo: React.FC<Props> = (props) => {
 
   const [order, setOrder] = React.useState<Order>(props.order);
   const [customer, setCustomer] = React.useState<Customer>(props.order.customer);
+  const [orderStatus, setOrderStatus] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     const historyState = history.location.state as any;
-    const order = historyState.order;
-    setOrder(order);
+    const order = historyState?.order;
+    if (order) {
+      setOrder(order);
+      setCustomer(order.customer);
+    } else history.push('/home');
   }, []);
 
   const onInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,14 +92,24 @@ const CustomerInfo: React.FC<Props> = (props) => {
 
   const confirmHandler = () => {
     props.sendDisableFlag(true);
+
     order.customer = customer;
+    order.activeStatus = orderStatus;
+
     apiPost(APIs.createOrderForMainScreenUrl, order).then((HTTPdata) => {
       props.sendDisableFlag(false);
       if (HTTPdata.code === STATUS_CODE.OK) {
         showSnackBarAlert(5000, 'success', HTTPdata.message);
+        props.sendOrder({
+          no: 0,
+          customer: {},
+          orderDetails: [],
+          finalPrice: 0,
+        });
+        props.sendLoadUnpaidOrderList(true);
         const orderId = HTTPdata.values;
         sessionStorage.setItem('orderId', orderId);
-        history.push('/orderDetails');
+        history.push('/orderDetails', { backToHomeScreen: true });
       }
     });
   };
@@ -212,11 +234,25 @@ const CustomerInfo: React.FC<Props> = (props) => {
             <Typography className={classes.orderHeader} variant="h5">
               Cart Summary
             </Typography>
+
+            {order.no ? (
+              <Typography style={{ padding: 10 }}>
+                <Grid container justify="space-between">
+                  <Grid item>Order: {order.no}</Grid>
+                  <Grid item>Customer: {order.customer.fullName}</Grid>
+                </Grid>
+              </Typography>
+            ) : (
+              <></>
+            )}
+
             <TableContainer component={Paper}>
               <Table size="small">
-                <TableHead>
+                <TableHead className={classes.tableHeader}>
                   <TableRow>
-                    <TableCell colSpan={4}>Order Detail</TableCell>
+                    <TableCell style={{ color: '#ffffff' }} colSpan={4}>
+                      Order Detail
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -233,15 +269,34 @@ const CustomerInfo: React.FC<Props> = (props) => {
                     </TableRow>
                   ))}
                 </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell>
-                      Total: {formatPrice(order.finalPrice)} {CURRENCY}
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
               </Table>
             </TableContainer>
+
+            <Typography style={{ padding: 10 }}>
+              <Grid container justify="space-between">
+                <Grid item>
+                  Total: {formatPrice(order.finalPrice)} {CURRENCY}
+                </Grid>
+                <Grid item>
+                  <TextField
+                    select={true}
+                    fullWidth={true}
+                    value={orderStatus ? 'unpaid' : 'paid'}
+                    variant="outlined"
+                    margin="dense"
+                    onChange={() => setOrderStatus(!orderStatus)}
+                    disabled={props.isDisable}
+                  >
+                    <MenuItem key={1} value={'unpaid'}>
+                      unpaid
+                    </MenuItem>
+                    <MenuItem key={2} value={'paid'}>
+                      paid
+                    </MenuItem>
+                  </TextField>
+                </Grid>
+              </Grid>
+            </Typography>
           </Paper>
         </Grid>
       </Grid>
@@ -263,6 +318,12 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     sendDisableFlag: (isDisable: boolean) => {
       dispatch(commonActions.actionDisableFlag(isDisable));
+    },
+    sendOrder: (order: Order) => {
+      dispatch(orderActions.actionReceiveOrder(order));
+    },
+    sendLoadUnpaidOrderList: (loadUnpaidOrderList: boolean) => {
+      dispatch(commonActions.actionLoadUnpaidOrderList(loadUnpaidOrderList));
     },
   };
 };

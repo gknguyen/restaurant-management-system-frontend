@@ -70,14 +70,15 @@ const OrderDetails: React.FC<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const orderId = getOrderId();
-  // const historyState = history.location.state as any;
-  // const orderId = historyState.orderId;
+
+  const historyState = history.location.state as any;
+  const backToHomeScreen = historyState?.backToHomeScreen;
+  const directPath = backToHomeScreen ? '/home' : '/orderList';
 
   const [order, setOrder] = React.useState<Order>(props.order);
 
   React.useEffect(() => {
     apiGet(APIs.getOneOrderForOrderScreenUrl, { orderId }).then((HTTPdata) => {
-      // props.sendOrder(HTTPdata.values);
       setOrder(HTTPdata.values);
     });
   }, []);
@@ -85,21 +86,14 @@ const OrderDetails: React.FC<Props> = (props) => {
   return (
     <Container maxWidth="xl">
       <Grid className={classes.grid} container spacing={2} direction="column">
-        {/** header */}
-        {/* <Grid container item xs={12}>
-          <Typography component="h1" variant="h4">
-            Order Details
-          </Typography>
-        </Grid> */}
-
         <Grid container item xs={12} justify="center">
           <Paper className={classes.paper}>
             <Typography className={classes.orderHeader} variant="h5">
               Cart Summary{' '}
               {order.activeStatus ? (
-                <CheckCircleIcon style={{ color: green[500] }} />
-              ) : (
                 <ErrorIcon style={{ color: red[600] }} />
+              ) : (
+                <CheckCircleIcon style={{ color: green[500] }} />
               )}
             </Typography>
 
@@ -171,6 +165,13 @@ const OrderDetails: React.FC<Props> = (props) => {
 
               <Grid container>
                 <Grid item xs={12} sm={6} md={2}>
+                  <b>Create At:</b>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {order.createDateTime}
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={2}>
                   <b>Total:</b>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
@@ -178,10 +179,10 @@ const OrderDetails: React.FC<Props> = (props) => {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={2}>
-                  <b>Create At:</b>
+                  <b>Edit At:</b>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  {order.createDateTime}
+                  {order.editDateTime}
                 </Grid>
               </Grid>
             </Card>
@@ -189,7 +190,7 @@ const OrderDetails: React.FC<Props> = (props) => {
         </Grid>
 
         <Grid container item xs={12} justify="center">
-          <Button variant="contained" color="secondary" onClick={() => history.push('/orderList')}>
+          <Button variant="contained" color="secondary" onClick={() => history.push(directPath)}>
             Go Back
           </Button>
         </Grid>

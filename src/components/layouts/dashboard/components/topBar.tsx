@@ -75,11 +75,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   /** redux params */
+  order: Order;
   navBarOpenFlag: boolean;
   productInCartNumber: number;
   isDisable: boolean;
   disableCartButton: boolean;
-  order: Order;
+  disableOrderButton: boolean;
   /** redux functions */
   sendNavBarOpenFlag: Function;
   sendDisableCartButton: Function;
@@ -92,6 +93,7 @@ const TopBar: React.FC<Props> = (props) => {
 
   const [cartOpen, setCartOpen] = React.useState<boolean>(false);
   const [unpaidOrderListOpen, setUnpaidOrderListOpen] = React.useState<boolean>(false);
+  const [unpaidOrderNumber, setUnpaidOrderNumber] = React.useState<number | undefined>(undefined);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const menuId = 'primary-search-account-menu';
@@ -154,9 +156,11 @@ const TopBar: React.FC<Props> = (props) => {
             <IconButton
               color="inherit"
               onClick={() => setUnpaidOrderListOpen(true)}
-              disabled={props.isDisable}
+              disabled={props.disableOrderButton || props.isDisable}
             >
-              <AssignmentIcon />
+              <Badge badgeContent={unpaidOrderNumber} color="secondary">
+                <AssignmentIcon />
+              </Badge>
             </IconButton>
 
             {/** cart */}
@@ -212,6 +216,7 @@ const TopBar: React.FC<Props> = (props) => {
       <UnpaidOrderList
         open={unpaidOrderListOpen}
         cancelCallBack={() => setUnpaidOrderListOpen(false)}
+        orderNumberCallBack={(number: number) => setUnpaidOrderNumber(number)}
       />
     </Box>
   );
@@ -220,11 +225,12 @@ const TopBar: React.FC<Props> = (props) => {
 /* collect data from redux store */
 const mapStateToProps = (state: any) => {
   return {
+    order: state.orderReducer.order,
     navBarOpenFlag: state.commonReducer.navBarOpenFlag,
     productInCartNumber: state.orderReducer.order.orderDetails.length,
     isDisable: state.commonReducer.isDisable,
     disableCartButton: state.commonReducer.disableCartButton,
-    order: state.orderReducer.order,
+    disableOrderButton: state.commonReducer.disableOrderButton,
   };
 };
 

@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
+  Grid,
 } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import MaterialTable, { Column } from 'material-table';
@@ -142,6 +143,7 @@ const Cart: React.FC<Props> = (props) => {
 
   const cancelHandler = () => {
     props.sendOrder({
+      no: 0,
       customer: {},
       orderDetails: [],
       finalPrice: 0,
@@ -159,6 +161,17 @@ const Cart: React.FC<Props> = (props) => {
     >
       <DialogTitle id="draggable-dialog-title">Cart</DialogTitle>
       <DialogContent>
+        {props.order.no ? (
+          <Typography style={{ padding: 10 }}>
+            <Grid container justify="space-between">
+              <Grid item>Order: {props.order.no}</Grid>
+              <Grid item>Customer: {props.order.customer.fullName}</Grid>
+            </Grid>
+          </Typography>
+        ) : (
+          <></>
+        )}
+
         <MaterialTable
           icons={tableIcons}
           style={{ width: '100%' }}

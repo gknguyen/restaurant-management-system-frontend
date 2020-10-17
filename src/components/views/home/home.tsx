@@ -178,7 +178,8 @@ const Home: React.FC<Props> = (props) => {
       setOrderDetail({} as OrderDetail);
     } else {
       setErrorIndex(index);
-      setErrorMessage('Please enter the quantity');
+      // setErrorMessage('Please enter the quantity');
+      showSnackBarAlert(5000, 'error', 'Please enter the quantity');
     }
   };
 
@@ -220,8 +221,8 @@ const Home: React.FC<Props> = (props) => {
                 root: classes.cardContent,
               }}
             >
-              <Grid container alignItems="flex-start" justify="center" spacing={2}>
-                <Grid item style={{ height: 80 }}>
+              <Grid container alignItems="center" justify="center" spacing={1}>
+                <Grid item>
                   <TextField
                     // variant="outlined"
                     size="small"
@@ -230,15 +231,15 @@ const Home: React.FC<Props> = (props) => {
                     name={product.name}
                     value={valueIndex === index ? value : ''}
                     onChange={(event) => inputAmountHandler(index, event, product.unit)}
-                    style={{ width: 100 }}
+                    style={{ maxWidth: 100, marginTop: 0 }}
                     error={errorIndex === index}
-                    helperText={errorIndex === index ? errorMessage : undefined}
+                    // helperText={errorIndex === index ? errorMessage : undefined}
                   />
                 </Grid>
-                <Grid item style={{ paddingTop: 23 }}>
+                <Grid item>
                   <Typography> / {product.amount}</Typography>
                 </Grid>
-                <Grid item style={{ paddingTop: 23 }}>
+                <Grid item>
                   <Typography>Pieces</Typography>
                 </Grid>
               </Grid>

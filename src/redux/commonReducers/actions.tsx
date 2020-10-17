@@ -35,3 +35,21 @@ export const actionDisableCartButton = (disableCartButton: boolean) => {
     });
   };
 };
+
+export const actionDisableOrderButton = (disableOrderButton: boolean) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: ActionType.RECEIVE_DISABLE_ORDER_BUTTON,
+      data: disableOrderButton,
+    });
+  };
+};
+
+export const actionLoadUnpaidOrderList = (loadUnpaidOrderList: boolean) => {
+  return (dispatch: any) => {
+    dispatch({
+      type: ActionType.LOAD_UNPAID_ORDER_LIST,
+      data: loadUnpaidOrderList,
+    });
+  };
+};

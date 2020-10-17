@@ -33,6 +33,7 @@ const headers = [
   { field: 'finalPrice', title: 'Price', sorting: false },
   { field: 'activeStatus', title: 'Active', sorting: false },
   { field: 'createDateTime', title: 'Create At', sorting: false },
+  { field: 'editDateTime', title: 'Edit At', sorting: false },
 ];
 
 interface Props {
@@ -68,6 +69,7 @@ const OrderList: React.FC<Props> = (props) => {
         createDateTime: serverOrder.createDateTime
           ? convertDateTime(serverOrder.createDateTime)
           : null,
+        editDateTime: serverOrder.editDateTime ? convertDateTime(serverOrder.editDateTime) : null,
       };
       orderList.push(order);
     });

@@ -59,6 +59,7 @@ export interface Order {
   finalPrice: number;
   activeStatus: boolean | JSX.Element;
   createDateTime: Date | string;
+  editDateTime: Date | string;
 }
 
 export interface OrderDetail {

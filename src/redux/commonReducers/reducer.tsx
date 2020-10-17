@@ -5,6 +5,8 @@ const initialState = {
   navBarOpenFlag: true,
   searchValue: '',
   disableCartButton: true,
+  disableOrderButton: true,
+  loadUnpaidOrderList: true,
 };
 
 const commonReducer = (state = initialState, action: any) => {
@@ -14,6 +16,12 @@ const commonReducer = (state = initialState, action: any) => {
     case ActionType.RECEIVE_DISABLE_FLAG:
       state.isDisable = action.data;
       return { ...state };
+    case ActionType.RECEIVE_DISABLE_CART_BUTTON:
+      state.disableCartButton = action.data;
+      return { ...state };
+    case ActionType.RECEIVE_DISABLE_ORDER_BUTTON:
+      state.disableOrderButton = action.data;
+      return { ...state };
     /* return disable flag */
     case ActionType.RECEIVE_NAVBAR_OPEN_FLAG:
       state.navBarOpenFlag = action.data;
@@ -22,9 +30,9 @@ const commonReducer = (state = initialState, action: any) => {
     case ActionType.RECEIVE_SEARCH_VALUE:
       state.searchValue = action.data;
       return { ...state };
-    /* return search value */
-    case ActionType.RECEIVE_DISABLE_CART_BUTTON:
-      state.disableCartButton = action.data;
+    /* load unpaid order list */
+    case ActionType.LOAD_UNPAID_ORDER_LIST:
+      state.loadUnpaidOrderList = action.data;
       return { ...state };
     /* return to new state */
     default:

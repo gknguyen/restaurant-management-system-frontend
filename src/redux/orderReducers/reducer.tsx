@@ -2,11 +2,11 @@ import * as ActionType from '../constant';
 
 const initialState = {
   order: {
+    no: 0,
     customer: {},
     orderDetails: [],
     finalPrice: 0,
   },
-  orderDetailList: [],
   orderDetail: {
     id: '',
     product: {
