@@ -50,6 +50,18 @@ if (userInfo.role === UserTypeName.admin)
           title: 'Customers',
           href: '/customerList',
           icon: PeopleIcon,
+          children: [
+            {
+              title: 'Products',
+              href: '/menu/productList',
+              icon: AddIcon,
+            },
+            {
+              title: 'Menu List',
+              href: '/menu/menuList',
+              icon: AddIcon,
+            },
+          ],
         },
         {
           title: 'Employees',

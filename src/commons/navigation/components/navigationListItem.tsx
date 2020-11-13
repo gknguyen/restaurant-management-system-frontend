@@ -115,9 +115,7 @@ const NavigationListItem: React.FC<Props> = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(openProp);
 
-  const handleToggle = () => {
-    setOpen((open: any) => !open);
-  };
+  console.log({ open });
 
   const paddingLeft = depth > 0 ? (props.navBarOpenFlag ? 20 : 0) + 8 * depth : 8;
 
@@ -128,7 +126,7 @@ const NavigationListItem: React.FC<Props> = (props) => {
       <ListItem {...rest} className={clsx(classes.item, className)} disableGutters>
         <Button
           className={classes.button}
-          onClick={handleToggle}
+          onClick={() => setOpen(!open)}
           style={style}
           classes={{ root: classes.smallButton }}
           disabled={isDisable}
